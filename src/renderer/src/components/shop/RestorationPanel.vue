@@ -5,7 +5,7 @@
  */
 import { computed } from 'vue'
 import AppIcon from '@renderer/components/AppIcon.vue'
-import { UButton } from '@renderer/components/ui'
+import { UButton, ConditionBadge } from '@renderer/components/ui'
 import { useShopStore } from '@renderer/stores/useShopStore'
 import { useVaultStore } from '@renderer/stores/useVaultStore'
 import { useStorageStore } from '@renderer/stores/useStorageStore'
@@ -17,8 +17,6 @@ import type { ItemCondition } from '@renderer/data/storage/items'
 import { resolveItemName } from '@renderer/data/storage/items'
 import {
     CONDITION_ORDER,
-    CONDITION_ICONS,
-    CONDITION_COLORS,
     calculateRestorationCost,
     getNextCondition,
     getRestoredValue,
@@ -77,17 +75,8 @@ function handleRestoreToMax(itemId: string, source: 'vault' | 'storage'): void {
     shop.startRestoration(itemId, source, 'pristine')
 }
 
-function conditionLabel(cond: ItemCondition): string {
-    return t(`shop.condition_${cond}`)
-}
-
 function nextCond(item: any): ItemCondition | null {
     return getNextCondition(item.condition ?? 'good')
-}
-
-function nextCondLabel(item: any): string {
-    const nc = nextCond(item)
-    return nc ? conditionLabel(nc) : ''
 }
 
 function nextCondValue(item: any): string {
@@ -138,13 +127,9 @@ function showRestoreMax(item: any): boolean {
                         <div class="slot-info-block">
                             <span class="slot-name">{{ resolveItemName(slot.item, t) }}</span>
                             <span class="slot-cond-flow">
-                                <AppIcon :icon="CONDITION_ICONS[slot.startCondition]"
-                                    :style="{ color: CONDITION_COLORS[slot.startCondition] }" />
-                                {{ conditionLabel(slot.startCondition) }}
+                                <ConditionBadge :condition="slot.startCondition" size="xs" />
                                 <AppIcon icon="mdi:arrow-right" class="arrow-icon" />
-                                <AppIcon :icon="CONDITION_ICONS[slot.targetCondition]"
-                                    :style="{ color: CONDITION_COLORS[slot.targetCondition] }" />
-                                {{ conditionLabel(slot.targetCondition) }}
+                                <ConditionBadge :condition="slot.targetCondition" size="xs" />
                             </span>
                         </div>
                     </div>
@@ -182,10 +167,11 @@ function showRestoreMax(item: any): boolean {
                         :style="{ color: rarityCssVar(item.rarity) }" />
                     <div class="restorable-item__info">
                         <span class="restorable-item__name">{{ resolveItemName(item, t) }}</span>
-                        <span class="restorable-item__cond"
-                            :style="{ color: CONDITION_COLORS[item.condition ?? 'good'] }">
-                            <AppIcon :icon="CONDITION_ICONS[item.condition ?? 'good']" />
-                            {{ conditionLabel(item.condition ?? 'good') }}
+                        <ConditionBadge :condition="item.condition ?? 'good'" size="xs" />
+                        <span v-if="nextCond(item)" class="restorable-item__next-val">
+                            →
+                            <ConditionBadge :condition="nextCond(item) ?? 'good'" size="xs" />:
+                            {{ nextCondValue(item) }}
                         </span>
                     </div>
                     <span class="restorable-item__source badge">{{ source }}</span>
@@ -194,10 +180,6 @@ function showRestoreMax(item: any): boolean {
                 <div class="restorable-item__values">
                     <span class="restorable-item__current-val">
                         {{ t('shop.workshop_current_value') }}: {{ formatCash(item.appraisedValue ?? item.baseValue) }}
-                    </span>
-                    <span v-if="nextCond(item)" class="restorable-item__next-val">
-                        → {{ nextCondLabel(item) }}:
-                        {{ nextCondValue(item) }}
                     </span>
                 </div>
 
@@ -403,14 +385,6 @@ function showRestoreMax(item: any): boolean {
     color: var(--t-text);
 }
 
-.restorable-item__cond {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-size: var(--t-font-size-xs);
-    font-weight: var(--t-font-semibold);
-}
-
 .restorable-item__source {
     font-size: 0.6rem;
     padding: 0.15rem 0.4rem;
@@ -433,7 +407,9 @@ function showRestoreMax(item: any): boolean {
 }
 
 .restorable-item__next-val {
+    display: inline;
     color: var(--t-success);
+    font-size: var(--t-font-size-xs);
     font-weight: var(--t-font-semibold);
 }
 

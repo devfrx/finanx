@@ -5,7 +5,7 @@
  * players can browse, search, buy and sell thousands of items.
  *
  * Features:
- * - Procedural item generation with rarity tiers up to mythic
+ * - Procedural item generation with rarity tiers up to prestige
  * - Unique one-time items with enormous values
  * - Search by name, category, rarity
  * - Flash sales with discounts
@@ -70,7 +70,7 @@ import {
   type ResaleAuction,
 } from '@renderer/data/shop/auction'
 
-import { RARITY_ORDER } from '@renderer/data/rarity'
+import { RARITY_ORDER, migrateRarity } from '@renderer/data/rarity'
 
 // ─── Types ──────────────────────────────────────────────────────
 
@@ -892,7 +892,13 @@ export const useShopStore = defineStore('shop', () => {
   }
 
   function loadFromSave(data: Record<string, any>): void {
-    if (data.listings) listings.value = data.listings
+    if (data.listings) {
+      listings.value = data.listings
+      // Migrate legacy rarity names (common→unverified, etc.)
+      for (const listing of listings.value) {
+        if (listing.item) listing.item.rarity = migrateRarity(listing.item.rarity)
+      }
+    }
     if (data.purchasedUniqueIds) purchasedUniqueIds.value = new Set(data.purchasedUniqueIds)
     if (data.lastRefreshTick !== undefined) lastRefreshTick.value = data.lastRefreshTick
     if (data.lastFullRestockTick !== undefined) lastFullRestockTick.value = data.lastFullRestockTick
@@ -911,9 +917,21 @@ export const useShopStore = defineStore('shop', () => {
     if (data.lastDemandTick !== undefined) lastDemandTick.value = data.lastDemandTick
     // Restoration
     if (data.restorationSlotCount !== undefined) restorationSlotCount.value = data.restorationSlotCount
-    if (data.restorationSlots) restorationSlots.value = data.restorationSlots
+    if (data.restorationSlots) {
+      restorationSlots.value = data.restorationSlots
+      // Migrate legacy rarity names in restoration slots
+      for (const slot of restorationSlots.value) {
+        if (slot?.item) slot.item.rarity = migrateRarity(slot.item.rarity)
+      }
+    }
     // Auctions
-    if (data.activeAuctions) activeAuctions.value = data.activeAuctions
+    if (data.activeAuctions) {
+      activeAuctions.value = data.activeAuctions
+      // Migrate legacy rarity names in auction items
+      for (const auction of activeAuctions.value) {
+        if (auction.item) auction.item.rarity = migrateRarity(auction.item.rarity)
+      }
+    }
     if (data.auctionHistory) auctionHistory.value = data.auctionHistory
   }
 

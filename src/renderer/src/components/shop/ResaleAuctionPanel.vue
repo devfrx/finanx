@@ -14,16 +14,11 @@ import { useStorageStore } from '@renderer/stores/useStorageStore'
 import { usePlayerStore } from '@renderer/stores/usePlayerStore'
 import { useFormat } from '@renderer/composables/useFormat'
 import { useI18n } from 'vue-i18n'
-import { UButton, UCard, UModal } from '@renderer/components/ui'
+import { UButton, UCard, UModal, RarityBadge, ConditionBadge } from '@renderer/components/ui'
 import { D, ZERO } from '@renderer/core/BigNum'
 import { rarityCssVar } from '@renderer/data/rarity'
 import { calculateListingFee } from '@renderer/data/shop/auction'
 import type { ResaleAuction, NpcAuctionBidder } from '@renderer/data/shop/auction'
-import {
-    CONDITION_ICONS,
-    CONDITION_COLORS,
-} from '@renderer/data/shop/restoration'
-import type { ItemCondition } from '@renderer/data/storage/items'
 import { resolveItemName } from '@renderer/data/storage/items'
 
 const shop = useShopStore()
@@ -95,10 +90,6 @@ function confirmListing(): void {
 
     showListDialog.value = false
     selectedItemId.value = null
-}
-
-function condLabel(cond: ItemCondition | undefined): string {
-    return t(`shop.condition_${cond ?? 'good'}`)
 }
 
 function auctionTimeLeft(auction: ResaleAuction): string {
@@ -207,13 +198,11 @@ const HISTORY_STATUS_ICONS: Record<string, string> = {
                     </div>
                     <div class="live-card__item-info">
                         <span class="live-card__item-name">{{ resolveItemName(auction.item, t) }}</span>
-                        <span class="live-card__rarity" :style="{ color: rarityCssVar(auction.item.rarity) }">
-                            {{ auction.item.rarity }}
+                        <span class="live-card__rarity">
+                            <RarityBadge :rarity="auction.item.rarity" size="xs" />
                             <template v-if="auction.item.condition">
                                 <span class="live-card__cond-sep">·</span>
-                                <AppIcon :icon="CONDITION_ICONS[auction.item.condition]"
-                                    :style="{ color: CONDITION_COLORS[auction.item.condition] }" />
-                                {{ condLabel(auction.item.condition) }}
+                                <ConditionBadge :condition="auction.item.condition" size="xs" />
                             </template>
                         </span>
                     </div>
@@ -298,14 +287,8 @@ const HISTORY_STATUS_ICONS: Record<string, string> = {
                     <div class="listing-card__info">
                         <span class="listing-card__name">{{ resolveItemName(item, t) }}</span>
                         <div class="listing-card__tags">
-                            <span class="listing-card__rarity" :style="{ color: rarityCssVar(item.rarity) }">
-                                {{ item.rarity }}
-                            </span>
-                            <span v-if="item.condition" class="listing-card__condition"
-                                :style="{ color: CONDITION_COLORS[item.condition] }">
-                                <AppIcon :icon="CONDITION_ICONS[item.condition]" />
-                                {{ condLabel(item.condition) }}
-                            </span>
+                            <ConditionBadge v-if="item.condition" :condition="item.condition" size="xs" />
+                            <RarityBadge :rarity="item.rarity" size="xs" />
                         </div>
                     </div>
                     <span class="listing-card__source"
@@ -355,9 +338,7 @@ const HISTORY_STATUS_ICONS: Record<string, string> = {
                         :style="{ color: rarityCssVar(ah.item.rarity) }" />
                     <div class="history-item__info">
                         <span class="history-item__name">{{ resolveItemName(ah.item, t) }}</span>
-                        <span class="history-item__rarity" :style="{ color: rarityCssVar(ah.item.rarity) }">
-                            {{ ah.item.rarity }}
-                        </span>
+                        <RarityBadge :rarity="ah.item.rarity" size="xs" />
                     </div>
                     <span class="history-item__status-label">{{ t(`shop.auction_status_${ah.status}`) }}</span>
                     <span v-if="ah.status === 'sold'" class="history-item__price">
@@ -379,9 +360,7 @@ const HISTORY_STATUS_ICONS: Record<string, string> = {
                 </div>
                 <div class="dialog-item__text">
                     <span class="dialog-item-name">{{ resolveItemName(selectedItem.item, t) }}</span>
-                    <span class="dialog-item-rarity" :style="{ color: rarityCssVar(selectedItem.item.rarity) }">
-                        {{ selectedItem.item.rarity }}
-                    </span>
+                    <RarityBadge :rarity="selectedItem.item.rarity" size="sm" />
                     <span class="dialog-item-val">
                         {{ t('shop.auction_value') }}: {{ formatCash(selectedItem.item.appraisedValue ??
                             selectedItem.item.baseValue) }}
@@ -879,21 +858,6 @@ const HISTORY_STATUS_ICONS: Record<string, string> = {
     gap: var(--t-space-2);
 }
 
-.listing-card__rarity {
-    font-size: 0.6rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: var(--t-font-bold);
-}
-
-.listing-card__condition {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    font-size: 0.6rem;
-    font-weight: var(--t-font-semibold);
-}
-
 .listing-card__source {
     display: flex;
     align-items: center;
@@ -909,13 +873,13 @@ const HISTORY_STATUS_ICONS: Record<string, string> = {
 }
 
 .listing-card__source--vault {
-    background: var(--t-blue-muted);
-    color: var(--t-blue);
+    /* background: var(--t-blue-muted);
+    color: var(--t-blue); */
 }
 
 .listing-card__source--storage {
-    background: var(--t-orange-muted);
-    color: var(--t-orange);
+    /* background: var(--t-orange-muted);
+    color: var(--t-orange); */
 }
 
 .listing-card__bottom {
@@ -1054,13 +1018,6 @@ const HISTORY_STATUS_ICONS: Record<string, string> = {
     text-overflow: ellipsis;
 }
 
-.history-item__rarity {
-    font-size: 0.55rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-weight: var(--t-font-bold);
-}
-
 .history-item__status-label {
     text-transform: uppercase;
     font-size: 0.6rem;
@@ -1122,13 +1079,6 @@ const HISTORY_STATUS_ICONS: Record<string, string> = {
     font-weight: var(--t-font-semibold);
     font-size: var(--t-font-size-sm);
     color: var(--t-text);
-}
-
-.dialog-item-rarity {
-    font-size: 0.6rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: var(--t-font-bold);
 }
 
 .dialog-item-val {

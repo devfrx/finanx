@@ -120,7 +120,7 @@ function categoryIcon(category: string): string {
 
 .deal-card__icon {
     font-size: 1.4rem;
-    color: var(--_risk-color, var(--t-accent));
+    /* color: var(--_risk-color, var(--t-accent)); */
     flex-shrink: 0;
 }
 

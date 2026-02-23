@@ -188,7 +188,7 @@ export function applyRarityShift(
 ): Record<string, number> {
   if (shift === 0) return { ...baseWeights }
 
-  const RARITY_TIERS = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'jackpot', 'mythic']
+  const RARITY_TIERS = ['unverified', 'certified', 'graded', 'authenticated', 'licensed', 'exclusive', 'prestige']
   const result: Record<string, number> = {}
 
   for (let i = 0; i < RARITY_TIERS.length; i++) {

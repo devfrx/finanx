@@ -28,7 +28,16 @@ const { formatCash } = useFormat()
 const { t } = useI18n()
 
 function handleBuy(listingId: string, destination: 'vault' | 'storage'): void {
-    shop.buyItem(listingId, destination)
+    const ok = shop.buyItem(listingId, destination)
+    if (!ok) {
+        // Purchase failed — not enough cash or vault full
+        const listing = shop.listings.find(l => l.id === listingId)
+        if (listing && player.cash.lt(listing.price)) {
+            // Not enough cash
+        } else if (destination === 'vault') {
+            // Vault is full
+        }
+    }
 }
 
 const activeTab = ref('browse')

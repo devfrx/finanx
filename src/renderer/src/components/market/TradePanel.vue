@@ -257,7 +257,7 @@ function setToMarketPrice() {
                                 placeholder="0.00" />
                         </UTooltip>
                         <UTooltip :text="$t('orders.tip_set_market')" placement="top">
-                            <UButton variant="ghost" size="xs" icon="mdi:crosshairs-gps" @click="setToMarketPrice"
+                            <UButton variant="icon" size="sm" icon="mdi:crosshairs-gps" @click="setToMarketPrice"
                                 class="set-market-btn" />
                         </UTooltip>
                     </div>
@@ -280,8 +280,7 @@ function setToMarketPrice() {
                 <div class="expire-presets">
                     <UTooltip v-for="(preset, idx) in EXPIRATION_PRESETS" :key="preset.label"
                         :text="idx === 0 ? $t('orders.tip_expire_gtc') : $t('orders.tip_expiration')" placement="top">
-                        <UButton variant="ghost" size="xs" :active="limitExpireIdx === idx"
-                            @click="limitExpireIdx = idx">
+                        <UButton variant="tab" size="xs" :active="limitExpireIdx === idx" @click="limitExpireIdx = idx">
                             {{ $t(preset.label) }}
                         </UButton>
                     </UTooltip>

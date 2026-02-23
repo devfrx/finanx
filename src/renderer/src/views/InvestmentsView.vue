@@ -298,7 +298,7 @@ const investInfoSections = computed<InfoSection[]>(() => [
                                 :stroke-dashoffset="226.2 * (1 - getInvestmentProgress(inv) / 100)" />
                         </svg>
                         <span class="inv-card__ring-pct">{{ getInvestmentProgress(inv).toFixed(0)
-                            }}<small>%</small></span>
+                        }}<small>%</small></span>
                     </div>
                     <!-- Info -->
                     <div class="inv-card__info">
@@ -318,12 +318,12 @@ const investInfoSections = computed<InfoSection[]>(() => [
                             <div class="inv-card__metric">
                                 <span class="inv-card__metric-lbl">{{ $t('investments.success') }}</span>
                                 <span class="inv-card__metric-val text-sky">{{ formatRate(inv.successChance * 100)
-                                    }}</span>
+                                }}</span>
                             </div>
                             <div class="inv-card__metric">
                                 <span class="inv-card__metric-lbl">{{ $t('investments.return_label') }}</span>
                                 <span class="inv-card__metric-val text-emerald">{{ inv.returnMultiplier.toFixed(1)
-                                    }}x</span>
+                                }}x</span>
                             </div>
                         </div>
                         <div class="inv-card__time">
@@ -341,7 +341,7 @@ const investInfoSections = computed<InfoSection[]>(() => [
         <!-- Available Opportunities -->
         <section class="section">
             <h2 class="section-header">
-                <AppIcon icon="mdi:lightbulb-on" class="section-icon text-gold" />
+                <AppIcon icon="mdi:lightbulb-on" class="section-icon" />
                 {{ $t('investments.available_opps') }}
                 <span class="opp-count">({{ startups.opportunities.length }})</span>
             </h2>
@@ -376,20 +376,20 @@ const investInfoSections = computed<InfoSection[]>(() => [
                                 {{ STAGES[opp.stage].name }}
                             </span>
                         </div>
-                        <div class="opp-card__badges">
-                            <span class="opp-card__sector-badge">
-                                <AppIcon :icon="SECTORS[opp.sector].icon" />
-                                {{ SECTORS[opp.sector].name }}
-                            </span>
-                            <UTooltip v-for="trait in opp.traits" :key="trait"
-                                :text="getTraitData(trait).description ?? getTraitData(trait).name" placement="bottom">
-                                <span class="opp-card__trait"
-                                    :class="getTraitData(trait).isPositive ? 'opp-card__trait--pos' : 'opp-card__trait--neg'">
-                                    <AppIcon :icon="getTraitData(trait).icon" />
-                                    {{ getTraitData(trait).name }}
-                                </span>
-                            </UTooltip>
-                        </div>
+                        <UAccordion :title="SECTORS[opp.sector].name" :icon="SECTORS[opp.sector].icon" variant="ghost"
+                            compact :badge="opp.traits.length">
+                            <div class="opp-card__badges">
+                                <UTooltip v-for="trait in opp.traits" :key="trait"
+                                    :text="getTraitData(trait).description ?? getTraitData(trait).name"
+                                    placement="bottom">
+                                    <span class="opp-card__trait"
+                                        :class="getTraitData(trait).isPositive ? 'opp-card__trait--pos' : 'opp-card__trait--neg'">
+                                        <AppIcon :icon="getTraitData(trait).icon" />
+                                        {{ getTraitData(trait).name }}
+                                    </span>
+                                </UTooltip>
+                            </div>
+                        </UAccordion>
                     </div>
 
                     <!-- Card body -->
@@ -410,7 +410,7 @@ const investInfoSections = computed<InfoSection[]>(() => [
                                 <span class="opp-card__kpi-lbl">{{ $t('investments.return_label') }}</span>
                             </div>
                             <div class="opp-card__kpi">
-                                <span v-if="getPhaseIndex(opp) === 0" class="opp-card__kpi-val kpi--hidden">? ? ?</span>
+                                <span v-if="getPhaseIndex(opp) === 0" class="opp-card__kpi-val kpi--hidden">?</span>
                                 <span v-else-if="getPhaseIndex(opp) === 1" class="opp-card__kpi-val kpi--range">
                                     ~{{ formatRate(Math.max(0, opp.baseSuccessChance - 0.10) * 100) }}&ndash;{{
                                         formatRate(Math.min(1, opp.baseSuccessChance + 0.10) * 100) }}
@@ -562,7 +562,7 @@ const investInfoSections = computed<InfoSection[]>(() => [
                 <div class="dialog-potential">
                     <span>{{ $t('investments.potential_returns') }}</span>
                     <strong class="text-emerald">{{ formatCash(D(investAmount * selectedOpp.baseReturnMultiplier))
-                        }}</strong>
+                    }}</strong>
                 </div>
             </div>
 
@@ -670,14 +670,14 @@ const investInfoSections = computed<InfoSection[]>(() => [
 
 /* Hot deal */
 .opp-card--hot {
-    border: 1.5px solid transparent;
-    background:
+    /* border: 1.5px solid transparent; */
+    /* background:
         linear-gradient(var(--t-bg-card), var(--t-bg-card)) padding-box,
         linear-gradient(135deg, var(--t-danger), var(--t-warning), var(--t-danger)) border-box;
-    animation: opp-hot-glow 3s ease-in-out infinite alternate;
+    animation: opp-hot-glow 3s ease-in-out infinite alternate; */
 }
 
-@keyframes opp-hot-glow {
+/* @keyframes opp-hot-glow {
     from {
         box-shadow: 0 0 12px -4px color-mix(in srgb, var(--t-danger) 20%, transparent);
     }
@@ -685,7 +685,7 @@ const investInfoSections = computed<InfoSection[]>(() => [
     to {
         box-shadow: 0 0 24px -4px color-mix(in srgb, var(--t-danger) 35%, transparent);
     }
-}
+} */
 
 /* --- Header band with gradient tint --- */
 .opp-card__header {
@@ -720,7 +720,7 @@ const investInfoSections = computed<InfoSection[]>(() => [
     color: var(--_ac);
     font-size: var(--t-font-size-2xl);
     flex-shrink: 0;
-    box-shadow: 0 0 20px -6px color-mix(in srgb, var(--_ac) 30%, transparent);
+    /* box-shadow: 0 0 20px -6px color-mix(in srgb, var(--_ac) 30%, transparent); */
 }
 
 .opp-card__titles {
@@ -782,33 +782,33 @@ const investInfoSections = computed<InfoSection[]>(() => [
 }
 
 .opp-card__stage--seed {
-    background: var(--t-danger-muted);
+    /* background: var(--t-danger-muted);
     color: var(--t-danger);
-    border-color: color-mix(in srgb, var(--t-danger) 20%, transparent);
+    border-color: color-mix(in srgb, var(--t-danger) 20%, transparent); */
 }
 
 .opp-card__stage--seriesA {
-    background: var(--t-orange-muted);
+    /* background: var(--t-orange-muted);
     color: var(--t-orange);
-    border-color: color-mix(in srgb, var(--t-orange) 20%, transparent);
+    border-color: color-mix(in srgb, var(--t-orange) 20%, transparent); */
 }
 
 .opp-card__stage--seriesB {
-    background: var(--t-blue-muted);
+    /* background: var(--t-blue-muted);
     color: var(--t-blue);
-    border-color: color-mix(in srgb, var(--t-blue) 20%, transparent);
+    border-color: color-mix(in srgb, var(--t-blue) 20%, transparent); */
 }
 
 .opp-card__stage--seriesC {
-    background: var(--t-purple-muted);
+    /* background: var(--t-purple-muted);
     color: var(--t-purple);
-    border-color: color-mix(in srgb, var(--t-purple) 20%, transparent);
+    border-color: color-mix(in srgb, var(--t-purple) 20%, transparent); */
 }
 
 .opp-card__stage--preIPO {
-    background: var(--t-success-muted);
+    /* background: var(--t-success-muted);
     color: var(--t-success);
-    border-color: color-mix(in srgb, var(--t-success) 20%, transparent);
+    border-color: color-mix(in srgb, var(--t-success) 20%, transparent); */
 }
 
 /* Badges row */
@@ -905,13 +905,13 @@ const investInfoSections = computed<InfoSection[]>(() => [
 }
 
 .kpi--cash {
-    color: var(--t-gold);
+    /* color: var(--t-gold); */
 }
 
 .kpi--return {
     color: var(--t-success);
-    font-size: var(--t-font-size-2xl);
-    text-shadow: 0 0 16px color-mix(in srgb, var(--t-success) 30%, transparent);
+    /* font-size: var(--t-font-size-2xl); */
+    /* text-shadow: 0 0 16px color-mix(in srgb, var(--t-success) 30%, transparent); */
 }
 
 .kpi--hidden {
@@ -920,12 +920,12 @@ const investInfoSections = computed<InfoSection[]>(() => [
 }
 
 .kpi--range {
-    color: var(--t-blue);
-    font-size: var(--t-font-size-xs);
+    /* color: var(--t-blue);
+    font-size: var(--t-font-size-xs); */
 }
 
 .kpi--exact {
-    color: var(--t-blue);
+    /* color: var(--t-blue); */
 }
 
 /* Success gauge */
@@ -1094,10 +1094,10 @@ const investInfoSections = computed<InfoSection[]>(() => [
 .opp-card__timer--urgent {
     color: var(--t-danger);
     font-weight: var(--t-font-bold);
-    animation: urgent-blink 1.2s ease-in-out infinite;
+    /* animation: urgent-blink 1.2s ease-in-out infinite; */
 }
 
-@keyframes urgent-blink {
+/* @keyframes urgent-blink {
 
     0%,
     100% {
@@ -1107,7 +1107,7 @@ const investInfoSections = computed<InfoSection[]>(() => [
     50% {
         opacity: 0.4;
     }
-}
+} */
 
 .opp-card__actions {
     display: flex;

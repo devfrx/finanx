@@ -7,7 +7,7 @@
  */
 import { ref, computed } from 'vue'
 import AppIcon from '@renderer/components/AppIcon.vue'
-import { UButton, UTooltip, UAccordion } from '@renderer/components/ui'
+import { UButton, UTooltip, UAccordion, RarityBadge } from '@renderer/components/ui'
 import { useStorageStore } from '@renderer/stores/useStorageStore'
 import { usePlayerStore } from '@renderer/stores/usePlayerStore'
 import { useFormat } from '@renderer/composables/useFormat'
@@ -463,9 +463,7 @@ function reactionClass(outcome: string): string {
                     <div class="found-item__rarity-strip" />
                     <AppIcon :icon="item.icon" class="found-item__icon" :style="{ color: rarityCssVar(item.rarity) }" />
                     <span class="found-item__name">{{ resolveItemName(item, t) }}</span>
-                    <span class="found-item__rarity" :style="{ color: rarityCssVar(item.rarity) }">
-                        {{ item.rarity }}
-                    </span>
+                    <RarityBadge :rarity="item.rarity" size="xs" />
                 </div>
             </div>
 

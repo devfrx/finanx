@@ -428,7 +428,7 @@ export const FINANCE_SKILLS: UpgradeDef[] = [
   {
     id: 'f_exoreal', name: 'Exoplanet Real Estate', row: 14, col: 3,
     description: 'Sell plots on terraformed exoplanets.',
-    effectDescription: '+8% real estate rent', icon: 'mdi:planet',
+    effectDescription: '+8% real estate rent', icon: 'mdi:earth',
     cost: D(100e9), target: 'realEstateRent', multiplier: 0.08,
     category: 'Finance', prerequisites: ['f_orbital'],
   },

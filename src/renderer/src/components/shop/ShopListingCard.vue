@@ -7,17 +7,15 @@
  */
 import { computed } from 'vue'
 import AppIcon from '@renderer/components/AppIcon.vue'
-import { UButton, UCard } from '@renderer/components/ui'
+import { UButton, UCard, RarityBadge, ConditionBadge } from '@renderer/components/ui'
 import { useFormat } from '@renderer/composables/useFormat'
 import { useI18n } from 'vue-i18n'
 import { rarityCssVar } from '@renderer/data/rarity'
 import { resolveItemName, resolveItemDescription } from '@renderer/data/storage/items'
 import type { ShopListing } from '@renderer/data/shop/items'
 import { useShopStore } from '@renderer/stores/useShopStore'
-import {
-    CONDITION_ICONS,
-    CONDITION_COLORS,
-} from '@renderer/data/shop/restoration'
+import { usePlayerStore } from '@renderer/stores/usePlayerStore'
+import { useVaultStore } from '@renderer/stores/useVaultStore'
 
 const props = defineProps<{
     listing: ShopListing
@@ -28,11 +26,14 @@ defineEmits<{
 }>()
 
 const shop = useShopStore()
+const player = usePlayerStore()
+const vault = useVaultStore()
 const { formatCash } = useFormat()
 const { t } = useI18n()
 
 const condition = computed(() => props.listing.item.condition ?? 'good')
 const demandMult = computed(() => shop.getDemandMultiplier(props.listing.item.category))
+const cantAfford = computed(() => player.cash.lt(props.listing.price))
 </script>
 
 <template>
@@ -51,11 +52,8 @@ const demandMult = computed(() => shop.getDemandMultiplier(props.listing.item.ca
 
         <!-- ── Tags row — condition · unique · demand ──────── -->
         <div class="card__tags">
-            <span class="tag tag--condition"
-                :style="{ color: CONDITION_COLORS[condition], borderColor: CONDITION_COLORS[condition] + '40' }">
-                <AppIcon :icon="CONDITION_ICONS[condition]" />
-                {{ t(`shop.condition_${condition}`) }}
-            </span>
+            <ConditionBadge :condition="condition" size="xs" />
+            <RarityBadge :rarity="listing.item.rarity" size="xs" />
             <span v-if="listing.unique" class="tag tag--unique">
                 <AppIcon icon="mdi:star-shooting" /> {{ t('shop.unique') }}
             </span>
@@ -70,9 +68,6 @@ const demandMult = computed(() => shop.getDemandMultiplier(props.listing.item.ca
         <!-- ── Title + Rarity ──────────────────────────────── -->
         <div class="card__title-block">
             <span class="card__name">{{ resolveItemName(listing.item, t) }}</span>
-            <span class="card__rarity" :style="{ color: rarityCssVar(listing.item.rarity) }">
-                {{ listing.item.rarity }}
-            </span>
         </div>
 
         <!-- ── Description ─────────────────────────────────── -->
@@ -92,10 +87,11 @@ const demandMult = computed(() => shop.getDemandMultiplier(props.listing.item.ca
         <!-- ── Buy actions ─────────────────────────────────── -->
         <div class="card__actions">
             <UButton variant="primary" size="xs" icon="mdi:safe-square-outline" block
-                @click="$emit('buy', listing.id, 'vault')">
+                :disabled="cantAfford || vault.isFull" @click="$emit('buy', listing.id, 'vault')">
                 {{ t('shop.buy_to_vault') }}
             </UButton>
-            <UButton variant="ghost" size="xs" icon="mdi:package-variant" @click="$emit('buy', listing.id, 'storage')">
+            <UButton variant="ghost" size="xs" icon="mdi:package-variant" :disabled="cantAfford"
+                @click="$emit('buy', listing.id, 'storage')">
                 {{ t('shop.buy_to_storage') }}
             </UButton>
         </div>
@@ -160,6 +156,8 @@ const demandMult = computed(() => shop.getDemandMultiplier(props.listing.item.ca
 .card__tags {
     display: flex;
     flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
     gap: 0.35rem;
     padding: var(--t-space-2) var(--t-space-3) 0;
 }
@@ -175,11 +173,6 @@ const demandMult = computed(() => shop.getDemandMultiplier(props.listing.item.ca
     padding: 0.15rem 0.45rem;
     border-radius: var(--t-radius-sm);
     line-height: 1.3;
-}
-
-.tag--condition {
-    background: color-mix(in srgb, var(--t-info) 8%, transparent);
-    border: 1px solid;
 }
 
 .tag--unique {
@@ -217,12 +210,6 @@ const demandMult = computed(() => shop.getDemandMultiplier(props.listing.item.ca
     overflow: hidden;
 }
 
-.card__rarity {
-    font-size: 0.6rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: var(--t-font-bold);
-}
 
 /* ── Description ─────────────────────────────────────────── */
 .card__desc {

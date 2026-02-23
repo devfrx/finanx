@@ -81,7 +81,7 @@ function parseRevealInfo(resultKey: string): { name: string; budget: string } | 
             <!-- Mood indicator -->
             <UTooltip :text="ev.def.mood" placement="top">
                 <span class="lot-event-chip__mood">
-                    <AppIcon :icon="moodIcon(ev.def.mood)" />
+                    <!-- <AppIcon :icon="moodIcon(ev.def.mood)" /> -->
                 </span>
             </UTooltip>
 

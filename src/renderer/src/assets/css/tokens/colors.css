@@ -157,14 +157,14 @@
   --t-gamble-roulette-black: #1a1a2e;
   --t-gamble-roulette-green: #27ae60;
 
-  /* -- Rarity -- */
-  --t-rarity-common: #a1a1aa;
-  --t-rarity-uncommon: #22c55e;
-  --t-rarity-rare: #3b82f6;
-  --t-rarity-epic: #a855f7;
-  --t-rarity-legendary: #f59e0b;
-  --t-rarity-jackpot: #ef4444;
-  --t-rarity-mythic: #facc15;
+  /* -- Certification Tiers -- */
+  --t-rarity-unverified: #a1a1aa;
+  --t-rarity-certified: #22c55e;
+  --t-rarity-graded: #3b82f6;
+  --t-rarity-authenticated: #a855f7;
+  --t-rarity-licensed: #f59e0b;
+  --t-rarity-exclusive: #ef4444;
+  --t-rarity-prestige: #facc15;
 
   /* -- Overlay -- */
   --t-overlay: rgba(0, 0, 0, 0.55);

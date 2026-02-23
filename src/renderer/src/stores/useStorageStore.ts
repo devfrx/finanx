@@ -43,6 +43,7 @@ import {
   getLotTierDef,
 } from '@renderer/data/storage/auctionTiers'
 import { generateItem } from '@renderer/data/storage/itemGen'
+import { migrateItemRarities } from '@renderer/data/rarity'
 import {
   type StorageLocation,
   getUnlockedLocations,
@@ -51,6 +52,7 @@ import {
 import { generateLocationPool } from '@renderer/data/storage/locationGen'
 import { applySellTax } from '@renderer/data/storage/items'
 import { CONDITION_MULTIPLIERS } from '@renderer/data/shop/restoration'
+import { CONDITION_TIERS } from '@renderer/data/condition'
 import {
   SELL_TAX,
   INVENTORY_SOFT_CAP,
@@ -150,10 +152,12 @@ export const useStorageStore = defineStore('storage', () => {
 
   // ── Computed ───────────────────────────────────────────────
 
-  /** Locations the player can currently access (cash ≥ unlockAt). */
+  /** Locations the player has ever been able to access (totalCashEarned ≥ unlockAt). */
   const unlockedLocations = computed((): StorageLocation[] => {
     const player = usePlayerStore()
-    return getUnlockedLocations(locationPool.value, player.cash)
+    // Use totalCashEarned (monotonically increasing) so locations stay unlocked
+    // even when the player spends cash below the unlock threshold
+    return getUnlockedLocations(locationPool.value, player.totalCashEarned)
   })
 
   const inventoryValue = computed((): Decimal => {
@@ -222,6 +226,8 @@ export const useStorageStore = defineStore('storage', () => {
     if (currentTick - lastLocationReshuffle.value >= LOCATION_RESHUFFLE_TICKS) {
       reshuffleLocations()
       lastLocationReshuffle.value = currentTick
+      // Clear stale auctions — old locationIds are now invalid
+      availableAuctions.value = []
     }
 
     // Process active auction rounds
@@ -522,7 +528,7 @@ export const useStorageStore = defineStore('storage', () => {
     // Process ALL unapplied events: dedicated on_win + deferred item effects from reveal/bid
     const pendingEvs = auction.lotEvents.filter(e => !e.applied)
     const player = usePlayerStore()
-    const condOrder = ['damaged', 'poor', 'fair', 'good', 'excellent', 'mint', 'pristine']
+    const condOrder = CONDITION_TIERS
 
     for (const ev of pendingEvs) {
       const isWinTiming = ev.def.timing === 'on_win'
@@ -537,7 +543,7 @@ export const useStorageStore = defineStore('storage', () => {
             const loc = getLocation(auction.locationId)
             if (loc) {
               const bonusItem = generateItem(
-                'uncommon', // base rarity for bonus items
+                'certified', // base rarity for bonus items
                 loc.valueMultiplier,
               )
               auction.items.push(bonusItem)
@@ -547,10 +553,10 @@ export const useStorageStore = defineStore('storage', () => {
           case 'hidden_treasure': {
             // Generate a rare/epic+ hidden item — the "treasure" feeling
             const rarityRoll = Math.random()
-            const treasureRarity = rarityRoll < 0.05 ? 'mythic'
-              : rarityRoll < 0.15 ? 'legendary'
-              : rarityRoll < 0.35 ? 'epic'
-              : 'rare'
+            const treasureRarity = rarityRoll < 0.05 ? 'prestige'
+              : rarityRoll < 0.15 ? 'licensed'
+              : rarityRoll < 0.35 ? 'authenticated'
+              : 'graded'
             const loc = getLocation(auction.locationId)
             const bonusTreasure = generateItem(
               treasureRarity,
@@ -590,7 +596,7 @@ export const useStorageStore = defineStore('storage', () => {
           }
           case 'rarity_boost': {
             // Chance to upgrade the rarity of one random item
-            const rarityOrder = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'jackpot', 'mythic']
+            const rarityOrder = ['unverified', 'certified', 'graded', 'authenticated', 'licensed', 'exclusive', 'prestige']
             const boostable = auction.items.filter(i => {
               const idx = rarityOrder.indexOf(i.rarity)
               return idx >= 0 && idx < rarityOrder.length - 1
@@ -1118,7 +1124,11 @@ export const useStorageStore = defineStore('storage', () => {
   // ── Save/Load ──────────────────────────────────────────────
 
   function loadFromSave(data: Record<string, any>): void {
-    if (data.inventory) inventory.value = data.inventory
+    if (data.inventory) {
+      inventory.value = data.inventory
+      // Migrate legacy rarity names (common→unverified, etc.)
+      migrateItemRarities(inventory.value)
+    }
     if (data.locationPool) locationPool.value = data.locationPool
     if (data.totalAuctionsWon !== undefined) totalAuctionsWon.value = data.totalAuctionsWon
     if (data.totalAuctionsLost !== undefined) totalAuctionsLost.value = data.totalAuctionsLost

@@ -8,6 +8,29 @@ export default {
   // ─── Nomi Oggetti Procedurali / Descrizioni ───────────────────
   items: itemsIt,
 
+  // ─── Rarità / Livelli di Certificazione ──────────────────────
+  rarity: {
+    unverified: 'Non Verificato',
+    certified: 'Certificato',
+    graded: 'Valutato',
+    authenticated: 'Autenticato',
+    licensed: 'Con Licenza',
+    exclusive: 'Esclusivo',
+    prestige: 'Prestigio',
+  },
+
+  // ─── Condizione Oggetti ───────────────────────────────────────
+  condition: {
+    damaged: 'Danneggiato',
+    poor: 'Scarso',
+    fair: 'Discreto',
+    good: 'Buono',
+    excellent: 'Eccellente',
+    mint: 'Perfetto',
+    pristine: 'Immacolato',
+    unknown: 'Sconosciuta',
+  },
+
   // ─── Comuni / Condivisi ───────────────────────────────────────
   common: {
     buy: 'Compra',
@@ -2627,14 +2650,14 @@ export default {
     category_maps: 'Mappe',
     category_manuscripts: 'Manoscritti',
 
-    // -- Etichette rarità -----------------------------------------------
-    rarity_common: 'Comune',
-    rarity_uncommon: 'Non Comune',
-    rarity_rare: 'Raro',
-    rarity_epic: 'Epico',
-    rarity_legendary: 'Leggendario',
-    rarity_jackpot: 'Jackpot',
-    rarity_mythic: 'Mitico',
+    // -- Etichette certificazione ------------------------------------
+    rarity_unverified: 'Non Verificato',
+    rarity_certified: 'Certificato',
+    rarity_graded: 'Valutato',
+    rarity_authenticated: 'Autenticato',
+    rarity_licensed: 'Con Licenza',
+    rarity_exclusive: 'Esclusivo',
+    rarity_prestige: 'Prestigio',
 
     // ── Condizioni ──────────────────────────────────────────
     condition_damaged: 'Danneggiato',

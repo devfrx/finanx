@@ -4,12 +4,11 @@
  * Shows rarity border, value, source badge, and action buttons.
  */
 import AppIcon from '@renderer/components/AppIcon.vue'
-import { UButton, UCard } from '@renderer/components/ui'
+import { UButton, UCard, RarityBadge, ConditionBadge } from '@renderer/components/ui'
 import { useFormat } from '@renderer/composables/useFormat'
 import { useI18n } from 'vue-i18n'
 import { rarityCssVar } from '@renderer/data/rarity'
 import { resolveItemName, resolveItemDescription } from '@renderer/data/storage/items'
-import { CONDITION_ICONS, CONDITION_COLORS } from '@renderer/data/shop/restoration'
 import type { VaultItem } from '@renderer/stores/useVaultStore'
 
 defineProps<{
@@ -39,9 +38,7 @@ const SOURCE_ICONS: Record<string, string> = {
             <div class="vault-item__info">
                 <span class="vault-item__name">{{ resolveItemName(item, t) }}</span>
                 <div class="vault-item__badges">
-                    <span class="vault-item__rarity" :style="{ color: rarityCssVar(item.rarity) }">
-                        {{ item.rarity }}
-                    </span>
+                    <RarityBadge :rarity="item.rarity" size="xs" />
                     <span class="vault-item__source">
                         <AppIcon :icon="SOURCE_ICONS[item.source] || 'mdi:package-variant'" />
                         {{ t('vault.source_' + item.source) }}
@@ -54,11 +51,7 @@ const SOURCE_ICONS: Record<string, string> = {
 
         <div class="vault-item__value-row">
             <span class="vault-item__category">{{ item.category }}</span>
-            <div v-if="item.condition" class="vault-item__condition"
-                :style="{ color: CONDITION_COLORS[item.condition] }">
-                <AppIcon :icon="CONDITION_ICONS[item.condition]" />
-                {{ t(`items.condition.${item.condition}`) }}
-            </div>
+            <ConditionBadge v-if="item.condition" :condition="item.condition" size="xs" />
             <span class="vault-item__value">{{ formatCash(item.appraisedValue ?? item.baseValue) }}</span>
         </div>
 
@@ -103,13 +96,6 @@ const SOURCE_ICONS: Record<string, string> = {
     align-items: center;
 }
 
-.vault-item__rarity {
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: var(--t-font-bold);
-}
-
 .vault-item__source {
     display: inline-flex;
     align-items: center;
@@ -134,15 +120,6 @@ const SOURCE_ICONS: Record<string, string> = {
     align-items: center;
     flex-wrap: wrap;
     gap: var(--t-space-1);
-}
-
-.vault-item__condition {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-size: var(--t-font-size-xs);
-    font-weight: var(--t-font-semibold);
-    text-transform: capitalize;
 }
 
 .vault-item__category {

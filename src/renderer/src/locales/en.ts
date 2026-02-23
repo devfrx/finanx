@@ -8,6 +8,29 @@ export default {
   // ─── Procedural Item Names / Descriptions ─────────────────────
   items: itemsEn,
 
+  // ─── Rarity / Certification Tiers ─────────────────────────────
+  rarity: {
+    unverified: 'Unverified',
+    certified: 'Certified',
+    graded: 'Graded',
+    authenticated: 'Authenticated',
+    licensed: 'Licensed',
+    exclusive: 'Exclusive',
+    prestige: 'Prestige',
+  },
+
+  // ─── Item Condition Tiers ─────────────────────────────────────
+  condition: {
+    damaged: 'Damaged',
+    poor: 'Poor',
+    fair: 'Fair',
+    good: 'Good',
+    excellent: 'Excellent',
+    mint: 'Mint',
+    pristine: 'Pristine',
+    unknown: 'Unknown',
+  },
+
   // ─── Common / Shared ──────────────────────────────────────────
   common: {
     buy: 'Buy',
@@ -2657,14 +2680,14 @@ export default {
     category_maps: 'Maps',
     category_manuscripts: 'Manuscripts',
 
-    // -- Rarity labels -----------------------------------------------
-    rarity_common: 'Common',
-    rarity_uncommon: 'Uncommon',
-    rarity_rare: 'Rare',
-    rarity_epic: 'Epic',
-    rarity_legendary: 'Legendary',
-    rarity_jackpot: 'Jackpot',
-    rarity_mythic: 'Mythic',
+    // -- Certification tier labels -----------------------------------
+    rarity_unverified: 'Unverified',
+    rarity_certified: 'Certified',
+    rarity_graded: 'Graded',
+    rarity_authenticated: 'Authenticated',
+    rarity_licensed: 'Licensed',
+    rarity_exclusive: 'Exclusive',
+    rarity_prestige: 'Prestige',
 
     // ── Conditions ──────────────────────────────────────────
     condition_damaged: 'Damaged',

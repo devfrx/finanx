@@ -3,13 +3,14 @@
  * TransferDialog — Move items between Storage Wars ↔ Vault.
  */
 import { computed, ref, watch } from 'vue'
-import { UButton, UModal, UTabs } from '@renderer/components/ui'
+import { UButton, UModal, UTabs, RarityBadge } from '@renderer/components/ui'
 import type { TabDef } from '@renderer/components/ui'
 import { useVaultStore } from '@renderer/stores/useVaultStore'
 import { useStorageStore } from '@renderer/stores/useStorageStore'
 import { useFormat } from '@renderer/composables/useFormat'
 import { useI18n } from 'vue-i18n'
 import { resolveItemName } from '@renderer/data/storage/items'
+import { RARITY_ORDER } from '@renderer/data/rarity'
 
 const props = defineProps<{ visible: boolean }>()
 const emit = defineEmits<{ (e: 'close'): void }>()
@@ -26,10 +27,6 @@ const transferTabs = computed<TabDef[]>(() => [
     { id: 'to_vault', label: t('vault.transfer_to_vault'), icon: 'mdi:arrow-right' },
     { id: 'from_vault', label: t('vault.transfer_from_vault'), icon: 'mdi:arrow-left' },
 ])
-
-const RARITY_ORDER: Record<string, number> = {
-    common: 0, uncommon: 1, rare: 2, epic: 3, legendary: 4, jackpot: 5, mythic: 6
-}
 
 const sourceItems = computed(() => {
     const items = direction.value === 'to_vault'
@@ -97,10 +94,6 @@ function transfer(): void {
 }
 
 const canTransfer = computed(() => selectedIds.value.size > 0)
-
-function getRarityClass(rarity: string): string {
-    return `rarity-${rarity}`
-}
 </script>
 
 <template>
@@ -122,16 +115,18 @@ function getRarityClass(rarity: string): string {
                 {{ t('vault.no_items_to_transfer') }}
             </div>
             <div v-for="item in sourceItems" :key="item.id"
-                :class="['transfer-item', getRarityClass(item.rarity), { selected: selectedIds.has(item.id) }]"
-                @click="toggle(item.id)">
+                :class="['transfer-item', { selected: selectedIds.has(item.id) }]"
+                :style="{ borderLeftColor: rarityCssVar(item.rarity) }" @click="toggle(item.id)">
                 <div class="item-check">
                     <span v-if="selectedIds.has(item.id)">☑</span>
                     <span v-else>☐</span>
                 </div>
                 <div class="item-info">
                     <span class="item-name">{{ resolveItemName(item, t) }}</span>
-                    <span class="item-meta">{{ item.rarity }} · {{
-                        formatCash(item.appraisedValue ?? item.baseValue) }}</span>
+                    <span class="item-meta">
+                        <RarityBadge :rarity="item.rarity" size="xs" />
+                        · {{ formatCash(item.appraisedValue ?? item.baseValue) }}
+                    </span>
                 </div>
             </div>
         </div>
@@ -205,34 +200,6 @@ function getRarityClass(rarity: string): string {
     background: color-mix(in srgb, var(--t-accent) 10%, transparent);
 }
 
-.transfer-item.rarity-common {
-    border-left-color: var(--t-rarity-common);
-}
-
-.transfer-item.rarity-uncommon {
-    border-left-color: var(--t-rarity-uncommon);
-}
-
-.transfer-item.rarity-rare {
-    border-left-color: var(--t-rarity-rare);
-}
-
-.transfer-item.rarity-epic {
-    border-left-color: var(--t-rarity-epic);
-}
-
-.transfer-item.rarity-legendary {
-    border-left-color: var(--t-rarity-legendary);
-}
-
-.transfer-item.rarity-jackpot {
-    border-left-color: var(--t-rarity-jackpot);
-}
-
-.transfer-item.rarity-mythic {
-    border-left-color: var(--t-pink);
-}
-
 .item-check {
     font-size: 1rem;
 }
@@ -251,6 +218,5 @@ function getRarityClass(rarity: string): string {
 .item-meta {
     font-size: var(--t-font-size-xs);
     color: var(--t-text-muted);
-    text-transform: capitalize;
 }
 </style>

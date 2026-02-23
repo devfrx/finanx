@@ -6,7 +6,7 @@
  */
 import { ref, computed } from 'vue'
 import AppIcon from '@renderer/components/AppIcon.vue'
-import { UButton, UTabs } from '@renderer/components/ui'
+import { UButton, UTabs, RarityBadge, ConditionBadge } from '@renderer/components/ui'
 import type { TabDef } from '@renderer/components/ui'
 import { useStorageStore } from '@renderer/stores/useStorageStore'
 import { useVaultStore } from '@renderer/stores/useVaultStore'
@@ -15,10 +15,6 @@ import { useFormat } from '@renderer/composables/useFormat'
 import { useI18n } from 'vue-i18n'
 import { rarityCssVar } from '@renderer/data/rarity'
 import { resolveItemName } from '@renderer/data/storage/items'
-import {
-    CONDITION_ICONS,
-    CONDITION_COLORS,
-} from '@renderer/data/shop/restoration'
 
 const storageStore = useStorageStore()
 const vaultStore = useVaultStore()
@@ -85,18 +81,14 @@ function sellAllFromSource(): void {
                     <AppIcon :icon="item.icon" class="sell-item__icon" :style="{ color: rarityCssVar(item.rarity) }" />
                     <div class="sell-item__info">
                         <span class="sell-item__name">{{ resolveItemName(item, t) }}</span>
-                        <span class="sell-item__rarity" :style="{ color: rarityCssVar(item.rarity) }">
-                            {{ item.rarity }}
-                        </span>
+                        <div class="sell-item__badges">
+                            <ConditionBadge v-if="item.condition" :condition="item.condition" size="xs" />
+                            <RarityBadge :rarity="item.rarity" size="xs" />
+                        </div>
                     </div>
                 </div>
                 <div class="sell-item__footer">
                     <div class="sell-item__value-col">
-                        <span v-if="item.condition" class="sell-item__condition"
-                            :style="{ color: CONDITION_COLORS[item.condition] }">
-                            <AppIcon :icon="CONDITION_ICONS[item.condition]" />
-                            {{ t(`shop.condition_${item.condition}`) }}
-                        </span>
                         <span class="sell-item__value">
                             {{ formatCash(shopStore.getEstimatedSellValue(item)) }}
                         </span>
@@ -155,7 +147,7 @@ function sellAllFromSource(): void {
     padding: var(--t-space-3);
     background: var(--t-bg-card);
     border: 1px solid var(--t-border);
-    border-left: 3px solid var(--_rarity, var(--t-border));
+    /* border-left: 3px solid var(--_rarity, var(--t-border)); */
     border-radius: var(--t-radius-md);
 }
 
@@ -180,11 +172,10 @@ function sellAllFromSource(): void {
     color: var(--t-text);
 }
 
-.sell-item__rarity {
-    font-size: 0.6rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: var(--t-font-bold);
+.sell-item__badges {
+    display: flex;
+    gap: var(--t-space-2);
+    align-items: center;
 }
 
 .sell-item__footer {
@@ -197,15 +188,6 @@ function sellAllFromSource(): void {
     display: flex;
     flex-direction: column;
     gap: 0.15rem;
-}
-
-.sell-item__condition {
-    display: flex;
-    align-items: center;
-    gap: 0.2rem;
-    font-size: 0.6rem;
-    font-weight: var(--t-font-bold);
-    text-transform: uppercase;
 }
 
 .sell-item__value {

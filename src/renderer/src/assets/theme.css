@@ -162,14 +162,23 @@
   --t-gamble-roulette-black: #1a1a2e;
   --t-gamble-roulette-green: #27ae60;
 
-  /* -- Rarity -- */
-  --t-rarity-common: #a1a1aa;
-  --t-rarity-uncommon: #22c55e;
-  --t-rarity-rare: #3b82f6;
-  --t-rarity-epic: #a855f7;
-  --t-rarity-legendary: #f59e0b;
-  --t-rarity-jackpot: #ef4444;
-  --t-rarity-mythic: #facc15;
+  /* -- Certification Tiers (must match RARITY_DEFS.hexFallback in rarity.ts) -- */
+  --t-rarity-unverified: #a1a1aa;
+  --t-rarity-certified: #22c55e;
+  --t-rarity-graded: #3b82f6;
+  --t-rarity-authenticated: #a855f7;
+  --t-rarity-licensed: #f59e0b;
+  --t-rarity-exclusive: #ef4444;
+  --t-rarity-prestige: #facc15;
+
+  /* -- Item Conditions (must match CONDITION_DEFS.hexFallback in condition.ts) -- */
+  --t-condition-damaged: #ef4444;
+  --t-condition-poor: #f97316;
+  --t-condition-fair: #eab308;
+  --t-condition-good: #22c55e;
+  --t-condition-excellent: #3b82f6;
+  --t-condition-mint: #a855f7;
+  --t-condition-pristine: #facc15;
 
   /* -- Overlay -- */
   --t-overlay: rgba(0, 0, 0, 0.55);

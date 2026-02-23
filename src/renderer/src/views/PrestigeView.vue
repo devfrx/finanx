@@ -36,7 +36,7 @@ import {
 import { UPGRADE_CATEGORY_INFO, type PrestigeUpgradeDef } from '@renderer/data/prestige'
 import { rarityCssVar } from '@renderer/data/rarity'
 import { THEME } from '@renderer/assets/theme/colors'
-import { UTabs } from '@renderer/components/ui'
+import { UTabs, RarityBadge } from '@renderer/components/ui'
 import type { TabDef } from '@renderer/components/ui'
 
 const prestige = usePrestigeStore()
@@ -255,17 +255,17 @@ function buyPerk(perkId: string): void {
 /** Map lottery achievement IDs to display rarity */
 function getLotteryAchRarity(achId: string): string {
     const map: Record<string, string> = {
-        lot_quick_pick: 'uncommon',
-        lot_classic: 'rare',
-        lot_mega: 'epic',
-        lot_instant: 'uncommon',
-        lot_ultra: 'legendary',
-        lot_cosmic: 'jackpot',
-        lot_divine: 'mythic',
-        lot_divine_jackpot: 'mythic',
-        lot_master: 'mythic',
+        lot_quick_pick: 'certified',
+        lot_classic: 'graded',
+        lot_mega: 'authenticated',
+        lot_instant: 'certified',
+        lot_ultra: 'licensed',
+        lot_cosmic: 'exclusive',
+        lot_divine: 'prestige',
+        lot_divine_jackpot: 'prestige',
+        lot_master: 'prestige',
     }
-    return map[achId] || 'common'
+    return map[achId] || 'unverified'
 }
 
 /** Format achievement reward for display */
@@ -382,8 +382,11 @@ function formatAchReward(reward: { type: string; target?: string; value: number 
                             <AppIcon :icon="ability.icon" class="divine-card-icon" />
                             <div class="divine-card-body">
                                 <span class="divine-card-name">{{ ability.name }}</span>
-                                <span class="divine-card-value" :style="{ color: rarityCssVar(ability.rarity) }">+{{
-                                    Math.round((ability.effect.value - 1) * 100) }}%</span>
+                                <span class="divine-card-value">
+                                    <RarityBadge :rarity="ability.rarity" size="xs" icon-only />
+                                    <span :style="{ color: rarityCssVar(ability.rarity) }">+{{
+                                        Math.round((ability.effect.value - 1) * 100) }}%</span>
+                                </span>
                                 <span class="divine-card-desc">{{ ability.description }}</span>
                             </div>
                         </div>

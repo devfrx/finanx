@@ -5,11 +5,12 @@
  */
 import AppIcon from '@renderer/components/AppIcon.vue'
 import { UButton, UCard } from '@renderer/components/ui'
+import { RarityBadge } from '@renderer/components/ui'
 import { useFormat } from '@renderer/composables/useFormat'
 import { useI18n } from 'vue-i18n'
 import { rarityCssVar } from '@renderer/data/rarity'
 import { resolveItemName, resolveItemDescription } from '@renderer/data/storage/items'
-import { CONDITION_ICONS, CONDITION_COLORS } from '@renderer/data/shop/restoration'
+import { ConditionBadge } from '@renderer/components/ui'
 import type { InventoryItem as InventoryItemType } from '@renderer/stores/useStorageStore'
 
 defineProps<{
@@ -31,7 +32,7 @@ const { t } = useI18n()
             <AppIcon :icon="item.icon" class="inv-item__icon" :style="{ color: rarityCssVar(item.rarity) }" />
             <div class="inv-item__info">
                 <span class="inv-item__name">{{ resolveItemName(item, t) }}</span>
-                <span class="inv-item__rarity" :style="{ color: rarityCssVar(item.rarity) }">{{ item.rarity }}</span>
+                <RarityBadge :rarity="item.rarity" size="xs" />
             </div>
         </div>
 
@@ -39,14 +40,10 @@ const { t } = useI18n()
 
         <div class="inv-item__value-row">
             <span class="inv-item__category">{{ item.category }}</span>
-            <div v-if="item.appraised && item.condition" class="inv-item__condition"
-                :style="{ color: CONDITION_COLORS[item.condition] }">
-                <AppIcon :icon="CONDITION_ICONS[item.condition]" />
-                {{ t(`items.condition.${item.condition}`) }}
-            </div>
+            <ConditionBadge v-if="item.appraised && item.condition" :condition="item.condition" size="xs" />
             <div v-else-if="!item.appraised && item.condition" class="inv-item__condition inv-item__condition--hidden">
                 <AppIcon icon="mdi:help-circle-outline" />
-                {{ t('storage.condition_unknown') }}
+                {{ t('condition.unknown') }}
             </div>
             <div class="inv-item__value">
                 <template v-if="item.appraised">
@@ -93,13 +90,6 @@ const { t } = useI18n()
     color: var(--t-text);
 }
 
-.inv-item__rarity {
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: var(--t-font-bold);
-}
-
 .inv-item__desc {
     font-size: var(--t-font-size-xs);
     color: var(--t-text-muted);
@@ -115,16 +105,14 @@ const { t } = useI18n()
     gap: var(--t-space-1);
 }
 
-.inv-item__condition {
+.inv-item__condition--hidden {
     display: flex;
     align-items: center;
     gap: 0.25rem;
     font-size: var(--t-font-size-xs);
-    font-weight: var(--t-font-semibold);
-    text-transform: capitalize;
-}
-
-.inv-item__condition--hidden {
+    font-weight: var(--t-font-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
     color: var(--t-text-muted);
     font-style: italic;
 }

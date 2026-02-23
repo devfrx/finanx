@@ -144,7 +144,7 @@ export const CONTACTS: ContactDef[] = [
         id: 'smuggler_supply_run',
         nameKey: 'blackmarket.ability_supply_run',
         descKey: 'blackmarket.ability_supply_run_desc',
-        icon: 'mdi:route',
+        icon: 'mdi:map-marker-path',
         cost: 5000,
         impactTier: 'major',
         costWeight: 0.3,

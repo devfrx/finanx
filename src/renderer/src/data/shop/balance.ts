@@ -39,13 +39,13 @@ export const VAULT_SELL_TAX = 0.10
 
 /** Rarity weights for the shop pool — slightly more generous than storage wars. */
 export const SHOP_RARITY_WEIGHTS: Record<Rarity, number> = {
-  common: 40,
-  uncommon: 25,
-  rare: 16,
-  epic: 10,
-  legendary: 5,
-  jackpot: 2.5,
-  mythic: 1.5,
+  unverified: 40,
+  certified: 25,
+  graded: 16,
+  authenticated: 10,
+  licensed: 5,
+  exclusive: 2.5,
+  prestige: 1.5,
 }
 
 /** Extra-rare "unique" item chance (one-time-only items). */

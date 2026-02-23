@@ -35,24 +35,24 @@ export const DUD_UNIT_CHANCE = 0.18
 
 /** Rarity weight overrides for dud units. */
 export const DUD_RARITY_WEIGHTS: Record<string, number> = {
-  common: 75,
-  uncommon: 18,
-  rare: 5,
-  epic: 1.5,
-  legendary: 0.4,
-  jackpot: 0.05,
-  mythic: 0.01,
+  unverified: 75,
+  certified: 18,
+  graded: 5,
+  authenticated: 1.5,
+  licensed: 0.4,
+  exclusive: 0.05,
+  prestige: 0.01,
 }
 
 /** Standard rarity weights (replacing old hardcoded ones in items.ts). */
 export const BASE_RARITY_WEIGHTS: Record<string, number> = {
-  common: 48,
-  uncommon: 24,
-  rare: 14,
-  epic: 8,
-  legendary: 4,
-  jackpot: 1.2,
-  mythic: 0.3,
+  unverified: 48,
+  certified: 24,
+  graded: 14,
+  authenticated: 8,
+  licensed: 4,
+  exclusive: 1.2,
+  prestige: 0.3,
 }
 
 // ─── Condition Distribution ─────────────────────────────────────

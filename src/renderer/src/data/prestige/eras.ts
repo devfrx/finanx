@@ -27,7 +27,7 @@ export const PRESTIGE_ERAS: EraDef[] = [
     id: 'era_rising',
     name: 'Apprentice',
     description: 'You\'ve learned the basics. The system responds to your inputs.',
-    icon: 'mdi:star-rising',
+    icon: 'mdi:star-shooting',
     minRebirths: 1,
     pointsRequired: D(5),
     themeColor: '#22c55e', // green

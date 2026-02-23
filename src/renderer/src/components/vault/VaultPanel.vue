@@ -11,6 +11,7 @@ import { useVaultStore } from '@renderer/stores/useVaultStore'
 import { useFormat } from '@renderer/composables/useFormat'
 import { useI18n } from 'vue-i18n'
 import { ZERO } from '@renderer/core/BigNum'
+import { RARITY_ORDER } from '@renderer/data/rarity'
 import type { Rarity } from '@renderer/data/rarity'
 
 const vault = useVaultStore()
@@ -27,8 +28,8 @@ const filterSource = ref<'' | 'storage_wars' | 'shop' | 'transfer' | 'other'>(''
 
 const rarityOptions = computed(() => [
     { label: t('vault.all_rarities'), value: '' },
-    ...(['common', 'uncommon', 'rare', 'epic', 'legendary', 'jackpot', 'mythic'] as const).map(r => ({
-        label: r.charAt(0).toUpperCase() + r.slice(1),
+    ...(['unverified', 'certified', 'graded', 'authenticated', 'licensed', 'exclusive', 'prestige'] as const).map(r => ({
+        label: t(`rarity.${r}`, r.charAt(0).toUpperCase() + r.slice(1)),
         value: r
     }))
 ])
@@ -48,16 +49,6 @@ const sortOptions = [
 ] as const
 
 const sortBy = ref<string>('value_desc')
-
-const RARITY_ORDER: Record<string, number> = {
-    common: 0,
-    uncommon: 1,
-    rare: 2,
-    epic: 3,
-    legendary: 4,
-    jackpot: 5,
-    mythic: 6
-}
 
 const filteredItems = computed(() => {
     let items = [...vault.items]

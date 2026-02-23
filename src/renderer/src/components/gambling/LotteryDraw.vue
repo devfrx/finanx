@@ -8,6 +8,7 @@
  */
 import { ref, computed, onMounted, watch } from 'vue'
 import AppIcon from '@renderer/components/AppIcon.vue'
+import { RarityBadge } from '@renderer/components/ui'
 import { type LotteryDrawResult, type LotteryTicketDef } from '@renderer/data/lottery'
 import { rarityColor } from '@renderer/data/rarity'
 import { useFormat } from '@renderer/composables/useFormat'
@@ -76,7 +77,7 @@ const rarityColorVal = computed(() =>
 )
 
 const isJackpot = computed(() =>
-    activeResult.value.prizeTier?.rarity === 'jackpot' || activeResult.value.prizeTier?.rarity === 'legendary'
+    activeResult.value.prizeTier?.rarity === 'exclusive' || activeResult.value.prizeTier?.rarity === 'licensed'
 )
 
 /** Active luck chances — switches between Phase 1 (original) and Phase 2 (final) */
@@ -273,7 +274,7 @@ watch(() => props.result, () => startReveal())
                                 class="win-trophy" :class="`trophy-${jackpotTier}`" />
                             <span class="win-tier" :class="`tier-text-${jackpotTier}`">{{ activeResult.prizeTier.label
                                 }}</span>
-                            <span class="win-rarity-tag">{{ activeResult.prizeTier.rarity.toUpperCase() }}</span>
+                            <RarityBadge :rarity="activeResult.prizeTier.rarity" size="sm" />
                         </div>
                         <div class="win-details">
                             <span class="win-matches">
@@ -1031,16 +1032,6 @@ watch(() => props.result, () => startReveal())
 .win-tier {
     font-size: 1.3rem;
     font-weight: 800;
-    color: var(--rarity-color);
-}
-
-.win-rarity-tag {
-    font-size: 0.6rem;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    padding: 2px 8px;
-    border-radius: var(--t-radius-sm);
-    background: var(--t-bg-muted);
     color: var(--rarity-color);
 }
 

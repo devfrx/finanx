@@ -21,6 +21,7 @@ import { D, ZERO, add, sub, mul } from '@renderer/core/BigNum'
 import { usePlayerStore } from './usePlayerStore'
 import { useUpgradeStore } from './useUpgradeStore'
 import type { StorageItem } from '@renderer/data/storage/items'
+import { migrateItemRarities } from '@renderer/data/rarity'
 import {
   VAULT_BASE_CAPACITY,
   VAULT_SLOT_COST_BASE,
@@ -250,7 +251,11 @@ export const useVaultStore = defineStore('vault', () => {
   }
 
   function loadFromSave(data: Record<string, any>): void {
-    if (data.items) items.value = data.items
+    if (data.items) {
+      items.value = data.items
+      // Migrate legacy rarity names (common→unverified, etc.)
+      migrateItemRarities(items.value)
+    }
     if (data.storedCash !== undefined) storedCash.value = data.storedCash
     if (data.capacityUpgrades !== undefined) capacityUpgrades.value = data.capacityUpgrades
     if (data.totalItemsStored !== undefined) totalItemsStored.value = data.totalItemsStored

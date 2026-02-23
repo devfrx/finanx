@@ -35,6 +35,7 @@ import {
     type DivineAbilityDef,
 } from '@renderer/data/lottery'
 import { rarityCssVar } from '@renderer/data/rarity'
+import { RarityBadge } from '@renderer/components/ui'
 
 const emit = defineEmits<{ back: [] }>()
 
@@ -250,7 +251,7 @@ function executeSingleDrawWithLuck(
         gambling.recordWin('lottery', cost, D(payout))
         gambling.recordLotteryWin(ticket.id, fullResult.prizeTier.label)
 
-        const isJackpot = fullResult.prizeTier.rarity === 'jackpot' || fullResult.prizeTier.rarity === 'mythic'
+        const isJackpot = fullResult.prizeTier.rarity === 'exclusive' || fullResult.prizeTier.rarity === 'prestige'
         if (isJackpot) {
             const achId = LOTTERY_ACHIEVEMENT_MAP[ticket.id]
             if (achId) achievements.unlock(achId, gameEngine.currentTick)
@@ -465,7 +466,7 @@ function simulateJackpot(ticket: LotteryTicketDef, prizeIndex: number): void {
     gambling.recordLotteryWin(ticket.id, prize.label)
 
     // Unlock achievement
-    const isJackpot = prize.rarity === 'jackpot' || prize.rarity === 'mythic'
+    const isJackpot = prize.rarity === 'exclusive' || prize.rarity === 'prestige'
     if (isJackpot) {
         const achId = LOTTERY_ACHIEVEMENT_MAP[ticket.id]
         if (achId) achievements.unlock(achId, gameEngine.currentTick)
@@ -552,7 +553,7 @@ function simulateJackpot(ticket: LotteryTicketDef, prizeIndex: number): void {
                             <template v-if="prize.bonusRequired"> {{ $t('gambling.lt_bonus') }}</template>
                         </span>
                         <span class="prize-label">{{ prize.label }}</span>
-                        <span class="prize-rarity">{{ prize.rarity }}</span>
+                        <RarityBadge :rarity="prize.rarity" size="xs" />
                         <span class="prize-payout">×{{ prize.payoutMultiplier.toLocaleString() }}</span>
                     </div>
                 </div>
@@ -889,14 +890,6 @@ function simulateJackpot(ticket: LotteryTicketDef, prizeIndex: number): void {
     color: var(--t-text);
 }
 
-.prize-rarity {
-    font-size: 0.65rem;
-    font-weight: var(--t-font-bold);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--prize-color, var(--t-text-muted));
-}
-
 .prize-payout {
     font-family: var(--t-font-mono);
     font-weight: 800;
@@ -1229,40 +1222,40 @@ function simulateJackpot(ticket: LotteryTicketDef, prizeIndex: number): void {
     gap: 4px;
 }
 
-.dev-rarity-common {
-    border-color: var(--t-rarity-common);
-    color: var(--t-rarity-common);
+.dev-rarity-unverified {
+    border-color: var(--t-rarity-unverified);
+    color: var(--t-rarity-unverified);
 }
 
-.dev-rarity-uncommon {
-    border-color: var(--t-rarity-uncommon);
-    color: var(--t-rarity-uncommon);
+.dev-rarity-certified {
+    border-color: var(--t-rarity-certified);
+    color: var(--t-rarity-certified);
 }
 
-.dev-rarity-rare {
-    border-color: var(--t-rarity-rare);
-    color: var(--t-rarity-rare);
+.dev-rarity-graded {
+    border-color: var(--t-rarity-graded);
+    color: var(--t-rarity-graded);
 }
 
-.dev-rarity-epic {
-    border-color: var(--t-rarity-epic);
-    color: var(--t-rarity-epic);
+.dev-rarity-authenticated {
+    border-color: var(--t-rarity-authenticated);
+    color: var(--t-rarity-authenticated);
 }
 
-.dev-rarity-legendary {
-    border-color: var(--t-rarity-legendary);
-    color: var(--t-rarity-legendary);
+.dev-rarity-licensed {
+    border-color: var(--t-rarity-licensed);
+    color: var(--t-rarity-licensed);
 }
 
-.dev-rarity-jackpot {
-    border-color: var(--t-rarity-jackpot);
-    color: var(--t-rarity-jackpot);
+.dev-rarity-exclusive {
+    border-color: var(--t-rarity-exclusive);
+    color: var(--t-rarity-exclusive);
     font-weight: 800;
 }
 
-.dev-rarity-mythic {
-    border-color: var(--t-rarity-mythic);
-    color: var(--t-rarity-mythic);
+.dev-rarity-prestige {
+    border-color: var(--t-rarity-prestige);
+    color: var(--t-rarity-prestige);
     font-weight: 800;
 }
 

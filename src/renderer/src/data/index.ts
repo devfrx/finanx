@@ -58,8 +58,15 @@ export { EVENTS } from './events'
 export { GAMBLING_GAMES } from './gambling'
 export type { GamblingGameDef } from './gambling'
 
-export { RARITY_COLORS, rarityColor, rarityCssVar } from './rarity'
-export type { Rarity } from './rarity'
+export { RARITY_DEFS, RARITY_TIERS, RARITY_ORDER, RARITY_COLORS, rarityColor, rarityCssVar, rarityIcon } from './rarity'
+export type { Rarity, RarityDef } from './rarity'
+
+export {
+  CONDITION_DEFS, CONDITION_TIERS, CONDITION_ORDER, CONDITION_ORDER_ARRAY,
+  CONDITION_MULTIPLIERS, CONDITION_COLORS, CONDITION_ICONS,
+  conditionColor, conditionCssVar, conditionIcon,
+} from './condition'
+export type { ConditionDef } from './condition'
 
 export { LOTTERY_TICKETS, drawNumbers, countMatches, determinePrize, executeDraw } from './lottery'
 export type { LotteryTicketDef, LotteryPrizeTier, LotteryDrawResult } from './lottery'

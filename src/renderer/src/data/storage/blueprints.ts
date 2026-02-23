@@ -85,211 +85,211 @@ export interface CategoryBlueprint {
 
 export const NAME_PREFIXES: NamePrefix[] = [
   // ── Era / Age ──
-  { key: '0',  valueMult: 0.85, minRarity: 'common',    weight: 12 },   // Old
-  { key: '1',  valueMult: 1.10, minRarity: 'common',    weight: 10 },   // Vintage
-  { key: '2',  valueMult: 1.25, minRarity: 'uncommon',  weight: 8 },    // Antique
-  { key: '3',  valueMult: 1.15, minRarity: 'common',    weight: 9 },    // Retro
-  { key: '4',  valueMult: 1.40, minRarity: 'rare',      weight: 5 },    // Victorian
-  { key: '5',  valueMult: 1.05, minRarity: 'common',    weight: 10 },   // Classic
-  { key: '6',  valueMult: 1.20, minRarity: 'uncommon',  weight: 7 },    // Mid-Century
+  { key: '0',  valueMult: 0.85, minRarity: 'unverified',    weight: 12 },   // Old
+  { key: '1',  valueMult: 1.10, minRarity: 'unverified',    weight: 10 },   // Vintage
+  { key: '2',  valueMult: 1.25, minRarity: 'certified',  weight: 8 },    // Antique
+  { key: '3',  valueMult: 1.15, minRarity: 'unverified',    weight: 9 },    // Retro
+  { key: '4',  valueMult: 1.40, minRarity: 'graded',      weight: 5 },    // Victorian
+  { key: '5',  valueMult: 1.05, minRarity: 'unverified',    weight: 10 },   // Classic
+  { key: '6',  valueMult: 1.20, minRarity: 'certified',  weight: 7 },    // Mid-Century
   // ── Material / Quality ──
-  { key: '7',  valueMult: 0.70, minRarity: 'common',    weight: 14 },   // Rusty
-  { key: '8',  valueMult: 1.50, minRarity: 'rare',      weight: 4 },    // Gold-plated
-  { key: '9',  valueMult: 1.35, minRarity: 'uncommon',  weight: 5 },    // Silver
-  { key: '10', valueMult: 1.60, minRarity: 'epic',      weight: 3 },    // Hand-crafted
-  { key: '11', valueMult: 0.90, minRarity: 'common',    weight: 11 },   // Used
-  { key: '12', valueMult: 1.00, minRarity: 'common',    weight: 13 },   // Standard
-  { key: '13', valueMult: 1.30, minRarity: 'uncommon',  weight: 6 },    // Premium
-  { key: '14', valueMult: 1.70, minRarity: 'epic',      weight: 3 },    // Artisan
+  { key: '7',  valueMult: 0.70, minRarity: 'unverified',    weight: 14 },   // Rusty
+  { key: '8',  valueMult: 1.50, minRarity: 'graded',      weight: 4 },    // Gold-plated
+  { key: '9',  valueMult: 1.35, minRarity: 'certified',  weight: 5 },    // Silver
+  { key: '10', valueMult: 1.60, minRarity: 'authenticated',      weight: 3 },    // Hand-crafted
+  { key: '11', valueMult: 0.90, minRarity: 'unverified',    weight: 11 },   // Used
+  { key: '12', valueMult: 1.00, minRarity: 'unverified',    weight: 13 },   // Standard
+  { key: '13', valueMult: 1.30, minRarity: 'certified',  weight: 6 },    // Premium
+  { key: '14', valueMult: 1.70, minRarity: 'authenticated',      weight: 3 },    // Artisan
   // ── Style ──
-  { key: '15', valueMult: 1.20, minRarity: 'uncommon',  weight: 6 },    // Ornate
-  { key: '16', valueMult: 1.10, minRarity: 'common',    weight: 8 },    // Elegant
-  { key: '17', valueMult: 0.80, minRarity: 'common',    weight: 12 },   // Worn
-  { key: '18', valueMult: 1.45, minRarity: 'rare',      weight: 4 },    // Engraved
-  { key: '19', valueMult: 1.55, minRarity: 'rare',      weight: 3 },    // Gilded
+  { key: '15', valueMult: 1.20, minRarity: 'certified',  weight: 6 },    // Ornate
+  { key: '16', valueMult: 1.10, minRarity: 'unverified',    weight: 8 },    // Elegant
+  { key: '17', valueMult: 0.80, minRarity: 'unverified',    weight: 12 },   // Worn
+  { key: '18', valueMult: 1.45, minRarity: 'graded',      weight: 4 },    // Engraved
+  { key: '19', valueMult: 1.55, minRarity: 'graded',      weight: 3 },    // Gilded
   // ── Provenance ──
-  { key: '20', valueMult: 1.80, minRarity: 'legendary', weight: 2 },    // Royal
-  { key: '21', valueMult: 1.90, minRarity: 'legendary', weight: 2 },    // Imperial
-  { key: '22', valueMult: 2.00, minRarity: 'mythic',    weight: 1 },    // Legendary
-  { key: '23', valueMult: 1.15, minRarity: 'uncommon',  weight: 7 },    // Restored
-  { key: '24', valueMult: 1.65, minRarity: 'epic',      weight: 3 },    // Museum-quality
+  { key: '20', valueMult: 1.80, minRarity: 'licensed', weight: 2 },    // Royal
+  { key: '21', valueMult: 1.90, minRarity: 'licensed', weight: 2 },    // Imperial
+  { key: '22', valueMult: 2.00, minRarity: 'prestige',    weight: 1 },    // Legendary
+  { key: '23', valueMult: 1.15, minRarity: 'certified',  weight: 7 },    // Restored
+  { key: '24', valueMult: 1.65, minRarity: 'authenticated',      weight: 3 },    // Museum-quality
   // ── Era / Age (expanded) ──
-  { key: '25', valueMult: 1.30, minRarity: 'uncommon',  weight: 7 },    // Edwardian
-  { key: '26', valueMult: 1.35, minRarity: 'rare',      weight: 5 },    // Art Deco
-  { key: '27', valueMult: 1.25, minRarity: 'uncommon',  weight: 6 },    // Art Nouveau
-  { key: '28', valueMult: 1.45, minRarity: 'rare',      weight: 4 },    // Renaissance
-  { key: '29', valueMult: 1.50, minRarity: 'rare',      weight: 4 },    // Medieval
-  { key: '30', valueMult: 1.20, minRarity: 'uncommon',  weight: 7 },    // Georgian
-  { key: '31', valueMult: 1.15, minRarity: 'common',    weight: 9 },    // Post-War
-  { key: '32', valueMult: 1.10, minRarity: 'common',    weight: 9 },    // 1950s
-  { key: '33', valueMult: 1.12, minRarity: 'common',    weight: 9 },    // 1960s
-  { key: '34', valueMult: 1.08, minRarity: 'common',    weight: 10 },   // 1970s
-  { key: '35', valueMult: 1.05, minRarity: 'common',    weight: 10 },   // 1980s
-  { key: '36', valueMult: 0.95, minRarity: 'common',    weight: 11 },   // 1990s
-  { key: '37', valueMult: 1.55, minRarity: 'rare',      weight: 4 },    // Baroque
-  { key: '38', valueMult: 1.40, minRarity: 'rare',      weight: 5 },    // Colonial
-  { key: '39', valueMult: 1.60, minRarity: 'epic',      weight: 3 },    // Ancient
-  { key: '40', valueMult: 1.35, minRarity: 'rare',      weight: 5 },    // Pre-War
-  { key: '41', valueMult: 1.50, minRarity: 'rare',      weight: 4 },    // Belle Époque
+  { key: '25', valueMult: 1.30, minRarity: 'certified',  weight: 7 },    // Edwardian
+  { key: '26', valueMult: 1.35, minRarity: 'graded',      weight: 5 },    // Art Deco
+  { key: '27', valueMult: 1.25, minRarity: 'certified',  weight: 6 },    // Art Nouveau
+  { key: '28', valueMult: 1.45, minRarity: 'graded',      weight: 4 },    // Renaissance
+  { key: '29', valueMult: 1.50, minRarity: 'graded',      weight: 4 },    // Medieval
+  { key: '30', valueMult: 1.20, minRarity: 'certified',  weight: 7 },    // Georgian
+  { key: '31', valueMult: 1.15, minRarity: 'unverified',    weight: 9 },    // Post-War
+  { key: '32', valueMult: 1.10, minRarity: 'unverified',    weight: 9 },    // 1950s
+  { key: '33', valueMult: 1.12, minRarity: 'unverified',    weight: 9 },    // 1960s
+  { key: '34', valueMult: 1.08, minRarity: 'unverified',    weight: 10 },   // 1970s
+  { key: '35', valueMult: 1.05, minRarity: 'unverified',    weight: 10 },   // 1980s
+  { key: '36', valueMult: 0.95, minRarity: 'unverified',    weight: 11 },   // 1990s
+  { key: '37', valueMult: 1.55, minRarity: 'graded',      weight: 4 },    // Baroque
+  { key: '38', valueMult: 1.40, minRarity: 'graded',      weight: 5 },    // Colonial
+  { key: '39', valueMult: 1.60, minRarity: 'authenticated',      weight: 3 },    // Ancient
+  { key: '40', valueMult: 1.35, minRarity: 'graded',      weight: 5 },    // Pre-War
+  { key: '41', valueMult: 1.50, minRarity: 'graded',      weight: 4 },    // Belle Époque
   // ── Material / Quality (expanded) ──
-  { key: '42', valueMult: 1.55, minRarity: 'rare',      weight: 4 },    // Platinum
-  { key: '43', valueMult: 1.40, minRarity: 'rare',      weight: 5 },    // Bronze
-  { key: '44', valueMult: 1.25, minRarity: 'uncommon',  weight: 6 },    // Copper
-  { key: '45', valueMult: 1.30, minRarity: 'uncommon',  weight: 6 },    // Mahogany
-  { key: '46', valueMult: 1.35, minRarity: 'uncommon',  weight: 5 },    // Walnut
-  { key: '47', valueMult: 1.45, minRarity: 'rare',      weight: 4 },    // Rosewood
-  { key: '48', valueMult: 1.50, minRarity: 'rare',      weight: 4 },    // Ivory
-  { key: '49', valueMult: 1.20, minRarity: 'uncommon',  weight: 7 },    // Oak
-  { key: '50', valueMult: 1.10, minRarity: 'common',    weight: 9 },    // Pine
-  { key: '51', valueMult: 1.60, minRarity: 'epic',      weight: 3 },    // Ebony
-  { key: '52', valueMult: 1.70, minRarity: 'epic',      weight: 3 },    // Mother-of-Pearl
-  { key: '53', valueMult: 0.75, minRarity: 'common',    weight: 13 },   // Plastic
-  { key: '54', valueMult: 0.80, minRarity: 'common',    weight: 12 },   // Tin
-  { key: '55', valueMult: 1.15, minRarity: 'common',    weight: 8 },    // Brass
-  { key: '56', valueMult: 1.65, minRarity: 'epic',      weight: 3 },    // Crystal
-  { key: '57', valueMult: 1.75, minRarity: 'epic',      weight: 2 },    // Jade
-  { key: '58', valueMult: 1.80, minRarity: 'legendary', weight: 2 },    // Obsidian
-  { key: '59', valueMult: 1.40, minRarity: 'rare',      weight: 4 },    // Marble
-  { key: '60', valueMult: 1.30, minRarity: 'uncommon',  weight: 6 },    // Porcelain
-  { key: '61', valueMult: 1.55, minRarity: 'rare',      weight: 4 },    // Titanium
-  { key: '62', valueMult: 0.65, minRarity: 'common',    weight: 14 },   // Corroded
-  { key: '63', valueMult: 0.60, minRarity: 'common',    weight: 14 },   // Broken
-  { key: '64', valueMult: 1.85, minRarity: 'legendary', weight: 2 },    // Diamond-encrusted
-  { key: '65', valueMult: 1.45, minRarity: 'rare',      weight: 4 },    // Lacquered
-  { key: '66', valueMult: 1.35, minRarity: 'uncommon',  weight: 5 },    // Polished
-  { key: '67', valueMult: 0.85, minRarity: 'common',    weight: 11 },   // Scratched
-  { key: '68', valueMult: 0.90, minRarity: 'common',    weight: 11 },   // Faded
-  { key: '69', valueMult: 1.50, minRarity: 'rare',      weight: 4 },    // Enameled
-  { key: '70', valueMult: 1.25, minRarity: 'uncommon',  weight: 6 },    // Leather-bound
+  { key: '42', valueMult: 1.55, minRarity: 'graded',      weight: 4 },    // Platinum
+  { key: '43', valueMult: 1.40, minRarity: 'graded',      weight: 5 },    // Bronze
+  { key: '44', valueMult: 1.25, minRarity: 'certified',  weight: 6 },    // Copper
+  { key: '45', valueMult: 1.30, minRarity: 'certified',  weight: 6 },    // Mahogany
+  { key: '46', valueMult: 1.35, minRarity: 'certified',  weight: 5 },    // Walnut
+  { key: '47', valueMult: 1.45, minRarity: 'graded',      weight: 4 },    // Rosewood
+  { key: '48', valueMult: 1.50, minRarity: 'graded',      weight: 4 },    // Ivory
+  { key: '49', valueMult: 1.20, minRarity: 'certified',  weight: 7 },    // Oak
+  { key: '50', valueMult: 1.10, minRarity: 'unverified',    weight: 9 },    // Pine
+  { key: '51', valueMult: 1.60, minRarity: 'authenticated',      weight: 3 },    // Ebony
+  { key: '52', valueMult: 1.70, minRarity: 'authenticated',      weight: 3 },    // Mother-of-Pearl
+  { key: '53', valueMult: 0.75, minRarity: 'unverified',    weight: 13 },   // Plastic
+  { key: '54', valueMult: 0.80, minRarity: 'unverified',    weight: 12 },   // Tin
+  { key: '55', valueMult: 1.15, minRarity: 'unverified',    weight: 8 },    // Brass
+  { key: '56', valueMult: 1.65, minRarity: 'authenticated',      weight: 3 },    // Crystal
+  { key: '57', valueMult: 1.75, minRarity: 'authenticated',      weight: 2 },    // Jade
+  { key: '58', valueMult: 1.80, minRarity: 'licensed', weight: 2 },    // Obsidian
+  { key: '59', valueMult: 1.40, minRarity: 'graded',      weight: 4 },    // Marble
+  { key: '60', valueMult: 1.30, minRarity: 'certified',  weight: 6 },    // Porcelain
+  { key: '61', valueMult: 1.55, minRarity: 'graded',      weight: 4 },    // Titanium
+  { key: '62', valueMult: 0.65, minRarity: 'unverified',    weight: 14 },   // Corroded
+  { key: '63', valueMult: 0.60, minRarity: 'unverified',    weight: 14 },   // Broken
+  { key: '64', valueMult: 1.85, minRarity: 'licensed', weight: 2 },    // Diamond-encrusted
+  { key: '65', valueMult: 1.45, minRarity: 'graded',      weight: 4 },    // Lacquered
+  { key: '66', valueMult: 1.35, minRarity: 'certified',  weight: 5 },    // Polished
+  { key: '67', valueMult: 0.85, minRarity: 'unverified',    weight: 11 },   // Scratched
+  { key: '68', valueMult: 0.90, minRarity: 'unverified',    weight: 11 },   // Faded
+  { key: '69', valueMult: 1.50, minRarity: 'graded',      weight: 4 },    // Enameled
+  { key: '70', valueMult: 1.25, minRarity: 'certified',  weight: 6 },    // Leather-bound
   // ── Style (expanded) ──
-  { key: '71', valueMult: 1.30, minRarity: 'uncommon',  weight: 6 },    // Gothic
-  { key: '72', valueMult: 1.25, minRarity: 'uncommon',  weight: 7 },    // Rococo
-  { key: '73', valueMult: 1.20, minRarity: 'uncommon',  weight: 7 },    // Minimalist
-  { key: '74', valueMult: 1.15, minRarity: 'common',    weight: 8 },    // Rustic
-  { key: '75', valueMult: 1.35, minRarity: 'rare',      weight: 5 },    // Art-Nouveau
-  { key: '76', valueMult: 1.10, minRarity: 'common',    weight: 9 },    // Industrial
-  { key: '77', valueMult: 1.40, minRarity: 'rare',      weight: 4 },    // Bohemian
-  { key: '78', valueMult: 1.25, minRarity: 'uncommon',  weight: 6 },    // Scandinavian
-  { key: '79', valueMult: 1.30, minRarity: 'uncommon',  weight: 6 },    // Japanese
-  { key: '80', valueMult: 1.35, minRarity: 'rare',      weight: 5 },    // Chinese
-  { key: '81', valueMult: 1.45, minRarity: 'rare',      weight: 4 },    // Persian
-  { key: '82', valueMult: 1.20, minRarity: 'uncommon',  weight: 7 },    // Moroccan
-  { key: '83', valueMult: 1.50, minRarity: 'rare',      weight: 4 },    // Byzantine
-  { key: '84', valueMult: 1.15, minRarity: 'common',    weight: 8 },    // Bohemian
-  { key: '85', valueMult: 1.55, minRarity: 'rare',      weight: 3 },    // Venetian
-  { key: '86', valueMult: 1.40, minRarity: 'rare',      weight: 4 },    // Florentine
-  { key: '87', valueMult: 1.10, minRarity: 'common',    weight: 9 },    // Modern
-  { key: '88', valueMult: 1.20, minRarity: 'uncommon',  weight: 7 },    // Contemporary
-  { key: '89', valueMult: 1.05, minRarity: 'common',    weight: 10 },   // Traditional
+  { key: '71', valueMult: 1.30, minRarity: 'certified',  weight: 6 },    // Gothic
+  { key: '72', valueMult: 1.25, minRarity: 'certified',  weight: 7 },    // Rococo
+  { key: '73', valueMult: 1.20, minRarity: 'certified',  weight: 7 },    // Minimalist
+  { key: '74', valueMult: 1.15, minRarity: 'unverified',    weight: 8 },    // Rustic
+  { key: '75', valueMult: 1.35, minRarity: 'graded',      weight: 5 },    // Art-Nouveau
+  { key: '76', valueMult: 1.10, minRarity: 'unverified',    weight: 9 },    // Industrial
+  { key: '77', valueMult: 1.40, minRarity: 'graded',      weight: 4 },    // Bohemian
+  { key: '78', valueMult: 1.25, minRarity: 'certified',  weight: 6 },    // Scandinavian
+  { key: '79', valueMult: 1.30, minRarity: 'certified',  weight: 6 },    // Japanese
+  { key: '80', valueMult: 1.35, minRarity: 'graded',      weight: 5 },    // Chinese
+  { key: '81', valueMult: 1.45, minRarity: 'graded',      weight: 4 },    // Persian
+  { key: '82', valueMult: 1.20, minRarity: 'certified',  weight: 7 },    // Moroccan
+  { key: '83', valueMult: 1.50, minRarity: 'graded',      weight: 4 },    // Byzantine
+  { key: '84', valueMult: 1.15, minRarity: 'unverified',    weight: 8 },    // Bohemian
+  { key: '85', valueMult: 1.55, minRarity: 'graded',      weight: 3 },    // Venetian
+  { key: '86', valueMult: 1.40, minRarity: 'graded',      weight: 4 },    // Florentine
+  { key: '87', valueMult: 1.10, minRarity: 'unverified',    weight: 9 },    // Modern
+  { key: '88', valueMult: 1.20, minRarity: 'certified',  weight: 7 },    // Contemporary
+  { key: '89', valueMult: 1.05, minRarity: 'unverified',    weight: 10 },   // Traditional
   // ── Provenance (expanded) ──
-  { key: '90', valueMult: 1.75, minRarity: 'legendary', weight: 2 },    // Aristocratic
-  { key: '91', valueMult: 1.85, minRarity: 'legendary', weight: 2 },    // Papal
-  { key: '92', valueMult: 1.70, minRarity: 'epic',      weight: 2 },    // Commissioned
-  { key: '93', valueMult: 1.60, minRarity: 'epic',      weight: 3 },    // Heritage
-  { key: '94', valueMult: 1.65, minRarity: 'epic',      weight: 3 },    // Heirloom
-  { key: '95', valueMult: 1.55, minRarity: 'rare',      weight: 3 },    // Estate
-  { key: '96', valueMult: 2.10, minRarity: 'mythic',    weight: 1 },    // Pharaoh's
-  { key: '97', valueMult: 2.05, minRarity: 'mythic',    weight: 1 },    // Emperor's
-  { key: '98', valueMult: 1.95, minRarity: 'legendary', weight: 1 },    // Sultan's
-  { key: '99', valueMult: 1.90, minRarity: 'legendary', weight: 2 },    // Tsar's
+  { key: '90', valueMult: 1.75, minRarity: 'licensed', weight: 2 },    // Aristocratic
+  { key: '91', valueMult: 1.85, minRarity: 'licensed', weight: 2 },    // Papal
+  { key: '92', valueMult: 1.70, minRarity: 'authenticated',      weight: 2 },    // Commissioned
+  { key: '93', valueMult: 1.60, minRarity: 'authenticated',      weight: 3 },    // Heritage
+  { key: '94', valueMult: 1.65, minRarity: 'authenticated',      weight: 3 },    // Heirloom
+  { key: '95', valueMult: 1.55, minRarity: 'graded',      weight: 3 },    // Estate
+  { key: '96', valueMult: 2.10, minRarity: 'prestige',    weight: 1 },    // Pharaoh's
+  { key: '97', valueMult: 2.05, minRarity: 'prestige',    weight: 1 },    // Emperor's
+  { key: '98', valueMult: 1.95, minRarity: 'licensed', weight: 1 },    // Sultan's
+  { key: '99', valueMult: 1.90, minRarity: 'licensed', weight: 2 },    // Tsar's
   // ── Condition / State ──
-  { key: '100', valueMult: 0.55, minRarity: 'common',   weight: 13 },   // Tarnished
-  { key: '101', valueMult: 0.50, minRarity: 'common',   weight: 13 },   // Cracked
-  { key: '102', valueMult: 0.75, minRarity: 'common',   weight: 12 },   // Dusty
-  { key: '103', valueMult: 0.70, minRarity: 'common',   weight: 12 },   // Weathered
-  { key: '104', valueMult: 1.00, minRarity: 'common',   weight: 10 },   // Refurbished
-  { key: '105', valueMult: 1.20, minRarity: 'uncommon', weight: 7 },    // Pristine
-  { key: '106', valueMult: 1.25, minRarity: 'uncommon', weight: 6 },    // Immaculate
-  { key: '107', valueMult: 0.65, minRarity: 'common',   weight: 13 },   // Chipped
-  { key: '108', valueMult: 0.45, minRarity: 'common',   weight: 14 },   // Shattered
-  { key: '109', valueMult: 0.88, minRarity: 'common',   weight: 11 },   // Patinated
+  { key: '100', valueMult: 0.55, minRarity: 'unverified',   weight: 13 },   // Tarnished
+  { key: '101', valueMult: 0.50, minRarity: 'unverified',   weight: 13 },   // Cracked
+  { key: '102', valueMult: 0.75, minRarity: 'unverified',   weight: 12 },   // Dusty
+  { key: '103', valueMult: 0.70, minRarity: 'unverified',   weight: 12 },   // Weathered
+  { key: '104', valueMult: 1.00, minRarity: 'unverified',   weight: 10 },   // Refurbished
+  { key: '105', valueMult: 1.20, minRarity: 'certified', weight: 7 },    // Pristine
+  { key: '106', valueMult: 1.25, minRarity: 'certified', weight: 6 },    // Immaculate
+  { key: '107', valueMult: 0.65, minRarity: 'unverified',   weight: 13 },   // Chipped
+  { key: '108', valueMult: 0.45, minRarity: 'unverified',   weight: 14 },   // Shattered
+  { key: '109', valueMult: 0.88, minRarity: 'unverified',   weight: 11 },   // Patinated
   // ── Special / Exotic ──
-  { key: '110', valueMult: 1.70, minRarity: 'epic',     weight: 2 },    // Bespoke
-  { key: '111', valueMult: 1.80, minRarity: 'legendary', weight: 2 },   // Ceremonial
-  { key: '112', valueMult: 1.65, minRarity: 'epic',     weight: 3 },    // Monogrammed
-  { key: '113', valueMult: 1.75, minRarity: 'epic',     weight: 2 },    // Filigree
-  { key: '114', valueMult: 1.60, minRarity: 'epic',     weight: 3 },    // Inlaid
-  { key: '115', valueMult: 1.85, minRarity: 'legendary', weight: 2 },   // Jewel-studded
-  { key: '116', valueMult: 1.45, minRarity: 'rare',     weight: 4 },    // Embossed
-  { key: '117', valueMult: 1.50, minRarity: 'rare',     weight: 4 },    // Cloisonné
-  { key: '118', valueMult: 1.55, minRarity: 'rare',     weight: 3 },    // Damascened
-  { key: '119', valueMult: 2.20, minRarity: 'mythic',   weight: 1 },    // Sacred
+  { key: '110', valueMult: 1.70, minRarity: 'authenticated',     weight: 2 },    // Bespoke
+  { key: '111', valueMult: 1.80, minRarity: 'licensed', weight: 2 },   // Ceremonial
+  { key: '112', valueMult: 1.65, minRarity: 'authenticated',     weight: 3 },    // Monogrammed
+  { key: '113', valueMult: 1.75, minRarity: 'authenticated',     weight: 2 },    // Filigree
+  { key: '114', valueMult: 1.60, minRarity: 'authenticated',     weight: 3 },    // Inlaid
+  { key: '115', valueMult: 1.85, minRarity: 'licensed', weight: 2 },   // Jewel-studded
+  { key: '116', valueMult: 1.45, minRarity: 'graded',     weight: 4 },    // Embossed
+  { key: '117', valueMult: 1.50, minRarity: 'graded',     weight: 4 },    // Cloisonné
+  { key: '118', valueMult: 1.55, minRarity: 'graded',     weight: 3 },    // Damascened
+  { key: '119', valueMult: 2.20, minRarity: 'prestige',   weight: 1 },    // Sacred
 ]
 
 // ─── Shared Suffix Pool ─────────────────────────────────────────
 
 export const NAME_SUFFIXES: NameSuffix[] = [
-  { key: '0',  valueBonus: 0.05, minRarity: 'common',    weight: 10 },  // from estate sale
-  { key: '1',  valueBonus: 0.10, minRarity: 'uncommon',  weight: 7 },   // with certificate
-  { key: '2',  valueBonus: 0.15, minRarity: 'rare',      weight: 5 },   // limited edition
-  { key: '3',  valueBonus: 0.20, minRarity: 'rare',      weight: 4 },   // signed
-  { key: '4',  valueBonus: 0.25, minRarity: 'epic',      weight: 3 },   // one of a kind
-  { key: '5',  valueBonus: 0.08, minRarity: 'common',    weight: 9 },   // with papers
-  { key: '6',  valueBonus: 0.12, minRarity: 'uncommon',  weight: 6 },   // authenticated
-  { key: '7',  valueBonus: 0.30, minRarity: 'epic',      weight: 3 },   // celebrity-owned
-  { key: '8',  valueBonus: 0.18, minRarity: 'rare',      weight: 4 },   // private collection
-  { key: '9',  valueBonus: 0.35, minRarity: 'legendary', weight: 2 },   // museum deaccession
-  { key: '10', valueBonus: 0.15, minRarity: 'uncommon',  weight: 6 },   // numbered
-  { key: '11', valueBonus: 0.40, minRarity: 'legendary', weight: 2 },   // with provenance
-  { key: '12', valueBonus: 0.50, minRarity: 'mythic',    weight: 1 },   // national treasure
+  { key: '0',  valueBonus: 0.05, minRarity: 'unverified',    weight: 10 },  // from estate sale
+  { key: '1',  valueBonus: 0.10, minRarity: 'certified',  weight: 7 },   // with certificate
+  { key: '2',  valueBonus: 0.15, minRarity: 'graded',      weight: 5 },   // limited edition
+  { key: '3',  valueBonus: 0.20, minRarity: 'graded',      weight: 4 },   // signed
+  { key: '4',  valueBonus: 0.25, minRarity: 'authenticated',      weight: 3 },   // one of a kind
+  { key: '5',  valueBonus: 0.08, minRarity: 'unverified',    weight: 9 },   // with papers
+  { key: '6',  valueBonus: 0.12, minRarity: 'certified',  weight: 6 },   // authenticated
+  { key: '7',  valueBonus: 0.30, minRarity: 'authenticated',      weight: 3 },   // celebrity-owned
+  { key: '8',  valueBonus: 0.18, minRarity: 'graded',      weight: 4 },   // private collection
+  { key: '9',  valueBonus: 0.35, minRarity: 'licensed', weight: 2 },   // museum deaccession
+  { key: '10', valueBonus: 0.15, minRarity: 'certified',  weight: 6 },   // numbered
+  { key: '11', valueBonus: 0.40, minRarity: 'licensed', weight: 2 },   // with provenance
+  { key: '12', valueBonus: 0.50, minRarity: 'prestige',    weight: 1 },   // national treasure
   // ── Provenance (expanded) ──
-  { key: '13', valueBonus: 0.06, minRarity: 'common',    weight: 9 },   // from garage sale
-  { key: '14', valueBonus: 0.07, minRarity: 'common',    weight: 9 },   // from flea market
-  { key: '15', valueBonus: 0.09, minRarity: 'common',    weight: 8 },   // from attic find
-  { key: '16', valueBonus: 0.04, minRarity: 'common',    weight: 10 },  // from thrift store
-  { key: '17', valueBonus: 0.11, minRarity: 'uncommon',  weight: 7 },   // from auction house
-  { key: '18', valueBonus: 0.13, minRarity: 'uncommon',  weight: 6 },   // from private dealer
-  { key: '19', valueBonus: 0.16, minRarity: 'rare',      weight: 5 },   // from royal collection
-  { key: '20', valueBonus: 0.22, minRarity: 'rare',      weight: 4 },   // from shipwreck salvage
-  { key: '21', valueBonus: 0.28, minRarity: 'epic',      weight: 3 },   // from archaeological dig
-  { key: '22', valueBonus: 0.33, minRarity: 'epic',      weight: 3 },   // from ancient tomb
-  { key: '23', valueBonus: 0.38, minRarity: 'legendary', weight: 2 },   // from palace vault
-  { key: '24', valueBonus: 0.45, minRarity: 'legendary', weight: 2 },   // from Vatican archives
-  { key: '25', valueBonus: 0.55, minRarity: 'mythic',    weight: 1 },   // from lost civilization
+  { key: '13', valueBonus: 0.06, minRarity: 'unverified',    weight: 9 },   // from garage sale
+  { key: '14', valueBonus: 0.07, minRarity: 'unverified',    weight: 9 },   // from flea market
+  { key: '15', valueBonus: 0.09, minRarity: 'unverified',    weight: 8 },   // from attic find
+  { key: '16', valueBonus: 0.04, minRarity: 'unverified',    weight: 10 },  // from thrift store
+  { key: '17', valueBonus: 0.11, minRarity: 'certified',  weight: 7 },   // from auction house
+  { key: '18', valueBonus: 0.13, minRarity: 'certified',  weight: 6 },   // from private dealer
+  { key: '19', valueBonus: 0.16, minRarity: 'graded',      weight: 5 },   // from royal collection
+  { key: '20', valueBonus: 0.22, minRarity: 'graded',      weight: 4 },   // from shipwreck salvage
+  { key: '21', valueBonus: 0.28, minRarity: 'authenticated',      weight: 3 },   // from archaeological dig
+  { key: '22', valueBonus: 0.33, minRarity: 'authenticated',      weight: 3 },   // from ancient tomb
+  { key: '23', valueBonus: 0.38, minRarity: 'licensed', weight: 2 },   // from palace vault
+  { key: '24', valueBonus: 0.45, minRarity: 'licensed', weight: 2 },   // from Vatican archives
+  { key: '25', valueBonus: 0.55, minRarity: 'prestige',    weight: 1 },   // from lost civilization
   // ── Special Traits ──
-  { key: '26', valueBonus: 0.10, minRarity: 'uncommon',  weight: 7 },   // with original box
-  { key: '27', valueBonus: 0.14, minRarity: 'uncommon',  weight: 6 },   // with receipt
-  { key: '28', valueBonus: 0.12, minRarity: 'uncommon',  weight: 6 },   // with warranty
-  { key: '29', valueBonus: 0.17, minRarity: 'rare',      weight: 5 },   // prototype
-  { key: '30', valueBonus: 0.19, minRarity: 'rare',      weight: 4 },   // first production run
-  { key: '31', valueBonus: 0.21, minRarity: 'rare',      weight: 4 },   // artist's proof
-  { key: '32', valueBonus: 0.24, minRarity: 'epic',      weight: 3 },   // exhibition piece
-  { key: '33', valueBonus: 0.27, minRarity: 'epic',      weight: 3 },   // award-winning
-  { key: '34', valueBonus: 0.32, minRarity: 'epic',      weight: 3 },   // historically significant
-  { key: '35', valueBonus: 0.36, minRarity: 'legendary', weight: 2 },   // war trophy
-  { key: '36', valueBonus: 0.42, minRarity: 'legendary', weight: 2 },   // crown jewel
-  { key: '37', valueBonus: 0.48, minRarity: 'mythic',    weight: 1 },   // world heritage item
+  { key: '26', valueBonus: 0.10, minRarity: 'certified',  weight: 7 },   // with original box
+  { key: '27', valueBonus: 0.14, minRarity: 'certified',  weight: 6 },   // with receipt
+  { key: '28', valueBonus: 0.12, minRarity: 'certified',  weight: 6 },   // with warranty
+  { key: '29', valueBonus: 0.17, minRarity: 'graded',      weight: 5 },   // prototype
+  { key: '30', valueBonus: 0.19, minRarity: 'graded',      weight: 4 },   // first production run
+  { key: '31', valueBonus: 0.21, minRarity: 'graded',      weight: 4 },   // artist's proof
+  { key: '32', valueBonus: 0.24, minRarity: 'authenticated',      weight: 3 },   // exhibition piece
+  { key: '33', valueBonus: 0.27, minRarity: 'authenticated',      weight: 3 },   // award-winning
+  { key: '34', valueBonus: 0.32, minRarity: 'authenticated',      weight: 3 },   // historically significant
+  { key: '35', valueBonus: 0.36, minRarity: 'licensed', weight: 2 },   // war trophy
+  { key: '36', valueBonus: 0.42, minRarity: 'licensed', weight: 2 },   // crown jewel
+  { key: '37', valueBonus: 0.48, minRarity: 'prestige',    weight: 1 },   // world heritage item
   // ── Condition / History ──
-  { key: '38', valueBonus: 0.03, minRarity: 'common',    weight: 10 },  // slightly used
-  { key: '39', valueBonus: 0.06, minRarity: 'common',    weight: 9 },   // well-maintained
-  { key: '40', valueBonus: 0.08, minRarity: 'common',    weight: 8 },   // recently serviced
-  { key: '41', valueBonus: 0.11, minRarity: 'uncommon',  weight: 7 },   // professionally cleaned
-  { key: '42', valueBonus: 0.14, minRarity: 'uncommon',  weight: 6 },   // expertly restored
-  { key: '43', valueBonus: 0.16, minRarity: 'rare',      weight: 5 },   // never opened
-  { key: '44', valueBonus: 0.20, minRarity: 'rare',      weight: 4 },   // factory sealed
-  { key: '45', valueBonus: 0.23, minRarity: 'rare',      weight: 4 },   // time capsule find
+  { key: '38', valueBonus: 0.03, minRarity: 'unverified',    weight: 10 },  // slightly used
+  { key: '39', valueBonus: 0.06, minRarity: 'unverified',    weight: 9 },   // well-maintained
+  { key: '40', valueBonus: 0.08, minRarity: 'unverified',    weight: 8 },   // recently serviced
+  { key: '41', valueBonus: 0.11, minRarity: 'certified',  weight: 7 },   // professionally cleaned
+  { key: '42', valueBonus: 0.14, minRarity: 'certified',  weight: 6 },   // expertly restored
+  { key: '43', valueBonus: 0.16, minRarity: 'graded',      weight: 5 },   // never opened
+  { key: '44', valueBonus: 0.20, minRarity: 'graded',      weight: 4 },   // factory sealed
+  { key: '45', valueBonus: 0.23, minRarity: 'graded',      weight: 4 },   // time capsule find
   // ── Celebrity / Famous ──
-  { key: '46', valueBonus: 0.26, minRarity: 'epic',      weight: 3 },   // previously exhibited
-  { key: '47', valueBonus: 0.29, minRarity: 'epic',      weight: 3 },   // featured in documentary
-  { key: '48', valueBonus: 0.34, minRarity: 'legendary', weight: 2 },   // owned by royalty
-  { key: '49', valueBonus: 0.37, minRarity: 'legendary', weight: 2 },   // presidential artifact
-  { key: '50', valueBonus: 0.41, minRarity: 'legendary', weight: 2 },   // Hollywood provenance
-  { key: '51', valueBonus: 0.44, minRarity: 'legendary', weight: 2 },   // Nobel laureate's
-  { key: '52', valueBonus: 0.52, minRarity: 'mythic',    weight: 1 },   // cursed artifact
-  { key: '53', valueBonus: 0.58, minRarity: 'mythic',    weight: 1 },   // legendary lost relic
+  { key: '46', valueBonus: 0.26, minRarity: 'authenticated',      weight: 3 },   // previously exhibited
+  { key: '47', valueBonus: 0.29, minRarity: 'authenticated',      weight: 3 },   // featured in documentary
+  { key: '48', valueBonus: 0.34, minRarity: 'licensed', weight: 2 },   // owned by royalty
+  { key: '49', valueBonus: 0.37, minRarity: 'licensed', weight: 2 },   // presidential artifact
+  { key: '50', valueBonus: 0.41, minRarity: 'licensed', weight: 2 },   // Hollywood provenance
+  { key: '51', valueBonus: 0.44, minRarity: 'licensed', weight: 2 },   // Nobel laureate's
+  { key: '52', valueBonus: 0.52, minRarity: 'prestige',    weight: 1 },   // cursed artifact
+  { key: '53', valueBonus: 0.58, minRarity: 'prestige',    weight: 1 },   // legendary lost relic
   // ── Miscellaneous ──
-  { key: '54', valueBonus: 0.05, minRarity: 'common',    weight: 9 },   // with minor flaws
-  { key: '55', valueBonus: 0.07, minRarity: 'common',    weight: 9 },   // estate clearance
-  { key: '56', valueBonus: 0.09, minRarity: 'common',    weight: 8 },   // barn find
-  { key: '57', valueBonus: 0.13, minRarity: 'uncommon',  weight: 6 },   // inherited piece
-  { key: '58', valueBonus: 0.15, minRarity: 'uncommon',  weight: 6 },   // collector's grade
-  { key: '59', valueBonus: 0.18, minRarity: 'rare',      weight: 5 },   // investment grade
-  { key: '60', valueBonus: 0.22, minRarity: 'rare',      weight: 4 },   // competition winner
-  { key: '61', valueBonus: 0.25, minRarity: 'epic',      weight: 3 },   // master craftsman's
-  { key: '62', valueBonus: 0.31, minRarity: 'epic',      weight: 3 },   // once-in-a-lifetime
-  { key: '63', valueBonus: 0.39, minRarity: 'legendary', weight: 2 },   // insured for millions
-  { key: '64', valueBonus: 0.46, minRarity: 'legendary', weight: 1 },   // Sotheby's certified
-  { key: '65', valueBonus: 0.60, minRarity: 'mythic',    weight: 1 },   // eighth wonder
+  { key: '54', valueBonus: 0.05, minRarity: 'unverified',    weight: 9 },   // with minor flaws
+  { key: '55', valueBonus: 0.07, minRarity: 'unverified',    weight: 9 },   // estate clearance
+  { key: '56', valueBonus: 0.09, minRarity: 'unverified',    weight: 8 },   // barn find
+  { key: '57', valueBonus: 0.13, minRarity: 'certified',  weight: 6 },   // inherited piece
+  { key: '58', valueBonus: 0.15, minRarity: 'certified',  weight: 6 },   // collector's grade
+  { key: '59', valueBonus: 0.18, minRarity: 'graded',      weight: 5 },   // investment grade
+  { key: '60', valueBonus: 0.22, minRarity: 'graded',      weight: 4 },   // competition winner
+  { key: '61', valueBonus: 0.25, minRarity: 'authenticated',      weight: 3 },   // master craftsman's
+  { key: '62', valueBonus: 0.31, minRarity: 'authenticated',      weight: 3 },   // once-in-a-lifetime
+  { key: '63', valueBonus: 0.39, minRarity: 'licensed', weight: 2 },   // insured for millions
+  { key: '64', valueBonus: 0.46, minRarity: 'licensed', weight: 1 },   // Sotheby's certified
+  { key: '65', valueBonus: 0.60, minRarity: 'prestige',    weight: 1 },   // eighth wonder
 ]
 
 // ─── Category Blueprints ────────────────────────────────────────
@@ -316,18 +316,18 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '14', icon: 'mdi:shoe-formal',     weight: 2, dropWeight: 12 },  // Mismatched Shoes
       { key: '15', icon: 'mdi:battery',         weight: 1, dropWeight: 13 },  // Dead Batteries
       { key: '16', icon: 'mdi:bottle-soda',     weight: 1, dropWeight: 14 },  // Empty Bottles
-      { key: '17', icon: 'mdi:pillow',          weight: 2, dropWeight: 11 },  // Stained Pillows
+      { key: '17', icon: 'mdi:bed',             weight: 2, dropWeight: 11 },  // Stained Pillows
       { key: '18', icon: 'mdi:image-broken',    weight: 1, dropWeight: 10 },  // Cracked Frame
       { key: '19', icon: 'mdi:cup-water',       weight: 1, dropWeight: 15 },  // Chipped Mugs
     ],
     valueCurves: {
-      common:    { min: 1,   max: 10 },
-      uncommon:  { min: 5,   max: 20 },
-      rare:      { min: 10,  max: 40 },
-      epic:      { min: 20,  max: 60 },
-      legendary: { min: 30,  max: 80 },
-      jackpot:   { min: 40,  max: 100 },
-      mythic:    { min: 50,  max: 120 },
+      unverified:    { min: 1,   max: 10 },
+      certified:  { min: 5,   max: 20 },
+      graded:      { min: 10,  max: 40 },
+      authenticated:      { min: 20,  max: 60 },
+      licensed: { min: 30,  max: 80 },
+      exclusive:   { min: 40,  max: 100 },
+      prestige:    { min: 50,  max: 120 },
     },
     hasDescriptions: true,
   },
@@ -358,13 +358,13 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '19', icon: 'mdi:clock-time-eight', weight: 15, dropWeight: 2 }, // Grandfather Clock
     ],
     valueCurves: {
-      common:    { min: 5,     max: 40 },
-      uncommon:  { min: 30,    max: 200 },
-      rare:      { min: 150,   max: 1500 },
-      epic:      { min: 800,   max: 8000 },
-      legendary: { min: 3000,  max: 30000 },
-      jackpot:   { min: 10000, max: 80000 },
-      mythic:    { min: 30000, max: 250000 },
+      unverified:    { min: 5,     max: 40 },
+      certified:  { min: 30,    max: 200 },
+      graded:      { min: 150,   max: 1500 },
+      authenticated:      { min: 800,   max: 8000 },
+      licensed: { min: 3000,  max: 30000 },
+      exclusive:   { min: 10000, max: 80000 },
+      prestige:    { min: 30000, max: 250000 },
     },
     hasDescriptions: true,
   },
@@ -395,13 +395,13 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '19', icon: 'mdi:cassette',          weight: 2, dropWeight: 6 },  // Walkman
     ],
     valueCurves: {
-      common:    { min: 8,     max: 50 },
-      uncommon:  { min: 35,    max: 250 },
-      rare:      { min: 100,   max: 1000 },
-      epic:      { min: 400,   max: 4000 },
-      legendary: { min: 2000,  max: 20000 },
-      jackpot:   { min: 5000,  max: 50000 },
-      mythic:    { min: 15000, max: 150000 },
+      unverified:    { min: 8,     max: 50 },
+      certified:  { min: 35,    max: 250 },
+      graded:      { min: 100,   max: 1000 },
+      authenticated:      { min: 400,   max: 4000 },
+      licensed: { min: 2000,  max: 20000 },
+      exclusive:   { min: 5000,  max: 50000 },
+      prestige:    { min: 15000, max: 150000 },
     },
     hasDescriptions: true,
   },
@@ -432,13 +432,13 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '19', icon: 'mdi:shoe-heel',    weight: 2, dropWeight: 4 },   // Stilettos
     ],
     valueCurves: {
-      common:    { min: 5,     max: 30 },
-      uncommon:  { min: 40,    max: 250 },
-      rare:      { min: 150,   max: 2000 },
-      epic:      { min: 600,   max: 6000 },
-      legendary: { min: 3000,  max: 40000 },
-      jackpot:   { min: 8000,  max: 80000 },
-      mythic:    { min: 20000, max: 200000 },
+      unverified:    { min: 5,     max: 30 },
+      certified:  { min: 40,    max: 250 },
+      graded:      { min: 150,   max: 2000 },
+      authenticated:      { min: 600,   max: 6000 },
+      licensed: { min: 3000,  max: 40000 },
+      exclusive:   { min: 8000,  max: 80000 },
+      prestige:    { min: 20000, max: 200000 },
     },
     hasDescriptions: true,
   },
@@ -463,17 +463,17 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '13', icon: 'mdi:air-filter',      weight: 8, dropWeight: 3 },   // Compressor
       { key: '14', icon: 'mdi:water-pump',      weight: 7, dropWeight: 4 },   // Water Pump
       { key: '15', icon: 'mdi:magnify',         weight: 1, dropWeight: 5 },   // Magnifying Glass
-      { key: '16', icon: 'mdi:clamp',           weight: 3, dropWeight: 7 },   // Clamp Set
+      { key: '16', icon: 'mdi:wrench',          weight: 3, dropWeight: 7 },   // Clamp Set
       { key: '17', icon: 'mdi:ruler',           weight: 2, dropWeight: 8 },   // Level
     ],
     valueCurves: {
-      common:    { min: 10,    max: 70 },
-      uncommon:  { min: 35,    max: 250 },
-      rare:      { min: 200,   max: 2000 },
-      epic:      { min: 800,   max: 8000 },
-      legendary: { min: 3000,  max: 25000 },
-      jackpot:   { min: 8000,  max: 60000 },
-      mythic:    { min: 20000, max: 200000 },
+      unverified:    { min: 10,    max: 70 },
+      certified:  { min: 35,    max: 250 },
+      graded:      { min: 200,   max: 2000 },
+      authenticated:      { min: 800,   max: 8000 },
+      licensed: { min: 3000,  max: 25000 },
+      exclusive:   { min: 8000,  max: 60000 },
+      prestige:    { min: 20000, max: 200000 },
     },
     hasDescriptions: true,
   },
@@ -505,13 +505,13 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '20', icon: 'mdi:crystal-ball',     weight: 2, dropWeight: 3 },   // Crystal Ball
     ],
     valueCurves: {
-      common:    { min: 5,     max: 40 },
-      uncommon:  { min: 30,    max: 400 },
-      rare:      { min: 150,   max: 2500 },
-      epic:      { min: 500,   max: 6000 },
-      legendary: { min: 2000,  max: 25000 },
-      jackpot:   { min: 5000,  max: 60000 },
-      mythic:    { min: 15000, max: 200000 },
+      unverified:    { min: 5,     max: 40 },
+      certified:  { min: 30,    max: 400 },
+      graded:      { min: 150,   max: 2500 },
+      authenticated:      { min: 500,   max: 6000 },
+      licensed: { min: 2000,  max: 25000 },
+      exclusive:   { min: 5000,  max: 60000 },
+      prestige:    { min: 15000, max: 200000 },
     },
     hasDescriptions: true,
   },
@@ -542,13 +542,13 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '19', icon: 'mdi:hand-heart',      weight: 6, dropWeight: 2 },   // Mosaic
     ],
     valueCurves: {
-      common:    { min: 8,      max: 60 },
-      uncommon:  { min: 50,     max: 500 },
-      rare:      { min: 200,    max: 4000 },
-      epic:      { min: 1000,   max: 15000 },
-      legendary: { min: 5000,   max: 80000 },
-      jackpot:   { min: 15000,  max: 200000 },
-      mythic:    { min: 50000,  max: 1000000 },
+      unverified:    { min: 8,      max: 60 },
+      certified:  { min: 50,     max: 500 },
+      graded:      { min: 200,    max: 4000 },
+      authenticated:      { min: 1000,   max: 15000 },
+      licensed: { min: 5000,   max: 80000 },
+      exclusive:   { min: 15000,  max: 200000 },
+      prestige:    { min: 50000,  max: 1000000 },
     },
     hasDescriptions: true,
   },
@@ -579,13 +579,13 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '19', icon: 'mdi:star-four-points', weight: 1, dropWeight: 3 }, // Hairpin
     ],
     valueCurves: {
-      common:    { min: 5,      max: 40 },
-      uncommon:  { min: 50,     max: 300 },
-      rare:      { min: 250,    max: 3000 },
-      epic:      { min: 1200,   max: 18000 },
-      legendary: { min: 8000,   max: 120000 },
-      jackpot:   { min: 25000,  max: 300000 },
-      mythic:    { min: 80000,  max: 1500000 },
+      unverified:    { min: 5,      max: 40 },
+      certified:  { min: 50,     max: 300 },
+      graded:      { min: 250,    max: 3000 },
+      authenticated:      { min: 1200,   max: 18000 },
+      licensed: { min: 8000,   max: 120000 },
+      exclusive:   { min: 25000,  max: 300000 },
+      prestige:    { min: 80000,  max: 1500000 },
     },
     hasDescriptions: true,
   },
@@ -616,13 +616,13 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '19', icon: 'mdi:pistol',           weight: 2, dropWeight: 2 },  // Flintlock Pistol
     ],
     valueCurves: {
-      common:    { min: 10,     max: 60 },
-      uncommon:  { min: 40,     max: 350 },
-      rare:      { min: 200,    max: 3000 },
-      epic:      { min: 1500,   max: 25000 },
-      legendary: { min: 10000,  max: 180000 },
-      jackpot:   { min: 30000,  max: 400000 },
-      mythic:    { min: 80000,  max: 1500000 },
+      unverified:    { min: 10,     max: 60 },
+      certified:  { min: 40,     max: 350 },
+      graded:      { min: 200,    max: 3000 },
+      authenticated:      { min: 1500,   max: 25000 },
+      licensed: { min: 10000,  max: 180000 },
+      exclusive:   { min: 30000,  max: 400000 },
+      prestige:    { min: 80000,  max: 1500000 },
     },
     hasDescriptions: true,
   },
@@ -651,13 +651,13 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '17', icon: 'mdi:bow-arrow',     weight: 4, dropWeight: 4 },   // Archery Bow
     ],
     valueCurves: {
-      common:    { min: 8,     max: 60 },
-      uncommon:  { min: 25,    max: 200 },
-      rare:      { min: 120,   max: 2000 },
-      epic:      { min: 800,   max: 10000 },
-      legendary: { min: 4000,  max: 50000 },
-      jackpot:   { min: 10000, max: 100000 },
-      mythic:    { min: 30000, max: 500000 },
+      unverified:    { min: 8,     max: 60 },
+      certified:  { min: 25,    max: 200 },
+      graded:      { min: 120,   max: 2000 },
+      authenticated:      { min: 800,   max: 10000 },
+      licensed: { min: 4000,  max: 50000 },
+      exclusive:   { min: 10000, max: 100000 },
+      prestige:    { min: 30000, max: 500000 },
     },
     hasDescriptions: true,
   },
@@ -681,18 +681,18 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '12', icon: 'mdi:music-note',     weight: 3,  dropWeight: 4 },  // Oboe
       { key: '13', icon: 'mdi:music',          weight: 2,  dropWeight: 5 },  // Banjo
       { key: '14', icon: 'mdi:music-note',     weight: 4,  dropWeight: 3 },  // Tuba
-      { key: '15', icon: 'mdi:accordion',      weight: 5,  dropWeight: 3 },  // Accordion
+      { key: '15', icon: 'mdi:music-box',      weight: 5,  dropWeight: 3 },  // Accordion
       { key: '16', icon: 'mdi:music',          weight: 2,  dropWeight: 5 },  // Ukulele
       { key: '17', icon: 'mdi:music-note',     weight: 3,  dropWeight: 4 },  // Mandolin
     ],
     valueCurves: {
-      common:    { min: 10,     max: 60 },
-      uncommon:  { min: 50,     max: 400 },
-      rare:      { min: 250,    max: 3000 },
-      epic:      { min: 1500,   max: 35000 },
-      legendary: { min: 8000,   max: 100000 },
-      jackpot:   { min: 25000,  max: 300000 },
-      mythic:    { min: 100000, max: 2000000 },
+      unverified:    { min: 10,     max: 60 },
+      certified:  { min: 50,     max: 400 },
+      graded:      { min: 250,    max: 3000 },
+      authenticated:      { min: 1500,   max: 35000 },
+      licensed: { min: 8000,   max: 100000 },
+      exclusive:   { min: 25000,  max: 300000 },
+      prestige:    { min: 100000, max: 2000000 },
     },
     hasDescriptions: true,
   },
@@ -720,13 +720,13 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '16', icon: 'mdi:snowflake',        weight: 12, dropWeight: 2 },  // Snowmobile Parts
     ],
     valueCurves: {
-      common:    { min: 10,     max: 100 },
-      uncommon:  { min: 40,     max: 400 },
-      rare:      { min: 300,    max: 6000 },
-      epic:      { min: 1500,   max: 30000 },
-      legendary: { min: 8000,   max: 100000 },
-      jackpot:   { min: 20000,  max: 250000 },
-      mythic:    { min: 60000,  max: 1000000 },
+      unverified:    { min: 10,     max: 100 },
+      certified:  { min: 40,     max: 400 },
+      graded:      { min: 300,    max: 6000 },
+      authenticated:      { min: 1500,   max: 30000 },
+      licensed: { min: 8000,   max: 100000 },
+      exclusive:   { min: 20000,  max: 250000 },
+      prestige:    { min: 60000,  max: 1000000 },
     },
     hasDescriptions: true,
   },
@@ -755,13 +755,13 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '17', icon: 'mdi:certificate',    weight: 1, dropWeight: 3 },   // Diploma
     ],
     valueCurves: {
-      common:    { min: 3,      max: 25 },
-      uncommon:  { min: 20,     max: 200 },
-      rare:      { min: 80,     max: 1500 },
-      epic:      { min: 600,    max: 10000 },
-      legendary: { min: 4000,   max: 60000 },
-      jackpot:   { min: 10000,  max: 150000 },
-      mythic:    { min: 30000,  max: 500000 },
+      unverified:    { min: 3,      max: 25 },
+      certified:  { min: 20,     max: 200 },
+      graded:      { min: 80,     max: 1500 },
+      authenticated:      { min: 600,    max: 10000 },
+      licensed: { min: 4000,   max: 60000 },
+      exclusive:   { min: 10000,  max: 150000 },
+      prestige:    { min: 30000,  max: 500000 },
     },
     hasDescriptions: true,
   },
@@ -785,18 +785,18 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '12', icon: 'mdi:candle',         weight: 1, dropWeight: 5 },   // Luxury Candle
       { key: '13', icon: 'mdi:necklace',       weight: 1, dropWeight: 3 },   // Cashmere Wrap
       { key: '14', icon: 'mdi:wallet',         weight: 1, dropWeight: 5 },   // Designer Wallet
-      { key: '15', icon: 'mdi:cufflinks',      weight: 1, dropWeight: 4 },   // Gold Cufflinks
+      { key: '15', icon: 'mdi:diamond-stone',  weight: 1, dropWeight: 4 },   // Gold Cufflinks
       { key: '16', icon: 'mdi:umbrella',       weight: 2, dropWeight: 5 },   // Parasol
       { key: '17', icon: 'mdi:chess-queen',    weight: 2, dropWeight: 3 },   // Chess Set
     ],
     valueCurves: {
-      common:    { min: 20,     max: 120 },
-      uncommon:  { min: 60,     max: 500 },
-      rare:      { min: 200,    max: 3500 },
-      epic:      { min: 1500,   max: 30000 },
-      legendary: { min: 10000,  max: 250000 },
-      jackpot:   { min: 50000,  max: 600000 },
-      mythic:    { min: 200000, max: 12000000 },
+      unverified:    { min: 20,     max: 120 },
+      certified:  { min: 60,     max: 500 },
+      graded:      { min: 200,    max: 3500 },
+      authenticated:      { min: 1500,   max: 30000 },
+      licensed: { min: 10000,  max: 250000 },
+      exclusive:   { min: 50000,  max: 600000 },
+      prestige:    { min: 200000, max: 12000000 },
     },
     hasDescriptions: true,
   },
@@ -815,23 +815,23 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '7', icon: 'mdi:memory',           weight: 1, dropWeight: 6 },   // RAM Module
       { key: '8', icon: 'mdi:harddisk',         weight: 2, dropWeight: 7 },   // Hard Drive
       { key: '9', icon: 'mdi:usb',              weight: 1, dropWeight: 8 },   // USB Hub
-      { key: '10', icon: 'mdi:gpu',             weight: 2, dropWeight: 4 },   // Graphics Card
+      { key: '10', icon: 'mdi:expansion-card',  weight: 2, dropWeight: 4 },   // Graphics Card
       { key: '11', icon: 'mdi:network',         weight: 3, dropWeight: 5 },   // Network Switch
       { key: '12', icon: 'mdi:printer-3d',      weight: 4, dropWeight: 3 },   // 3D Printer
       { key: '13', icon: 'mdi:tablet',          weight: 2, dropWeight: 6 },   // Tablet
-      { key: '14', icon: 'mdi:smartwatch',      weight: 1, dropWeight: 5 },   // Smartwatch
+      { key: '14', icon: 'mdi:watch',           weight: 1, dropWeight: 5 },   // Smartwatch
       { key: '15', icon: 'mdi:raspberry-pi',    weight: 1, dropWeight: 7 },   // Single Board PC
       { key: '16', icon: 'mdi:solar-panel',     weight: 4, dropWeight: 3 },   // Solar Panel
       { key: '17', icon: 'mdi:power-plug',      weight: 2, dropWeight: 6 },   // Power Supply
     ],
     valueCurves: {
-      common:    { min: 15,     max: 150 },
-      uncommon:  { min: 80,     max: 600 },
-      rare:      { min: 300,    max: 3000 },
-      epic:      { min: 1500,   max: 15000 },
-      legendary: { min: 5000,   max: 60000 },
-      jackpot:   { min: 15000,  max: 150000 },
-      mythic:    { min: 40000,  max: 500000 },
+      unverified:    { min: 15,     max: 150 },
+      certified:  { min: 80,     max: 600 },
+      graded:      { min: 300,    max: 3000 },
+      authenticated:      { min: 1500,   max: 15000 },
+      licensed: { min: 5000,   max: 60000 },
+      exclusive:   { min: 15000,  max: 150000 },
+      prestige:    { min: 40000,  max: 500000 },
     },
     hasDescriptions: true,
   },
@@ -855,18 +855,18 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '12', icon: 'mdi:head',          weight: 3, dropWeight: 3 },   // Costume Mask
       { key: '13', icon: 'mdi:script-text',   weight: 1, dropWeight: 4 },   // Script Page
       { key: '14', icon: 'mdi:shoe-formal',   weight: 2, dropWeight: 3 },   // Worn Stage Shoes
-      { key: '15', icon: 'mdi:clapper',       weight: 2, dropWeight: 4 },   // Clapperboard
+      { key: '15', icon: 'mdi:movie-open',    weight: 2, dropWeight: 4 },   // Clapperboard
       { key: '16', icon: 'mdi:seat',          weight: 4, dropWeight: 2 },   // Director's Chair
       { key: '17', icon: 'mdi:badge-account', weight: 1, dropWeight: 5 },   // Backstage Pass
     ],
     valueCurves: {
-      common:    { min: 10,    max: 80 },
-      uncommon:  { min: 50,    max: 400 },
-      rare:      { min: 200,   max: 3000 },
-      epic:      { min: 1000,  max: 15000 },
-      legendary: { min: 5000,  max: 80000 },
-      jackpot:   { min: 15000, max: 200000 },
-      mythic:    { min: 40000, max: 800000 },
+      unverified:    { min: 10,    max: 80 },
+      certified:  { min: 50,    max: 400 },
+      graded:      { min: 200,   max: 3000 },
+      authenticated:      { min: 1000,  max: 15000 },
+      licensed: { min: 5000,  max: 80000 },
+      exclusive:   { min: 15000, max: 200000 },
+      prestige:    { min: 40000, max: 800000 },
     },
     hasDescriptions: true,
   },
@@ -895,13 +895,13 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '17', icon: 'mdi:diamond',         weight: 1, dropWeight: 3 },  // Black Diamond
     ],
     valueCurves: {
-      common:    { min: 20,     max: 100 },
-      uncommon:  { min: 80,     max: 500 },
-      rare:      { min: 400,    max: 4000 },
-      epic:      { min: 2000,   max: 25000 },
-      legendary: { min: 10000,  max: 150000 },
-      jackpot:   { min: 30000,  max: 400000 },
-      mythic:    { min: 100000, max: 2000000 },
+      unverified:    { min: 20,     max: 100 },
+      certified:  { min: 80,     max: 500 },
+      graded:      { min: 400,    max: 4000 },
+      authenticated:      { min: 2000,   max: 25000 },
+      licensed: { min: 10000,  max: 150000 },
+      exclusive:   { min: 30000,  max: 400000 },
+      prestige:    { min: 100000, max: 2000000 },
     },
     hasDescriptions: true,
   },
@@ -927,13 +927,13 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '14', icon: 'mdi:clock-outline',  weight: 1, dropWeight: 4 },   // Skeleton Watch
     ],
     valueCurves: {
-      common:    { min: 15,     max: 80 },
-      uncommon:  { min: 60,     max: 400 },
-      rare:      { min: 300,    max: 5000 },
-      epic:      { min: 2000,   max: 30000 },
-      legendary: { min: 10000,  max: 200000 },
-      jackpot:   { min: 40000,  max: 500000 },
-      mythic:    { min: 100000, max: 3000000 },
+      unverified:    { min: 15,     max: 80 },
+      certified:  { min: 60,     max: 400 },
+      graded:      { min: 300,    max: 5000 },
+      authenticated:      { min: 2000,   max: 30000 },
+      licensed: { min: 10000,  max: 200000 },
+      exclusive:   { min: 40000,  max: 500000 },
+      prestige:    { min: 100000, max: 3000000 },
     },
     hasDescriptions: true,
   },
@@ -959,13 +959,13 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '14', icon: 'mdi:bottle-wine-outline', weight: 2, dropWeight: 3 }, // Scotch Whisky
     ],
     valueCurves: {
-      common:    { min: 10,     max: 50 },
-      uncommon:  { min: 40,     max: 300 },
-      rare:      { min: 150,    max: 2500 },
-      epic:      { min: 800,    max: 12000 },
-      legendary: { min: 4000,   max: 60000 },
-      jackpot:   { min: 15000,  max: 200000 },
-      mythic:    { min: 50000,  max: 1000000 },
+      unverified:    { min: 10,     max: 50 },
+      certified:  { min: 40,     max: 300 },
+      graded:      { min: 150,    max: 2500 },
+      authenticated:      { min: 800,    max: 12000 },
+      licensed: { min: 4000,   max: 60000 },
+      exclusive:   { min: 15000,  max: 200000 },
+      prestige:    { min: 50000,  max: 1000000 },
     },
     hasDescriptions: true,
   },
@@ -988,13 +988,13 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '11', icon: 'mdi:shoe-formal',   weight: 1, dropWeight: 3 },   // Designer Kicks
     ],
     valueCurves: {
-      common:    { min: 15,    max: 80 },
-      uncommon:  { min: 60,    max: 400 },
-      rare:      { min: 200,   max: 2500 },
-      epic:      { min: 1000,  max: 12000 },
-      legendary: { min: 4000,  max: 50000 },
-      jackpot:   { min: 10000, max: 100000 },
-      mythic:    { min: 25000, max: 300000 },
+      unverified:    { min: 15,    max: 80 },
+      certified:  { min: 60,    max: 400 },
+      graded:      { min: 200,   max: 2500 },
+      authenticated:      { min: 1000,  max: 12000 },
+      licensed: { min: 4000,  max: 50000 },
+      exclusive:   { min: 10000, max: 100000 },
+      prestige:    { min: 25000, max: 300000 },
     },
     hasDescriptions: true,
   },
@@ -1017,13 +1017,13 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '11', icon: 'mdi:cards-playing',   weight: 1, dropWeight: 5 },  // Vintage Deck
     ],
     valueCurves: {
-      common:    { min: 5,     max: 30 },
-      uncommon:  { min: 20,    max: 200 },
-      rare:      { min: 100,   max: 2000 },
-      epic:      { min: 500,   max: 8000 },
-      legendary: { min: 2000,  max: 40000 },
-      jackpot:   { min: 8000,  max: 120000 },
-      mythic:    { min: 20000, max: 500000 },
+      unverified:    { min: 5,     max: 30 },
+      certified:  { min: 20,    max: 200 },
+      graded:      { min: 100,   max: 2000 },
+      authenticated:      { min: 500,   max: 8000 },
+      licensed: { min: 2000,  max: 40000 },
+      exclusive:   { min: 8000,  max: 120000 },
+      prestige:    { min: 20000, max: 500000 },
     },
     hasDescriptions: true,
   },
@@ -1046,13 +1046,13 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '11', icon: 'mdi:cash-100',        weight: 1, dropWeight: 3 },  // Gold Sovereign
     ],
     valueCurves: {
-      common:    { min: 5,      max: 30 },
-      uncommon:  { min: 25,     max: 200 },
-      rare:      { min: 100,    max: 1500 },
-      epic:      { min: 500,    max: 8000 },
-      legendary: { min: 3000,   max: 50000 },
-      jackpot:   { min: 10000,  max: 120000 },
-      mythic:    { min: 30000,  max: 500000 },
+      unverified:    { min: 5,      max: 30 },
+      certified:  { min: 25,     max: 200 },
+      graded:      { min: 100,    max: 1500 },
+      authenticated:      { min: 500,    max: 8000 },
+      licensed: { min: 3000,   max: 50000 },
+      exclusive:   { min: 10000,  max: 120000 },
+      prestige:    { min: 30000,  max: 500000 },
     },
     hasDescriptions: true,
   },
@@ -1075,13 +1075,13 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '11', icon: 'mdi:map',             weight: 1, dropWeight: 5 },  // City Plan
     ],
     valueCurves: {
-      common:    { min: 5,     max: 40 },
-      uncommon:  { min: 30,    max: 250 },
-      rare:      { min: 150,   max: 2000 },
-      epic:      { min: 600,   max: 10000 },
-      legendary: { min: 3000,  max: 50000 },
-      jackpot:   { min: 10000, max: 120000 },
-      mythic:    { min: 25000, max: 400000 },
+      unverified:    { min: 5,     max: 40 },
+      certified:  { min: 30,    max: 250 },
+      graded:      { min: 150,   max: 2000 },
+      authenticated:      { min: 600,   max: 10000 },
+      licensed: { min: 3000,  max: 50000 },
+      exclusive:   { min: 10000, max: 120000 },
+      prestige:    { min: 25000, max: 400000 },
     },
     hasDescriptions: true,
   },
@@ -1104,13 +1104,13 @@ export const CATEGORY_BLUEPRINTS: CategoryBlueprint[] = [
       { key: '11', icon: 'mdi:fountain-pen-tip', weight: 1, dropWeight: 2 },  // Treatise
     ],
     valueCurves: {
-      common:    { min: 8,      max: 50 },
-      uncommon:  { min: 40,     max: 350 },
-      rare:      { min: 200,    max: 3000 },
-      epic:      { min: 1000,   max: 15000 },
-      legendary: { min: 5000,   max: 80000 },
-      jackpot:   { min: 15000,  max: 200000 },
-      mythic:    { min: 40000,  max: 800000 },
+      unverified:    { min: 8,      max: 50 },
+      certified:  { min: 40,     max: 350 },
+      graded:      { min: 200,    max: 3000 },
+      authenticated:      { min: 1000,   max: 15000 },
+      licensed: { min: 5000,   max: 80000 },
+      exclusive:   { min: 15000,  max: 200000 },
+      prestige:    { min: 40000,  max: 800000 },
     },
     hasDescriptions: true,
   },

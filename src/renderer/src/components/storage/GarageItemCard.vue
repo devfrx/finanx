@@ -9,12 +9,11 @@
  * Built entirely on UCard / UButton + CSS variables — nothing hardcoded.
  */
 import AppIcon from '@renderer/components/AppIcon.vue'
-import { UButton, UCard } from '@renderer/components/ui'
+import { UButton, UCard, RarityBadge, ConditionBadge } from '@renderer/components/ui'
 import { useFormat } from '@renderer/composables/useFormat'
 import { useI18n } from 'vue-i18n'
 import { rarityCssVar } from '@renderer/data/rarity'
 import { resolveItemName, resolveItemDescription } from '@renderer/data/storage/items'
-import { CONDITION_ICONS, CONDITION_COLORS } from '@renderer/data/shop/restoration'
 import type { InventoryItem } from '@renderer/stores/useStorageStore'
 
 defineProps<{
@@ -44,7 +43,7 @@ const { t } = useI18n()
 
                 <div class="garage-card__titles">
                     <span class="garage-card__name">{{ resolveItemName(item, t) }}</span>
-                    <span class="garage-card__rarity">{{ item.rarity }}</span>
+                    <RarityBadge :rarity="item.rarity" size="xs" />
                 </div>
             </div>
         </template>
@@ -59,15 +58,11 @@ const { t } = useI18n()
             </span>
 
             <!-- Condition -->
-            <span v-if="item.appraised && item.condition" class="garage-card__condition"
-                :style="{ color: CONDITION_COLORS[item.condition] }">
-                <AppIcon :icon="CONDITION_ICONS[item.condition]" />
-                {{ t(`items.condition.${item.condition}`) }}
-            </span>
+            <ConditionBadge v-if="item.appraised && item.condition" :condition="item.condition" size="xs" />
             <span v-else-if="!item.appraised && item.condition"
                 class="garage-card__condition garage-card__condition--unknown">
                 <AppIcon icon="mdi:help-circle-outline" />
-                {{ t('storage.condition_unknown') }}
+                {{ t('condition.unknown') }}
             </span>
         </div>
 
@@ -165,13 +160,6 @@ const { t } = useI18n()
     text-overflow: ellipsis;
 }
 
-.garage-card__rarity {
-    font-size: var(--t-font-size-2xs);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-weight: var(--t-font-bold);
-    color: var(--_rarity);
-}
 
 /* ─── Description ───────────────────────────────────────────── */
 .garage-card__desc {
@@ -215,8 +203,9 @@ const { t } = useI18n()
     align-items: center;
     gap: var(--t-space-0-5);
     font-size: var(--t-font-size-xs);
-    font-weight: var(--t-font-semibold);
-    text-transform: capitalize;
+    font-weight: var(--t-font-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
 }
 
 .garage-card__condition--unknown {

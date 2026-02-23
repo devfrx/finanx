@@ -110,7 +110,7 @@ const hasEvents = computed(() => props.auction.lotEvents.length > 0)
             <div class="stat-block">
                 <span class="stat-block__label">{{ t('storage.items_inside') }}</span>
                 <span class="stat-block__value stat-block__value--mystery">
-                    <AppIcon icon="mdi:help-circle-outline" />
+                    <!-- <AppIcon icon="mdi:help-circle-outline" /> -->
                     {{ t('storage.unknown_items') }}
                 </span>
             </div>
@@ -262,7 +262,7 @@ const hasEvents = computed(() => props.auction.lotEvents.length > 0)
     font-size: var(--t-font-size-2xs);
     font-weight: var(--t-font-medium);
     padding: 0.2rem 0.55rem;
-    border-radius: var(--t-radius-full);
+    border-radius: var(--t-radius-sm);
     white-space: nowrap;
 }
 
@@ -274,10 +274,10 @@ const hasEvents = computed(() => props.auction.lotEvents.length > 0)
 .auction-chip--event {
     color: var(--t-warning);
     background: color-mix(in srgb, var(--t-warning) 10%, transparent);
-    animation: chip-pulse 2.5s ease-in-out infinite;
+    /* animation: chip-pulse 2.5s ease-in-out infinite; */
 }
 
-@keyframes chip-pulse {
+/* @keyframes chip-pulse {
 
     0%,
     100% {
@@ -287,7 +287,7 @@ const hasEvents = computed(() => props.auction.lotEvents.length > 0)
     50% {
         opacity: 1;
     }
-}
+} */
 
 /* ── Peek window ────────────────────────────────────────────── */
 .auction-card__peek {

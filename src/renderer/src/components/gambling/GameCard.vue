@@ -87,7 +87,7 @@ defineEmits<{ play: [] }>()
         </div>
 
         <template #footer>
-            <UButton variant="primary" size="xs" @click="$emit('play')">
+            <UButton variant="primary" size="sm" @click="$emit('play')" class="cta-button">
                 {{ $t('gambling.play') }}</UButton>
         </template>
     </UCard>
@@ -256,5 +256,9 @@ defineEmits<{ play: [] }>()
     font-family: var(--t-font-mono);
     font-weight: var(--t-font-semibold);
     font-size: var(--t-font-size-sm);
+}
+
+.cta-button {
+    width: 100%;
 }
 </style>

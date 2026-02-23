@@ -12,6 +12,12 @@ import { D, mul } from '@renderer/core/BigNum'
 import type { StorageItem, ItemCondition } from '../storage/items'
 import { RARITY_ORDER } from '../rarity'
 import {
+  CONDITION_ORDER_ARRAY as CONDITION_ORDER,
+  CONDITION_MULTIPLIERS,
+  CONDITION_COLORS,
+  CONDITION_ICONS,
+} from '../condition'
+import {
   RESTORATION_SLOT_BASE,
   RESTORATION_SLOT_MAX,
   RESTORATION_SLOT_UPGRADE_COST_BASE,
@@ -22,22 +28,12 @@ import {
   RESTORATION_RARITY_TIME_MULT,
 } from './balance'
 
-// ─── Condition Ladder ───────────────────────────────────────────
+// Re-export from condition.ts for backward compat — consumers can import from either place.
+export { CONDITION_ORDER, CONDITION_MULTIPLIERS, CONDITION_COLORS, CONDITION_ICONS }
 
-export const CONDITION_ORDER: ItemCondition[] = [
-  'damaged', 'poor', 'fair', 'good', 'excellent', 'mint', 'pristine',
-]
+// ─── Condition Ladder (legacy aliases now derived from condition.ts) ───
 
-export const CONDITION_MULTIPLIERS: Record<ItemCondition, number> = {
-  damaged: 0.35,
-  poor: 0.55,
-  fair: 0.80,
-  good: 1.0,
-  excellent: 1.15,
-  mint: 1.35,
-  pristine: 1.70,
-}
-
+/** @deprecated Use CONDITION_DEFS or CONDITION_ORDER_ARRAY from '@renderer/data/condition' */
 export const CONDITION_LABELS: Record<ItemCondition, string> = {
   damaged: 'Damaged',
   poor: 'Poor',
@@ -46,26 +42,6 @@ export const CONDITION_LABELS: Record<ItemCondition, string> = {
   excellent: 'Excellent',
   mint: 'Mint',
   pristine: 'Pristine',
-}
-
-export const CONDITION_ICONS: Record<ItemCondition, string> = {
-  damaged: 'mdi:hammer-wrench',
-  poor: 'mdi:wrench',
-  fair: 'mdi:circle-half-full',
-  good: 'mdi:check-circle-outline',
-  excellent: 'mdi:star-half-full',
-  mint: 'mdi:star',
-  pristine: 'mdi:star-shooting',
-}
-
-export const CONDITION_COLORS: Record<ItemCondition, string> = {
-  damaged: '#ef4444',
-  poor: '#f97316',
-  fair: '#eab308',
-  good: '#22c55e',
-  excellent: '#3b82f6',
-  mint: '#a855f7',
-  pristine: '#facc15',
 }
 
 // ─── Types ──────────────────────────────────────────────────────

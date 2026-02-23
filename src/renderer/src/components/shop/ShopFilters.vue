@@ -10,7 +10,7 @@ import Select from 'primevue/select'
 import { useI18n } from 'vue-i18n'
 import { SHOP_CATEGORIES, SHOP_CATEGORY_ICONS } from '@renderer/data/shop/items'
 import type { ShopCategory } from '@renderer/data/shop/items'
-import { CONDITION_ORDER } from '@renderer/data/shop/restoration'
+import { CONDITION_ORDER_ARRAY as CONDITION_ORDER } from '@renderer/data/condition'
 import type { ItemCondition } from '@renderer/data/storage/items'
 import { useShopStore } from '@renderer/stores/useShopStore'
 import type { SortField } from '@renderer/stores/useShopStore'
@@ -20,8 +20,8 @@ const { t } = useI18n()
 
 const rarityOptions = computed(() => [
     { label: t('shop.all_rarities'), value: 'all' },
-    ...['common', 'uncommon', 'rare', 'epic', 'legendary', 'jackpot', 'mythic'].map(r => ({
-        label: t(`shop.rarity_${r}`, r.charAt(0).toUpperCase() + r.slice(1)),
+    ...['unverified', 'certified', 'graded', 'authenticated', 'licensed', 'exclusive', 'prestige'].map(r => ({
+        label: t(`rarity.${r}`, r.charAt(0).toUpperCase() + r.slice(1)),
         value: r
     }))
 ])
@@ -57,7 +57,7 @@ const conditions = computed(() => {
     for (const cond of CONDITION_ORDER) {
         items.push({
             value: cond,
-            label: t(`shop.condition_${cond}`),
+            label: t(`condition.${cond}`),
         })
     }
     return items

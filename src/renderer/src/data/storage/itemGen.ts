@@ -98,7 +98,7 @@ function pickPrefix(rarity: Rarity): NamePrefix | null {
   const eligible = NAME_PREFIXES.filter(p => rv >= rarityValue(p.minRarity))
   if (eligible.length === 0) return null
   // Higher rarity → higher chance of getting a prefix
-  const noPrefix = rarity === 'common' ? 0.50 : rarity === 'uncommon' ? 0.35 : 0.15
+  const noPrefix = rarity === 'unverified' ? 0.50 : rarity === 'certified' ? 0.35 : 0.15
   if (Math.random() < noPrefix) return null
   // Rarity-coherence bias: higher rarity favors higher valueMult prefixes
   const tier = rv
@@ -117,7 +117,7 @@ function pickSuffix(rarity: Rarity): NameSuffix | null {
   const rv = rarityValue(rarity)
   const eligible = NAME_SUFFIXES.filter(s => rv >= rarityValue(s.minRarity))
   if (eligible.length === 0) return null
-  const noSuffix = rarity === 'common' ? 0.65 : rarity === 'uncommon' ? 0.50 : 0.25
+  const noSuffix = rarity === 'unverified' ? 0.65 : rarity === 'certified' ? 0.50 : 0.25
   if (Math.random() < noSuffix) return null
   // Rarity-coherence bias: higher rarity favors higher valueBonus suffixes
   const tier = rv
@@ -147,7 +147,7 @@ function pickWeightedRarity(weights: Record<string, number>): Rarity {
     roll -= weight
     if (roll <= 0) return rarity as Rarity
   }
-  return 'common'
+  return 'unverified'
 }
 
 // ─── Single Item Generation ─────────────────────────────────────
@@ -205,7 +205,7 @@ export function generateItem(
   const suffix = pickSuffix(rarity)
 
   // 4. Calculate value from rarity curve
-  const curve = blueprint.valueCurves[rarity] ?? blueprint.valueCurves.common
+  const curve = blueprint.valueCurves[rarity] ?? blueprint.valueCurves.unverified
   const rawValue = curve.min + Math.random() * (curve.max - curve.min)
 
   // Apply prefix multiplier + suffix bonus
@@ -280,16 +280,16 @@ export function generateUnitContents(
   const adjustedWeights = { ...baseWeights }
   if (!isDud) {
     const boost = 1 + rareChance + luckBonus * 0.3
-    adjustedWeights.rare *= boost
-    adjustedWeights.epic *= boost * 0.9
-    adjustedWeights.legendary *= boost * 0.7
-    adjustedWeights.mythic *= boost * 0.5
+    adjustedWeights.graded *= boost
+    adjustedWeights.authenticated *= boost * 0.9
+    adjustedWeights.licensed *= boost * 0.7
+    adjustedWeights.prestige *= boost * 0.5
   }
 
   for (let i = 0; i < count; i++) {
     // Junk override chance — force a junk item regardless of rarity roll
     if (!isDud && Math.random() < JUNK_OVERRIDE_CHANCE) {
-      const junkItem = generateItem('common', valueMultiplier, [], 1, 'junk')
+      const junkItem = generateItem('unverified', valueMultiplier, [], 1, 'junk')
       items.push(junkItem)
       continue
     }
