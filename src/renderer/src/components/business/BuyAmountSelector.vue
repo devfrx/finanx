@@ -21,7 +21,7 @@ const { formatCash } = useFormat()
     <div class="buy-controls">
         <span class="buy-label">{{ $t('business.purchase_amount') }}</span>
         <div class="buy-buttons">
-            <UButton variant="ghost" size="sm" v-for="amount in (options ?? [1, 10, 100])" :key="amount"
+            <UButton variant="tab" size="sm" v-for="amount in (options ?? [1, 10, 100])" :key="amount"
                 :active="modelValue === amount" @click="$emit('update:modelValue', amount)">
                 <span class="btn-amount">x{{ amount }}</span>
                 <span v-if="costFn" class="btn-cost">{{ formatCash(costFn(amount)) }}</span>

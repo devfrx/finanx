@@ -74,61 +74,52 @@ const incomeBreakdown = computed(() => [
 
 <template>
     <div class="account-summary">
-        <!-- ═══ Income / Expense Flow ═══ -->
-        <div class="flow-section">
-            <div class="flow-card income">
-                <div class="flow-header">
+        <!-- ═══ Flow Overview (glass-style cards) ═══ -->
+        <div class="flow-strip">
+            <div class="flow-card">
+                <div class="flow-icon-wrap flow-icon-wrap--income">
                     <AppIcon icon="mdi:trending-up" class="flow-icon" />
+                </div>
+                <div class="flow-body">
                     <span class="flow-label">{{ $t('banking.income_per_sec') }}</span>
+                    <span class="flow-value positive">
+                        +{{ formatCash(totalIncomePerSecond) }}/s
+                    </span>
                 </div>
-                <span class="flow-value"
-                    :class="{ positive: totalIncomePerSecond.gte(0), negative: totalIncomePerSecond.lt(0) }">{{
-                        totalIncomePerSecond.gte(0) ? '+' : '' }}{{ formatCash(totalIncomePerSecond) }}/s</span>
             </div>
-            <div class="flow-card expense">
-                <div class="flow-header">
+            <div class="flow-card">
+                <div class="flow-icon-wrap flow-icon-wrap--expense">
                     <AppIcon icon="mdi:trending-down" class="flow-icon" />
+                </div>
+                <div class="flow-body">
                     <span class="flow-label">{{ $t('banking.expenses_per_sec') }}</span>
+                    <span class="flow-value negative">
+                        -{{ formatCash(totalExpensePerSecond) }}/s
+                    </span>
                 </div>
-                <span class="flow-value negative">-{{ formatCash(totalExpensePerSecond) }}/s</span>
             </div>
-            <div class="flow-card net">
-                <div class="flow-header">
+            <div class="flow-card flow-card--accent">
+                <div class="flow-icon-wrap flow-icon-wrap--net">
                     <AppIcon icon="mdi:chart-timeline-variant" class="flow-icon" />
+                </div>
+                <div class="flow-body">
                     <span class="flow-label">{{ $t('banking.net_flow') }}</span>
+                    <span class="flow-value"
+                        :class="{ positive: netFlowPerSecond.gte(0), negative: netFlowPerSecond.lt(0) }">
+                        {{ netFlowPerSecond.gte(0) ? '+' : '' }}{{ formatCash(netFlowPerSecond) }}/s
+                    </span>
                 </div>
-                <span class="flow-value"
-                    :class="{ positive: netFlowPerSecond.gte(0), negative: netFlowPerSecond.lt(0) }">
-                    {{ netFlowPerSecond.gte(0) ? '+' : '' }}{{ formatCash(netFlowPerSecond) }}/s
-                </span>
-            </div>
-        </div>
-
-        <!-- ═══ Dual Balance ═══ -->
-        <div class="dual-balance">
-            <div class="dual-bal-item">
-                <div class="dual-bal-header">
-                    <AppIcon icon="mdi:credit-card" class="dual-bal-icon" />
-                    <span class="dual-bal-label">{{ $t('banking.card_balance') }}</span>
-                </div>
-                <span class="dual-bal-value">{{ formatCash(player.cardBalance) }}</span>
-            </div>
-            <div class="dual-bal-item wallet-item">
-                <div class="dual-bal-header">
-                    <AppIcon icon="mdi:wallet" class="dual-bal-icon wallet-icon-color" />
-                    <span class="dual-bal-label">{{ $t('banking.wallet_cash') }}</span>
-                </div>
-                <span class="dual-bal-value wallet-color">{{ formatCash(player.cash) }}</span>
             </div>
         </div>
 
         <!-- ═══ Summary Grid ═══ -->
         <div class="summary-grid">
-            <div v-for="item in summaryItems" :key="item.label" class="summary-item">
-                <div class="summary-icon-wrap" :style="{ color: item.color }">
-                    <AppIcon :icon="item.icon" class="summary-icon" />
+            <div v-for="item in summaryItems" :key="item.label" class="summary-card">
+                <div class="summary-icon-wrap"
+                    :style="{ background: `color-mix(in srgb, ${item.color} 10%, var(--t-bg-muted))` }">
+                    <AppIcon :icon="item.icon" class="summary-icon" :style="{ color: item.color }" />
                 </div>
-                <div class="summary-text">
+                <div class="summary-info">
                     <span class="summary-value" :style="{ color: item.color }">{{ item.value }}</span>
                     <span class="summary-label">{{ $t(item.label) }}</span>
                 </div>
@@ -136,48 +127,49 @@ const incomeBreakdown = computed(() => [
         </div>
 
         <!-- ═══ Income Breakdown ═══ -->
-        <div v-if="incomeBreakdown.length > 0" class="breakdown-section">
-            <h4 class="breakdown-title">
-                <AppIcon icon="mdi:chart-pie" class="breakdown-title-icon" />
-                {{ $t('banking.income_sources') }}
-            </h4>
+        <div v-if="incomeBreakdown.length > 0" class="breakdown-panel">
+            <div class="breakdown-header">
+                <div class="breakdown-header-icon-wrap">
+                    <AppIcon icon="mdi:chart-pie" class="breakdown-header-icon" />
+                </div>
+                <span class="breakdown-title">{{ $t('banking.income_sources') }}</span>
+            </div>
             <div class="breakdown-list">
                 <div v-for="item in incomeBreakdown" :key="item.label" class="breakdown-row">
                     <div class="breakdown-dot" :style="{ background: item.color }" />
-                    <AppIcon :icon="item.icon" class="breakdown-icon" :style="{ color: item.color }" />
+                    <AppIcon :icon="item.icon" class="breakdown-row-icon" :style="{ color: item.color }" />
                     <span class="breakdown-label">{{ $t(item.label) }}</span>
                     <span class="breakdown-value">{{ formatCash(item.value) }}/s</span>
                 </div>
             </div>
         </div>
 
-        <!-- ═══ Stats Row ═══ -->
-        <div class="stats-row">
-            <div class="stat-mini">
-                <span class="stat-mini-value">{{ player.level }}</span>
-                <span class="stat-mini-label">{{ $t('banking.level') }}</span>
+        <!-- ═══ Lifetime Stats ═══ -->
+        <div class="stats-strip">
+            <div class="stat-chip">
+                <span class="stat-chip-value">{{ formatCash(player.totalCashEarned) }}</span>
+                <span class="stat-chip-label">{{ $t('banking.lifetime_earnings') }}</span>
             </div>
-            <div class="stat-mini">
-                <span class="stat-mini-value">{{ formatCash(player.totalCashEarned) }}</span>
-                <span class="stat-mini-label">{{ $t('banking.lifetime_earnings') }}</span>
-            </div>
-            <div class="stat-mini">
-                <span class="stat-mini-value">{{ banking.lifetimeTransactions }}</span>
-                <span class="stat-mini-label">{{ $t('banking.total_transactions') }}</span>
+            <div class="stat-chip">
+                <span class="stat-chip-value">{{ banking.lifetimeTransactions }}</span>
+                <span class="stat-chip-label">{{ $t('banking.total_transactions') }}</span>
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+/* ═══════════════════════════════════════════
+   Account Summary — Premium Banking Style
+   ═══════════════════════════════════════════ */
 .account-summary {
     display: flex;
     flex-direction: column;
     gap: var(--t-space-4);
 }
 
-/* ═══ Flow Cards ═══ */
-.flow-section {
+/* ─── Flow Strip ─── */
+.flow-strip {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: var(--t-space-3);
@@ -185,37 +177,86 @@ const incomeBreakdown = computed(() => [
 
 .flow-card {
     display: flex;
-    flex-direction: column;
-    gap: var(--t-space-1);
+    align-items: center;
+    gap: var(--t-space-3);
     padding: var(--t-space-3) var(--t-space-4);
     background: var(--t-bg-card);
     border: 1px solid var(--t-border);
     border-radius: var(--t-radius-lg);
+    transition: border-color var(--t-transition-normal), box-shadow var(--t-transition-normal);
 }
 
-.flow-header {
+.flow-card:hover {
+    border-color: var(--t-border-hover);
+}
+
+.flow-card--accent {
+    border-color: color-mix(in srgb, var(--t-accent) 15%, var(--t-border));
+}
+
+.flow-icon-wrap {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--t-radius-md);
     display: flex;
     align-items: center;
-    gap: 0.3rem;
+    justify-content: center;
+    flex-shrink: 0;
+    background: var(--t-bg-muted);
+}
+
+.flow-icon-wrap--income {
+    background: color-mix(in srgb, var(--t-success) 10%, var(--t-bg-muted));
+}
+
+.flow-icon-wrap--expense {
+    background: color-mix(in srgb, var(--t-danger) 10%, var(--t-bg-muted));
+}
+
+.flow-icon-wrap--net {
+    background: color-mix(in srgb, var(--t-accent) 10%, var(--t-bg-muted));
 }
 
 .flow-icon {
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: var(--t-text-muted);
 }
 
+.flow-icon-wrap--income .flow-icon {
+    color: var(--t-success);
+}
+
+.flow-icon-wrap--expense .flow-icon {
+    color: var(--t-danger);
+}
+
+.flow-icon-wrap--net .flow-icon {
+    color: var(--t-accent);
+}
+
+.flow-body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
 .flow-label {
-    font-size: var(--t-font-size-xs);
+    font-size: var(--t-font-size-2xs);
     color: var(--t-text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     font-weight: var(--t-font-medium);
+    white-space: nowrap;
 }
 
 .flow-value {
     font-family: var(--t-font-mono);
     font-size: var(--t-font-size-base);
     font-weight: var(--t-font-bold);
+    color: var(--t-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .flow-value.positive {
@@ -226,14 +267,14 @@ const incomeBreakdown = computed(() => [
     color: var(--t-danger);
 }
 
-/* ═══ Summary Grid ═══ */
+/* ─── Summary Grid ─── */
 .summary-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: var(--t-space-3);
 }
 
-.summary-item {
+.summary-card {
     display: flex;
     align-items: center;
     gap: var(--t-space-3);
@@ -244,7 +285,7 @@ const incomeBreakdown = computed(() => [
     transition: border-color var(--t-transition-normal);
 }
 
-.summary-item:hover {
+.summary-card:hover {
     border-color: var(--t-border-hover);
 }
 
@@ -256,14 +297,13 @@ const incomeBreakdown = computed(() => [
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    background: var(--t-bg-muted);
 }
 
 .summary-icon {
     font-size: 1.1rem;
 }
 
-.summary-text {
+.summary-info {
     display: flex;
     flex-direction: column;
     min-width: 0;
@@ -279,34 +319,49 @@ const incomeBreakdown = computed(() => [
 }
 
 .summary-label {
-    font-size: var(--t-font-size-xs);
+    font-size: var(--t-font-size-2xs);
     color: var(--t-text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.04em;
     font-weight: var(--t-font-medium);
 }
 
-/* ═══ Income Breakdown ═══ */
-.breakdown-section {
-    padding: var(--t-space-3) var(--t-space-4);
+/* ─── Income Breakdown ─── */
+.breakdown-panel {
+    padding: var(--t-space-4);
     background: var(--t-bg-card);
     border: 1px solid var(--t-border);
     border-radius: var(--t-radius-lg);
 }
 
-.breakdown-title {
+.breakdown-header {
     display: flex;
     align-items: center;
-    gap: 0.3rem;
+    gap: var(--t-space-2);
+    margin-bottom: var(--t-space-3);
+}
+
+.breakdown-header-icon-wrap {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--t-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: color-mix(in srgb, var(--t-accent) 10%, var(--t-bg-muted));
+}
+
+.breakdown-header-icon {
+    font-size: 0.85rem;
+    color: var(--t-accent);
+}
+
+.breakdown-title {
     font-size: var(--t-font-size-sm);
     font-weight: var(--t-font-semibold);
     color: var(--t-text);
-    margin: 0 0 var(--t-space-3);
-}
-
-.breakdown-title-icon {
-    font-size: 0.9rem;
-    color: var(--t-text-muted);
+    margin: 0;
 }
 
 .breakdown-list {
@@ -319,6 +374,13 @@ const incomeBreakdown = computed(() => [
     display: flex;
     align-items: center;
     gap: var(--t-space-2);
+    padding: var(--t-space-1) var(--t-space-2);
+    border-radius: var(--t-radius-sm);
+    transition: background var(--t-transition-fast);
+}
+
+.breakdown-row:hover {
+    background: var(--t-bg-muted);
 }
 
 .breakdown-dot {
@@ -328,7 +390,7 @@ const incomeBreakdown = computed(() => [
     flex-shrink: 0;
 }
 
-.breakdown-icon {
+.breakdown-row-icon {
     font-size: 0.9rem;
     flex-shrink: 0;
 }
@@ -346,92 +408,54 @@ const incomeBreakdown = computed(() => [
     color: var(--t-text);
 }
 
-/* ═══ Stats Row ═══ */
-.stats-row {
+/* ─── Stats Strip ─── */
+.stats-strip {
     display: flex;
     gap: var(--t-space-3);
 }
 
-.stat-mini {
+.stat-chip {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 0.1rem;
     padding: var(--t-space-3);
     background: var(--t-bg-card);
     border: 1px solid var(--t-border);
     border-radius: var(--t-radius-lg);
+    transition: border-color var(--t-transition-normal);
 }
 
-.stat-mini-value {
+.stat-chip:hover {
+    border-color: var(--t-border-hover);
+}
+
+.stat-chip-value {
     font-family: var(--t-font-mono);
     font-size: var(--t-font-size-base);
     font-weight: var(--t-font-bold);
     color: var(--t-text);
 }
 
-.stat-mini-label {
-    font-size: var(--t-font-size-xs);
+.stat-chip-label {
+    font-size: var(--t-font-size-2xs);
     color: var(--t-text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     font-weight: var(--t-font-medium);
     text-align: center;
+    white-space: nowrap;
 }
 
-/* ═══ Dual Balance ═══ */
-.dual-balance {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--t-space-3);
-    padding: var(--t-space-3);
-    background: var(--t-bg-elevated);
-    border-radius: var(--t-radius-md);
-}
-
-.dual-bal-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-}
-
-.dual-bal-header {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-}
-
-.dual-bal-icon {
-    font-size: 0.8rem;
-    color: var(--t-text-muted);
-}
-
-.wallet-icon-color {
-    color: var(--t-success);
-}
-
-.dual-bal-label {
-    font-size: var(--t-font-size-xs);
-    color: var(--t-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-}
-
-.dual-bal-value {
-    font-family: var(--t-font-mono);
-    font-size: var(--t-font-size-lg);
-    font-weight: var(--t-font-bold);
-    color: var(--t-text);
-}
-
-.wallet-color {
-    color: var(--t-success);
-}
-
-/* ═══ Responsive ═══ */
+/* ─── Responsive ─── */
 @media (max-width: 700px) {
-    .flow-section {
+    .flow-strip {
         grid-template-columns: 1fr;
+    }
+
+    .stats-strip {
+        flex-direction: column;
     }
 }
 </style>

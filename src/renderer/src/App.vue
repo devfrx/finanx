@@ -125,6 +125,13 @@ body {
   box-shadow: var(--t-shadow-focus);
 }
 
+/* Inputs use border-color for focus, not the ring */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  box-shadow: none;
+}
+
 /* ── INTERACTIVE ELEMENTS – universal states ── */
 a,
 button,

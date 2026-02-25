@@ -22,8 +22,8 @@
 }
 
 .p-inputtext:focus {
-  box-shadow: var(--t-shadow-focus) !important;
-  border-color: transparent !important;
+  box-shadow: none !important;
+  border-color: var(--t-border-focus) !important;
 }
 
 .p-inputtext:disabled {

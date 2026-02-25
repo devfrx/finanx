@@ -6,7 +6,7 @@ import { useFormat } from '@renderer/composables/useFormat'
 import { useI18n } from 'vue-i18n'
 import AppIcon from '@renderer/components/AppIcon.vue'
 import { GameCard, SlotMachine, RouletteGame, CoinFlip, BlackjackGame, DiceGame, PlinkoGame, LotteryGame } from '@renderer/components/gambling'
-import { CashDisplay } from '@renderer/components/dashboard'
+import { CashDisplay, ChipExchange } from '@renderer/components/dashboard'
 import InfoPanel from '@renderer/components/layout/InfoPanel.vue'
 import type { InfoSection } from '@renderer/components/layout/InfoPanel.vue'
 import { EventImpactBanner } from '@renderer/components/events'
@@ -184,6 +184,9 @@ const gamblingInfoSections = computed<InfoSection[]>(() => [
                 </div>
                 <CashDisplay :label="$t('gambling.balance')" :value="formatCash(player.cash)" />
             </div>
+
+            <!-- Chip Exchange -->
+            <ChipExchange />
 
             <!-- Event Impact -->
             <EventImpactBanner route-name="gambling" />

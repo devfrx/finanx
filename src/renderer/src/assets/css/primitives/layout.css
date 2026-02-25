@@ -129,3 +129,17 @@
   border: 1px solid color-mix(in srgb, var(--t-gold) 25%, transparent);
   color: var(--t-gold);
 }
+
+/* ====================================
+   GLOBAL INPUT FOCUS RESET
+   Remove browser default outline on all inputs.
+   Components use border-color for focus indication instead.
+   ==================================== */
+input:focus,
+input:focus-visible,
+textarea:focus,
+textarea:focus-visible,
+select:focus,
+select:focus-visible {
+  outline: none;
+}
