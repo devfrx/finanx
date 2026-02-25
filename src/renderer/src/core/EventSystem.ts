@@ -67,6 +67,8 @@ export interface GameEventDef {
   requiresChoice?: boolean
   /** Alternative effects if player declines (only if requiresChoice) */
   declineEffects?: EventEffect[]
+  /** Mutual exclusion group — only one event from the same group can be active at a time */
+  exclusionGroup?: string
 }
 
 export interface ActiveEvent {
@@ -185,6 +187,12 @@ export class EventSystem {
       // Check uniqueness
       if (def.unique && this.state.activeEvents.some((a) => a.eventId === id)) continue
 
+      // Check mutual exclusion group
+      if (def.exclusionGroup && this.state.activeEvents.some((a) => {
+        const aDef = this.definitions.get(a.eventId)
+        return aDef?.exclusionGroup === def.exclusionGroup
+      })) continue
+
       // Check max active events (global cap to avoid spam)
       if (this.state.activeEvents.length >= 5) continue
 
@@ -208,6 +216,10 @@ export class EventSystem {
     const def = this.definitions.get(eventId)
     if (!def) {
       console.warn(`[EventSystem] forceActivateEvent: unknown id "${eventId}", ${this.definitions.size} defs registered`)
+      return false
+    }
+    // Prevent duplicate activation of unique events
+    if (def.unique && this.state.activeEvents.some((a) => a.eventId === eventId)) {
       return false
     }
     this.activateEvent(eventId)

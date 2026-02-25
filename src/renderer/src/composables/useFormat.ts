@@ -64,6 +64,7 @@ export function useFormat() {
 
   /** Format time in seconds to human-readable */
   function formatTime(seconds: number): string {
+    if (!isFinite(seconds) || seconds < 0) return '0s'
     if (seconds < 60) return `${Math.floor(seconds)}s`
     if (seconds < 3600) {
       const m = Math.floor(seconds / 60)

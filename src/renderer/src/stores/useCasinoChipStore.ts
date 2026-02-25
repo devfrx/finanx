@@ -132,9 +132,9 @@ export const useCasinoChipStore = defineStore('casinoChips', () => {
     // Higher tier = lower fee
     const tierIdx = ['standard', 'gold', 'platinum', 'black'].indexOf(banking.cardTier)
     fee -= tierIdx * 0.005 // 2%, 1.5%, 1%, 0.5%
-    // Skill tree cost reduction helps
+    // Skill tree cost reduction helps — multiplier ≥ 1 → divide to reduce fees
     const costMul = upgrades.getMultiplier('cost_reduction').toNumber()
-    fee *= costMul
+    fee /= costMul
     return Math.max(0, fee)
   })
 

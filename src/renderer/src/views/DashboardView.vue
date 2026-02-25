@@ -44,6 +44,17 @@ const availableJobs = computed(() =>
     JOBS.filter(j => !jobStore.unlockedJobs.find(uj => uj.defId === j.id))
 )
 
+/** Pre-built map for O(1) job definition lookup by id */
+const jobDefMap = computed(() => {
+    const map = new Map<string, (typeof JOBS)[number]>()
+    for (const j of JOBS) map.set(j.id, j)
+    return map
+})
+
+function getJobDef(defId: string) {
+    return jobDefMap.value.get(defId)
+}
+
 function toggleJob(defId: string): void {
     const job = jobStore.unlockedJobs.find(j => j.defId === defId)
     if (!job) return
@@ -112,13 +123,12 @@ function toggleJob(defId: string): void {
                             <div v-for="uj in jobStore.unlockedJobs" :key="uj.id" class="job-row"
                                 :class="{ active: uj.active }">
                                 <div class="job-icon-wrap" :class="{ 'job-icon-wrap--active': uj.active }">
-                                    <AppIcon :icon="JOBS.find(j => j.id === uj.defId)?.icon || 'mdi:briefcase'"
-                                        class="job-icon" />
+                                    <AppIcon :icon="getJobDef(uj.defId)?.icon || 'mdi:briefcase'" class="job-icon" />
                                 </div>
                                 <div class="job-info">
-                                    <span class="job-name">{{JOBS.find(j => j.id === uj.defId)?.name}}</span>
+                                    <span class="job-name">{{ getJobDef(uj.defId)?.name }}</span>
                                     <span class="job-meta">{{ $t('dashboard.exp_level', { n: uj.experienceLevel })
-                                        }}</span>
+                                    }}</span>
                                 </div>
                                 <UButton size="sm" :variant="uj.active ? 'danger' : 'success'"
                                     @click="toggleJob(uj.defId)">

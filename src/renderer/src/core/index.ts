@@ -44,3 +44,20 @@ export {
   type PlinkoBall,
   type PlinkoConfig
 } from './PlinkoEngine'
+export {
+  evaluateOrders,
+  calculateOrderCost,
+  generateOrderId,
+  isBuyOrder,
+  isSellOrder,
+  countActiveOrders,
+  getOrderTypeI18nKey,
+  BASE_MAX_ORDERS,
+  DEFAULT_EXPIRATION_TICKS,
+  EXPIRATION_PRESETS,
+  type LimitOrder,
+  type OrderType,
+  type OrderStatus,
+  type MarketType,
+  type OrderExecutionResult
+} from './LimitOrderEngine'

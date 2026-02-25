@@ -18,7 +18,8 @@ export const EVENTS: GameEventDef[] = [
     durationTicks: 1200, // 120s
     effects: [{ type: 'income_multiplier', value: 1.5, target: 'stocks' }],
     icon: 'mdi:chart-line-variant',
-    category: 'market'
+    category: 'market',
+    exclusionGroup: 'stock_market'
   },
   {
     id: 'tax_break',
@@ -58,7 +59,8 @@ export const EVENTS: GameEventDef[] = [
     durationTicks: 900,
     effects: [{ type: 'income_multiplier', value: 2, target: 'crypto' }],
     icon: 'mdi:bitcoin',
-    category: 'market'
+    category: 'market',
+    exclusionGroup: 'crypto_market'
   },
   {
     id: 'real_estate_boom',
@@ -83,7 +85,8 @@ export const EVENTS: GameEventDef[] = [
   {
     id: 'lottery_fever',
     name: 'Lottery Fever',
-    description: 'The whole city is buying tickets! Jackpot pools surge. Gambling luck massively boosted!',
+    description:
+      'The whole city is buying tickets! Jackpot pools surge. Gambling luck massively boosted!',
     probability: 0.015,
     durationTicks: 1800,
     effects: [{ type: 'sector_boost', value: 1.5, target: 'gambling' }],
@@ -131,7 +134,8 @@ export const EVENTS: GameEventDef[] = [
     durationTicks: 1200,
     effects: [{ type: 'income_multiplier', value: 0.5, target: 'stocks' }],
     icon: 'mdi:chart-line-variant',
-    category: 'market'
+    category: 'market',
+    exclusionGroup: 'stock_market'
   },
   {
     id: 'crypto_winter',
@@ -141,7 +145,8 @@ export const EVENTS: GameEventDef[] = [
     durationTicks: 1800,
     effects: [{ type: 'income_multiplier', value: 0.4, target: 'crypto' }],
     icon: 'mdi:snowflake',
-    category: 'market'
+    category: 'market',
+    exclusionGroup: 'crypto_market'
   },
   {
     id: 'supply_shortage',
@@ -159,7 +164,8 @@ export const EVENTS: GameEventDef[] = [
   {
     id: 'investor_offer',
     name: 'Angel Investor',
-    description: 'An investor offers to double your income for 60s, but takes a 20% cut of current cash.',
+    description:
+      'An investor offers to double your income for 60s, but takes a 20% cut of current cash.',
     probability: 0.02,
     durationTicks: 600,
     effects: [{ type: 'income_multiplier', value: 2 }],
@@ -211,7 +217,7 @@ export const EVENTS: GameEventDef[] = [
     description: 'Interest rates are rising! All loan rates increased by 30%.',
     probability: 0.018,
     durationTicks: 3600,
-    effects: [{ type: 'loan_rate_modifier', value: 0.30 }],
+    effects: [{ type: 'loan_rate_modifier', value: 0.3 }],
     icon: 'mdi:bank-transfer',
     category: 'economy'
   },
@@ -238,7 +244,8 @@ export const EVENTS: GameEventDef[] = [
   {
     id: 'loan_forgiveness',
     name: 'Debt Relief Program',
-    description: 'A new government program offers debt relief! Income boosted as debt burden eases.',
+    description:
+      'A new government program offers debt relief! Income boosted as debt burden eases.',
     probability: 0.01,
     durationTicks: 2400,
     effects: [
@@ -266,7 +273,7 @@ export const EVENTS: GameEventDef[] = [
     durationTicks: 900,
     effects: [
       { type: 'income_multiplier', value: 0.85, target: 'business' },
-      { type: 'loan_rate_modifier', value: 0.20, target: 'predatory' }
+      { type: 'loan_rate_modifier', value: 0.2, target: 'predatory' }
     ],
     icon: 'mdi:account-question',
     category: 'personal'
@@ -274,11 +281,12 @@ export const EVENTS: GameEventDef[] = [
   {
     id: 'financial_advisor',
     name: 'Financial Advisor Visit',
-    description: 'A financial advisor helps optimize your debt strategy. Better loan terms available!',
+    description:
+      'A financial advisor helps optimize your debt strategy. Better loan terms available!',
     probability: 0.02,
     durationTicks: 1800,
     effects: [
-      { type: 'loan_rate_modifier', value: -0.20 },
+      { type: 'loan_rate_modifier', value: -0.2 },
       { type: 'credit_score_modifier', value: 5 }
     ],
     icon: 'mdi:account-tie',
@@ -292,7 +300,7 @@ export const EVENTS: GameEventDef[] = [
     durationTicks: 2400,
     effects: [
       { type: 'credit_score_modifier', value: 8 },
-      { type: 'loan_rate_modifier', value: -0.10 }
+      { type: 'loan_rate_modifier', value: -0.1 }
     ],
     icon: 'mdi:credit-card-plus',
     category: 'personal'
@@ -304,8 +312,8 @@ export const EVENTS: GameEventDef[] = [
     probability: 0.015,
     durationTicks: 3000,
     effects: [
-      { type: 'income_multiplier', value: 1.20 },
-      { type: 'loan_rate_modifier', value: -0.30 },
+      { type: 'income_multiplier', value: 1.2 },
+      { type: 'loan_rate_modifier', value: -0.3 },
       { type: 'sector_boost', value: 1.15, target: 'business' }
     ],
     icon: 'mdi:cash-plus',
@@ -320,7 +328,7 @@ export const EVENTS: GameEventDef[] = [
     description: 'Banks are competing for deposits! All deposit APYs get a massive boost.',
     probability: 0.02,
     durationTicks: 1800, // 3 minutes
-    effects: [{ type: 'deposit_rate_modifier', value: 0.50 }],
+    effects: [{ type: 'deposit_rate_modifier', value: 0.5 }],
     icon: 'mdi:piggy-bank',
     category: 'economy'
   },
@@ -332,7 +340,7 @@ export const EVENTS: GameEventDef[] = [
     durationTicks: 3600, // 6 minutes
     effects: [
       { type: 'deposit_rate_modifier', value: 0.35 },
-      { type: 'loan_rate_modifier', value: 0.20 }
+      { type: 'loan_rate_modifier', value: 0.2 }
     ],
     icon: 'mdi:bank-plus',
     category: 'economy'
@@ -343,7 +351,7 @@ export const EVENTS: GameEventDef[] = [
     description: 'A new tax on savings accounts reduces deposit yields.',
     probability: 0.015,
     durationTicks: 2400, // 4 minutes
-    effects: [{ type: 'deposit_rate_modifier', value: -0.30 }],
+    effects: [{ type: 'deposit_rate_modifier', value: -0.3 }],
     icon: 'mdi:file-document-minus',
     category: 'economy'
   },
@@ -354,7 +362,7 @@ export const EVENTS: GameEventDef[] = [
     probability: 0.015,
     durationTicks: 3000, // 5 minutes
     effects: [
-      { type: 'deposit_rate_modifier', value: 0.20 },
+      { type: 'deposit_rate_modifier', value: 0.2 },
       { type: 'credit_score_modifier', value: 5 }
     ],
     icon: 'mdi:shield-check',
@@ -367,8 +375,8 @@ export const EVENTS: GameEventDef[] = [
     probability: 0.01,
     durationTicks: 2400,
     effects: [
-      { type: 'deposit_rate_modifier', value: -0.60 },
-      { type: 'loan_rate_modifier', value: -0.40 }
+      { type: 'deposit_rate_modifier', value: -0.6 },
+      { type: 'loan_rate_modifier', value: -0.4 }
     ],
     icon: 'mdi:trending-down',
     category: 'economy'
@@ -392,7 +400,7 @@ export const EVENTS: GameEventDef[] = [
     description: 'Investors are pulling back. Startup returns are lower than usual.',
     probability: 0.015,
     durationTicks: 2400, // 4 minutes
-    effects: [{ type: 'startup_return_modifier', value: -0.20 }],
+    effects: [{ type: 'startup_return_modifier', value: -0.2 }],
     icon: 'mdi:snowflake-alert',
     category: 'market'
   },
@@ -402,7 +410,7 @@ export const EVENTS: GameEventDef[] = [
     description: 'A government research fund subsidises due diligence costs!',
     probability: 0.02,
     durationTicks: 1500, // 2.5 minutes
-    effects: [{ type: 'research_cost_modifier', value: -0.30 }],
+    effects: [{ type: 'research_cost_modifier', value: -0.3 }],
     icon: 'mdi:file-certificate',
     category: 'opportunity'
   },
@@ -413,7 +421,7 @@ export const EVENTS: GameEventDef[] = [
     probability: 0.012,
     durationTicks: 1200,
     effects: [
-      { type: 'startup_return_modifier', value: 0.40 },
+      { type: 'startup_return_modifier', value: 0.4 },
       { type: 'startup_success_modifier', value: -0.05 }
     ],
     icon: 'mdi:unicorn-variant',
@@ -426,7 +434,7 @@ export const EVENTS: GameEventDef[] = [
     probability: 0.015,
     durationTicks: 900,
     effects: [
-      { type: 'research_cost_modifier', value: -0.50 },
+      { type: 'research_cost_modifier', value: -0.5 },
       { type: 'startup_success_modifier', value: 0.04 }
     ],
     icon: 'mdi:account-voice',
@@ -439,10 +447,22 @@ export const EVENTS: GameEventDef[] = [
     probability: 0.01,
     durationTicks: 2400,
     effects: [
-      { type: 'startup_success_modifier', value: -0.10 },
+      { type: 'startup_success_modifier', value: -0.1 },
       { type: 'startup_return_modifier', value: -0.15 }
     ],
     icon: 'mdi:chart-bubble',
     category: 'market'
   }
 ]
+
+/**
+ * Apply sane balance defaults to all events:
+ * – unique: true   → prevents the same event from stacking with itself
+ * – cooldownTicks  → 2× durationTicks cooldown after expiry, preventing spam
+ *
+ * Individual events can still override by setting the properties explicitly.
+ */
+for (const evt of EVENTS) {
+  if (evt.unique === undefined) evt.unique = true
+  if (evt.cooldownTicks === undefined) evt.cooldownTicks = evt.durationTicks * 2
+}

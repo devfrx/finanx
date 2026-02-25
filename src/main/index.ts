@@ -98,7 +98,7 @@ app.whenReady().then(async () => {
   try {
     await initDatabase()
     dbReady = true
-    console.log('[DB] Database initialized')
+    console.debug('[DB] Database initialized')
   } catch (err) {
     console.error('[DB] Failed to initialize database:', err)
   }

@@ -185,6 +185,7 @@ export const useCryptoStore = defineStore('crypto', () => {
 
   function buyCrypto(assetId: string, amount: number): Decimal | null {
     const asset = assets.value.find((a) => a.id === assetId)
+    if (!asset) return null
     if (!amount || amount <= 0) return null
 
     const player = usePlayerStore()
@@ -292,13 +293,13 @@ export const useCryptoStore = defineStore('crypto', () => {
         if (existing) {
           existing.amount = savedHolding.amount ?? 0
           existing.averageBuyPrice = savedHolding.averageBuyPrice ?? 0
-          existing.totalInvested = savedHolding.totalInvested ?? existing.totalInvested
+          existing.totalInvested = D(savedHolding.totalInvested ?? existing.totalInvested)
         } else if (savedHolding.amount > 0) {
           wallet.value.push({
             assetId: savedHolding.assetId,
             amount: savedHolding.amount,
             averageBuyPrice: savedHolding.averageBuyPrice,
-            totalInvested: savedHolding.totalInvested
+            totalInvested: D(savedHolding.totalInvested ?? 0)
           })
         }
       }
@@ -306,10 +307,10 @@ export const useCryptoStore = defineStore('crypto', () => {
     // Restore stats
     if (saved.cryptoStats) {
       if (saved.cryptoStats.totalRealizedProfit !== undefined) {
-        totalRealizedProfit.value = saved.cryptoStats.totalRealizedProfit
+        totalRealizedProfit.value = D(saved.cryptoStats.totalRealizedProfit)
       }
       if (saved.cryptoStats.totalStakingEarned !== undefined) {
-        totalStakingEarned.value = saved.cryptoStats.totalStakingEarned
+        totalStakingEarned.value = D(saved.cryptoStats.totalStakingEarned)
       }
     }
     // Restore market simulator state
@@ -328,6 +329,36 @@ export const useCryptoStore = defineStore('crypto', () => {
         console.warn('[CryptoStore] Failed to restore market state:', e)
       }
     }
+  }
+
+  /**
+   * Force-reduce crypto wallet value by a given amount.
+   * Used by the loan system during collateral seizure.
+   * Liquidates holdings proportionally across all positions.
+   */
+  function reduceAssetValue(amount: Decimal): void {
+    if (wallet.value.length === 0) return
+    const totalVal = totalWalletValue.value
+    if (totalVal.lte(0)) return
+
+    for (const h of wallet.value) {
+      const asset = assets.value.find((a) => a.id === h.assetId)
+      if (!asset || asset.currentPrice <= 0) continue
+      const holdingValue = D(asset.currentPrice * h.amount)
+      const share = holdingValue.div(totalVal)
+      const reduction = mul(amount, share)
+      const amountToLiquidate = Math.min(
+        h.amount,
+        reduction.toNumber() / asset.currentPrice
+      )
+      if (amountToLiquidate > 0) {
+        const fractionLiquidated = amountToLiquidate / h.amount
+        h.amount -= amountToLiquidate
+        h.totalInvested = sub(h.totalInvested, mul(h.totalInvested, fractionLiquidated))
+      }
+    }
+    // Remove empty holdings
+    wallet.value = wallet.value.filter((h) => h.amount > 0)
   }
 
   return {
@@ -349,6 +380,7 @@ export const useCryptoStore = defineStore('crypto', () => {
     prestigeReset,
     getSimulator,
     setMarketCondition,
-    loadFromSave
+    loadFromSave,
+    reduceAssetValue
   }
 })

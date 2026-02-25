@@ -138,7 +138,7 @@ function doPay(): void {
                 <div class="bm-info-row bm-info-sub">
                     <span class="bm-info-label">{{ t('bm_payment.units_needed') }}</span>
                     <span class="bm-info-value bm-mono">{{ cryptoUnitsNeeded }} {{ selectedHolding.asset.symbol
-                        }}</span>
+                    }}</span>
                 </div>
             </div>
 
@@ -156,10 +156,10 @@ function doPay(): void {
         </template>
 
         <!-- Cost display -->
-        <div class="bm-cost-row">
+        <!-- <div class="bm-cost-row">
             <span class="bm-cost-label">{{ t('bm_payment.cost') }}</span>
             <span class="bm-cost-value">{{ formatCash(cost) }}</span>
-        </div>
+        </div> -->
 
         <!-- Pay button -->
         <button class="bm-pay-btn" :disabled="!canPay" @click="doPay">

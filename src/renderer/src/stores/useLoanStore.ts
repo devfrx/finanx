@@ -22,6 +22,7 @@ import { useBusinessStore } from './useBusinessStore'
 import { useRealEstateStore } from './useRealEstateStore'
 import { useStockStore } from './useStockStore'
 import { useCryptoStore } from './useCryptoStore'
+import { useEventStore } from './useEventStore'
 import {
   LOANS,
   type LoanDef,
@@ -192,15 +193,19 @@ export const useLoanStore = defineStore('loans', () => {
   /** Recalculate credit score from factors */
   function recalculateCreditScore(): void {
     const factors = creditScoreFactors.value
-    creditScore.value = Math.round(
+    let raw = Math.round(
       factors.paymentHistory +
         factors.creditUtilization +
         factors.creditAge +
         factors.creditMix +
         factors.newCredit
     )
+    // Apply event credit_score_modifier (additive bonus/penalty, e.g. +15, -10)
+    const events = useEventStore()
+    const creditEventMod = events.getAdditiveBonus('credit_score_modifier')
+    raw += Math.round(creditEventMod)
     // Clamp to 0-100
-    creditScore.value = Math.max(0, Math.min(100, creditScore.value))
+    creditScore.value = Math.max(0, Math.min(100, raw))
   }
 
   /** Update credit utilization factor based on current debt */
@@ -337,6 +342,16 @@ export const useLoanStore = defineStore('loans', () => {
       maxApproved = headroom
     }
 
+    // After capping, ensure maxApproved still meets minimum
+    if (maxApproved.lt(def.minAmount)) {
+      return {
+        loanDefId,
+        requestedAmount: ZERO,
+        approved: false,
+        reason: 'Approved amount below minimum loan requirement'
+      }
+    }
+
     return {
       loanDefId,
       requestedAmount: maxApproved,
@@ -417,6 +432,11 @@ export const useLoanStore = defineStore('loans', () => {
     // Apply prestige loan_discount (from upgrades, milestones, and perks)
     const prestigeDiscount = prestige.getLoanDiscount()
     effectiveRate = Math.max(0.01, effectiveRate - prestigeDiscount)
+
+    // Apply event loan_rate_modifier (additive: e.g. -0.25 = 25% cheaper, +0.30 = 30% more expensive)
+    const events = useEventStore()
+    const loanEventMod = events.getAdditiveBonus('loan_rate_modifier')
+    effectiveRate *= Math.max(0, 1 + loanEventMod)
 
     // Calculate collateral to lock
     let collateralLocked = ZERO
@@ -954,7 +974,7 @@ export const useLoanStore = defineStore('loans', () => {
     totalLoansTaken.value = data.totalLoansTaken ?? 0
     totalLoansRepaidOnTime.value = data.totalLoansRepaidOnTime ?? 0
     totalLoansDefaulted.value = data.totalLoansDefaulted ?? 0
-    totalInterestPaidEver.value = data.totalInterestPaidEver ?? ZERO
+    totalInterestPaidEver.value = D(data.totalInterestPaidEver ?? 0)
   }
 
   return {

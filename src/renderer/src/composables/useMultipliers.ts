@@ -137,7 +137,7 @@ export const MULTIPLIER_CATEGORIES: MultiplierCategory[] = [
     icon: 'mdi:dice-multiple',
     upgradeTarget: 'gambling_luck',
     prestigeEffects: [],
-    eventEffect: null,
+    eventEffect: { type: 'sector_boost', target: 'gambling' },
     achievementTarget: 'gambling_luck',
     eraAffected: false
   },
@@ -157,7 +157,7 @@ export const MULTIPLIER_CATEGORIES: MultiplierCategory[] = [
     icon: 'mdi:star',
     upgradeTarget: 'xp_gain',
     prestigeEffects: ['xp_gain'],
-    eventEffect: null,
+    eventEffect: { type: 'sector_boost', target: 'xp' },
     achievementTarget: 'xp_gain',
     eraAffected: false
   },
@@ -177,7 +177,7 @@ export const MULTIPLIER_CATEGORIES: MultiplierCategory[] = [
     icon: 'mdi:rocket-launch',
     upgradeTarget: 'startup_success',
     prestigeEffects: [],
-    eventEffect: null,
+    eventEffect: { type: 'startup_success_modifier' },
     achievementTarget: null,
     eraAffected: false
   },

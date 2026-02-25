@@ -26,7 +26,7 @@ export async function initDatabase(): Promise<LowSync<GameSave>> {
   const { JSONFileSync } = await import('lowdb/node')
 
   const savePath = join(app.getPath('userData'), 'savegame.json')
-  console.log('[DB] Save file path:', savePath)
+  console.debug('[DB] Save file path:', savePath)
 
   const defaultData = createDefaultSave()
   const adapter = new JSONFileSync<GameSave>(savePath)
@@ -187,7 +187,7 @@ function runMigrations(saveData: GameSave): void {
   while (saveData.version < CURRENT_SAVE_VERSION) {
     const migrateFn = migrations[saveData.version]
     if (migrateFn) {
-      console.log(`[DB] Running migration v${saveData.version} → v${saveData.version + 1}`)
+      console.debug(`[DB] Running migration v${saveData.version} → v${saveData.version + 1}`)
       migrateFn(saveData)
     } else {
       // No migration defined, just bump version

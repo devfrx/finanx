@@ -916,16 +916,16 @@ export const useShopStore = defineStore('shop', () => {
     if (data.lastFullRestockTick !== undefined) lastFullRestockTick.value = data.lastFullRestockTick
     if (data.totalItemsBought !== undefined) totalItemsBought.value = data.totalItemsBought
     if (data.totalCashSpentOnPurchases !== undefined)
-      totalCashSpentOnPurchases.value = data.totalCashSpentOnPurchases
+      totalCashSpentOnPurchases.value = D(data.totalCashSpentOnPurchases)
     if (data.totalItemsSoldToShop !== undefined)
       totalItemsSoldToShop.value = data.totalItemsSoldToShop
-    if (data.totalCashFromSales !== undefined) totalCashFromSales.value = data.totalCashFromSales
+    if (data.totalCashFromSales !== undefined) totalCashFromSales.value = D(data.totalCashFromSales)
     if (data.uniqueItemsBought !== undefined) uniqueItemsBought.value = data.uniqueItemsBought
-    if (data.bestDeal !== undefined) bestDeal.value = data.bestDeal
+    if (data.bestDeal !== undefined) bestDeal.value = D(data.bestDeal)
     if (data.totalItemsRestored !== undefined) totalItemsRestored.value = data.totalItemsRestored
     if (data.totalRestorationCashSpent !== undefined)
-      totalRestorationCashSpent.value = data.totalRestorationCashSpent
-    if (data.totalAuctionRevenue !== undefined) totalAuctionRevenue.value = data.totalAuctionRevenue
+      totalRestorationCashSpent.value = D(data.totalRestorationCashSpent)
+    if (data.totalAuctionRevenue !== undefined) totalAuctionRevenue.value = D(data.totalAuctionRevenue)
     if (data.totalAuctionsCompleted !== undefined)
       totalAuctionsCompleted.value = data.totalAuctionsCompleted
     // Demand

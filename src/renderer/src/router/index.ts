@@ -130,7 +130,12 @@ const router = createRouter({
             meta: { titleKey: 'nav.dev', icon: 'mdi:bug' }
           }
         ]
-      : [])
+      : []),
+    // Catch-all 404 → redirect to dashboard
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/'
+    }
   ]
 })
 

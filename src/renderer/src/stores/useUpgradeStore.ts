@@ -26,7 +26,8 @@ const TARGET_MAP: Record<UpgradeTarget, UpgradeEffectTarget> = {
   offlineEfficiency: 'offline_efficiency',
   prestigeGain: 'prestige_gain',
   loanRate: 'loan_rate',
-  depositRate: 'deposit_rate'
+  depositRate: 'deposit_rate',
+  limitOrderSlots: 'limit_order_slots'
 }
 
 export type UpgradeEffectTarget =
@@ -45,6 +46,7 @@ export type UpgradeEffectTarget =
   | 'startup_success'
   | 'loan_rate'
   | 'deposit_rate'
+  | 'limit_order_slots'
 
 export interface UpgradeNodeDef {
   id: string

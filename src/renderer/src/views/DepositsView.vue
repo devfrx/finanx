@@ -8,6 +8,7 @@ import Slider from 'primevue/slider'
 import Select from 'primevue/select'
 import { useDepositStore } from '@renderer/stores/useDepositStore'
 import { usePlayerStore } from '@renderer/stores/usePlayerStore'
+import { useCardPaymentStore } from '@renderer/stores/useCardPaymentStore'
 import { useFormat } from '@renderer/composables/useFormat'
 import { useI18n } from 'vue-i18n'
 import { useOnTick } from '@renderer/composables/useGameLoop'
@@ -26,6 +27,7 @@ import type { InfoSection } from '@renderer/components/layout/InfoPanel.vue'
 
 const depositStore = useDepositStore()
 const player = usePlayerStore()
+const cardPayment = useCardPaymentStore()
 const { formatCash } = useFormat()
 const { t } = useI18n()
 
@@ -82,8 +84,11 @@ function openDepositDialog(def: DepositDef) {
 
     selectedDeposit.value = def
     minAmount.value = def.minDeposit.toNumber()
-    const capMax = def.maxDeposit.gt(0) ? def.maxDeposit.toNumber() : player.cash.toNumber()
-    maxAmount.value = Math.min(capMax, player.cash.toNumber())
+    // Deposits pay via card — available = cardBalance minus card fee
+    const feeRate = cardPayment.feeRate
+    const availableForDeposit = player.cardBalance.div(1 + feeRate).floor().toNumber()
+    const capMax = def.maxDeposit.gt(0) ? def.maxDeposit.toNumber() : availableForDeposit
+    maxAmount.value = Math.max(minAmount.value, Math.min(capMax, availableForDeposit))
     depositAmount.value = minAmount.value
     showOpenDialog.value = true
 }
@@ -227,9 +232,9 @@ const depositInfoSections = computed<InfoSection[]>(() => [
                             <span>{{ $t('deposits.apy_label') }} {{ (entry.effectiveAPY * 100).toFixed(1) }}%</span>
                             <span v-if="entry.earlyWithdrawal" class="text-warning">{{
                                 $t('deposits.early_withdrawal', { penalty: formatCash(entry.penaltyPaid) })
-                                }}</span>
+                            }}</span>
                             <span class="history-status" :class="entry.status">{{ entry.status.replace(/_/g, ' ')
-                                }}</span>
+                            }}</span>
                         </div>
                     </div>
                 </div>
@@ -254,7 +259,7 @@ const depositInfoSections = computed<InfoSection[]>(() => [
                 <div class="amount-selector">
                     <label>{{ $t('deposits.deposit_amount') }}</label>
                     <Slider v-model="depositAmount" :min="minAmount" :max="maxAmount"
-                        :step="Math.max(100, Math.floor((maxAmount - minAmount) / 100))" />
+                        :step="Math.max(1, Math.floor((maxAmount - minAmount) / 100)) || 1" />
                     <div class="amount-display">
                         <span class="amount-value">{{ formatCash(depositAmount) }}</span>
                         <span class="amount-range">{{ formatCash(minAmount) }} — {{ formatCash(maxAmount) }}</span>
@@ -265,7 +270,7 @@ const depositInfoSections = computed<InfoSection[]>(() => [
                     <div class="term-row">
                         <span>{{ $t('deposits.effective_apy') }}</span>
                         <strong class="text-success">{{ (depositStore.getModifiedAPY(selectedDeposit) * 100).toFixed(2)
-                        }}%</strong>
+                            }}%</strong>
                     </div>
                     <div class="term-row">
                         <span>{{ $t('deposits.term') }}</span>
@@ -288,7 +293,7 @@ const depositInfoSections = computed<InfoSection[]>(() => [
                 <div class="dialog-actions">
                     <UButton variant="ghost" @click="showOpenDialog = false">{{ $t('common.cancel') }}</UButton>
                     <UButton variant="success" @click="confirmDeposit">{{ $t('deposits.confirm_deposit')
-                    }}</UButton>
+                        }}</UButton>
                 </div>
             </div>
         </UModal>

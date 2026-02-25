@@ -18,4 +18,4 @@ import mdiIcons from '@iconify/json/json/mdi.json'
 // Add the collection to Iconify
 addCollection(mdiIcons)
 
-console.log('[Icons] MDI icon set loaded:', Object.keys(mdiIcons.icons).length, 'icons')
+console.debug('[Icons] MDI icon set loaded:', Object.keys(mdiIcons.icons).length, 'icons')

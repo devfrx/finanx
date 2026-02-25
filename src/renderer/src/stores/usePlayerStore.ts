@@ -16,6 +16,7 @@ import { ref, computed } from 'vue'
 import Decimal from 'break_infinity.js'
 import { D, ZERO, add, sub, mul, gte } from '@renderer/core/BigNum'
 import { useUpgradeStore } from './useUpgradeStore'
+import { useEventStore } from './useEventStore'
 
 /**
  * Transaction metadata — attach to earnCash/earnToCard/spendCash/spendFromCard/forcePay
@@ -167,11 +168,14 @@ export const usePlayerStore = defineStore('player', () => {
 
   // ─── XP & Level ───────────────────────────────────────────────
 
-  /** Add XP and handle level-up (applies xp_gain multiplier from skill tree) */
+  /** Add XP and handle level-up (applies xp_gain multiplier from skill tree + event boost) */
   function addXp(amount: Decimal): void {
     const upgrades = useUpgradeStore()
+    const events = useEventStore()
     const xpMul = upgrades.getMultiplier('xp_gain')
-    const boosted = mul(amount, xpMul)
+    // Event sector_boost for xp is a multiplier (e.g. 2 = 2×)
+    const xpEventBoost = events.getMultiplier('sector_boost', 'xp')
+    const boosted = mul(mul(amount, xpMul), xpEventBoost)
     xp.value = add(xp.value, boosted)
     while (gte(xp.value, xpToNextLevel.value)) {
       xp.value = sub(xp.value, xpToNextLevel.value)
@@ -209,21 +213,21 @@ export const usePlayerStore = defineStore('player', () => {
   }): void {
     // v3→v4 migration: if no cardBalance, all money was in single pool → move to card
     if (data.cardBalance !== undefined && data.cardBalance !== null) {
-      cash.value = data.cash
-      cardBalance.value = data.cardBalance
+      cash.value = D(data.cash)
+      cardBalance.value = D(data.cardBalance)
     } else {
       // Old save: single pool. Move everything to cardBalance, wallet starts empty.
       cash.value = ZERO
-      cardBalance.value = data.cash
+      cardBalance.value = D(data.cash)
     }
-    totalCashEarned.value = data.totalCashEarned
-    totalCashSpent.value = data.totalCashSpent
-    prestigePoints.value = data.prestigePoints
+    totalCashEarned.value = D(data.totalCashEarned)
+    totalCashSpent.value = D(data.totalCashSpent)
+    prestigePoints.value = D(data.prestigePoints)
     rebirthCount.value = data.rebirthCount
     level.value = data.level
-    xp.value = data.xp
-    xpToNextLevel.value = data.xpToNextLevel
-    netWorth.value = data.netWorth ?? ZERO
+    xp.value = D(data.xp)
+    xpToNextLevel.value = D(data.xpToNextLevel)
+    netWorth.value = D(data.netWorth ?? 0)
   }
 
   return {

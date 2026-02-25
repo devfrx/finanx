@@ -22,6 +22,7 @@ export type UpgradeTarget =
   | 'prestigeGain'
   | 'loanRate'
   | 'depositRate'
+  | 'limitOrderSlots'
 
 export interface UpgradeDef {
   id: string

@@ -1170,18 +1170,18 @@ export const useStorageStore = defineStore('storage', () => {
     if (data.totalAuctionsWon !== undefined) totalAuctionsWon.value = data.totalAuctionsWon
     if (data.totalAuctionsLost !== undefined) totalAuctionsLost.value = data.totalAuctionsLost
     if (data.totalSpentOnAuctions !== undefined)
-      totalSpentOnAuctions.value = data.totalSpentOnAuctions
+      totalSpentOnAuctions.value = D(data.totalSpentOnAuctions)
     if (data.totalSpentOnAppraisals !== undefined)
-      totalSpentOnAppraisals.value = data.totalSpentOnAppraisals
+      totalSpentOnAppraisals.value = D(data.totalSpentOnAppraisals)
     if (data.totalSpentOnEntryFees !== undefined)
-      totalSpentOnEntryFees.value = data.totalSpentOnEntryFees
+      totalSpentOnEntryFees.value = D(data.totalSpentOnEntryFees)
     if (data.totalSpentOnStorageFees !== undefined)
-      totalSpentOnStorageFees.value = data.totalSpentOnStorageFees
+      totalSpentOnStorageFees.value = D(data.totalSpentOnStorageFees)
     if (data.totalItemsSold !== undefined) totalItemsSold.value = data.totalItemsSold
-    if (data.totalSaleRevenue !== undefined) totalSaleRevenue.value = data.totalSaleRevenue
-    if (data.totalProfit !== undefined) totalProfit.value = data.totalProfit
-    if (data.biggestFind !== undefined) biggestFind.value = data.biggestFind
-    if (data.biggestFlip !== undefined) biggestFlip.value = data.biggestFlip
+    if (data.totalSaleRevenue !== undefined) totalSaleRevenue.value = D(data.totalSaleRevenue)
+    if (data.totalProfit !== undefined) totalProfit.value = D(data.totalProfit)
+    if (data.biggestFind !== undefined) biggestFind.value = D(data.biggestFind)
+    if (data.biggestFlip !== undefined) biggestFlip.value = D(data.biggestFlip)
     if (data.auctionHistory !== undefined) auctionHistory.value = data.auctionHistory
     if (data.lastRefreshTick !== undefined) lastRefreshTick.value = data.lastRefreshTick
     if (data.lastLocationReshuffle !== undefined)

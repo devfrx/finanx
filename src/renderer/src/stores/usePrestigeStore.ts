@@ -470,8 +470,8 @@ export const usePrestigeStore = defineStore('prestige', () => {
     milestones?: { id: string; unlocked: boolean; unlockedAtTick: number | null }[]
     perks?: { id: string; purchased: boolean; purchasedAtTick: number | null }[]
   }): void {
-    if (data.points !== undefined) points.value = data.points
-    if (data.totalPointsEarned !== undefined) totalPointsEarned.value = data.totalPointsEarned
+    if (data.points !== undefined) points.value = D(data.points)
+    if (data.totalPointsEarned !== undefined) totalPointsEarned.value = D(data.totalPointsEarned)
     if (data.rebirthCount !== undefined) rebirthCount.value = data.rebirthCount
 
     // Load upgrades (handles both old and new format)

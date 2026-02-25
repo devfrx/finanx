@@ -53,7 +53,10 @@ const EFFECT_ROUTE_MAP: Array<{
   routes: RouteName[]
 }> = [
   // Income multipliers
-  { type: 'income_multiplier', routes: ['business', 'stocks', 'crypto', 'realestate', 'deposits', 'investments'] },
+  {
+    type: 'income_multiplier',
+    routes: ['business', 'stocks', 'crypto', 'realestate', 'deposits', 'investments']
+  },
   { type: 'income_multiplier', target: 'stocks', routes: ['stocks'] },
   { type: 'income_multiplier', target: 'business', routes: ['business'] },
   { type: 'income_multiplier', target: 'crypto', routes: ['crypto'] },
@@ -93,7 +96,7 @@ const EFFECT_ROUTE_MAP: Array<{
 
   // Instant effects (shown on dashboard)
   { type: 'cash_grant', routes: ['dashboard'] },
-  { type: 'cash_loss', routes: ['dashboard'] },
+  { type: 'cash_loss', routes: ['dashboard'] }
 ]
 
 // ─── Effect label helpers ───────────────────────────────────────
@@ -111,10 +114,11 @@ function isPositiveEffect(effect: EventEffect): boolean {
     case 'income_multiplier':
     case 'sector_boost':
     case 'click_multiplier':
+      return effect.value > 1 // multiplier: >1 = boost, <1 = penalty
     case 'cash_grant':
     case 'prestige_bonus':
     case 'unlock':
-      return effect.value > 1 || effect.value > 0
+      return effect.value > 0
     case 'cost_multiplier':
     case 'cash_loss':
     case 'sector_penalty':
@@ -181,9 +185,8 @@ export function useActiveEvents() {
     return eventStore.activeEvents.map((ae: ActiveEvent) => {
       const def = system.getDefinition(ae.eventId)
       const durationTotal = def?.durationTicks ?? ae.ticksRemaining
-      const progress = durationTotal > 0
-        ? ((durationTotal - ae.ticksRemaining) / durationTotal) * 100
-        : 100
+      const progress =
+        durationTotal > 0 ? ((durationTotal - ae.ticksRemaining) / durationTotal) * 100 : 100
 
       const effects: EnrichedEffect[] = ae.effects.map((eff) => ({
         type: eff.type,
@@ -191,12 +194,14 @@ export function useActiveEvents() {
         target: eff.target,
         labelKey: effectLabelKey(eff),
         labelParams: { value: formatEffectValue(eff) },
-        isPositive: isPositiveEffect(eff),
+        isPositive: isPositiveEffect(eff)
       }))
 
-      const isPositive = effects.length > 0
-        ? effects.filter(e => e.isPositive).length >= effects.filter(e => !e.isPositive).length
-        : true
+      const isPositive =
+        effects.length > 0
+          ? effects.filter((e) => e.isPositive).length >=
+            effects.filter((e) => !e.isPositive).length
+          : true
 
       return {
         id: ae.eventId,
@@ -208,7 +213,7 @@ export function useActiveEvents() {
         durationTotal: durationTotal / 10,
         progress,
         effects,
-        isPositive,
+        isPositive
       }
     })
   })
@@ -257,6 +262,6 @@ export function useActiveEvents() {
     enrichedEvents,
     eventsForRoute,
     useRouteEvents,
-    formatTime,
+    formatTime
   }
 }

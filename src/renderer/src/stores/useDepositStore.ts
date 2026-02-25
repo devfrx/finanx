@@ -106,8 +106,8 @@ export const useDepositStore = defineStore('deposits', () => {
     const prestigeBonus = prestige.getTotalEffect('deposit_bonus')
     apy += prestigeBonus
 
-    // 4. Event modifiers (deposit_rate_modifier — additive)
-    const eventBonus = events.getMultiplier('deposit_rate_modifier')
+    // 4. Event modifiers (deposit_rate_modifier — additive, stacks correctly)
+    const eventBonus = events.getAdditiveBonus('deposit_rate_modifier')
     apy *= 1 + eventBonus
 
     // 5. Economy simulation: base central-bank rate affects deposits
@@ -141,6 +141,11 @@ export const useDepositStore = defineStore('deposits', () => {
     }
     if (player.netWorth.lt(def.minNetWorth)) {
       return { eligible: false, reason: `Requires net worth ${def.minNetWorth}`, effectiveAPY: 0 }
+    }
+
+    // Card balance check (deposits are paid via card)
+    if (player.cardBalance.lt(def.minDeposit)) {
+      return { eligible: false, reason: `Insufficient card balance (need ${def.minDeposit})`, effectiveAPY: 0 }
     }
 
     // Max active check
@@ -402,9 +407,9 @@ export const useDepositStore = defineStore('deposits', () => {
       deposits.value = data.deposits.map((d: ActiveDeposit) => ({
         id: d.id ?? '',
         depositDefId: d.depositDefId ?? '',
-        principal: d.principal ?? ZERO,
-        currentBalance: d.currentBalance ?? ZERO,
-        totalInterestEarned: d.totalInterestEarned ?? ZERO,
+        principal: D(d.principal ?? 0),
+        currentBalance: D(d.currentBalance ?? 0),
+        totalInterestEarned: D(d.totalInterestEarned ?? 0),
         effectiveAPY: d.effectiveAPY ?? 0,
         startTick: d.startTick ?? 0,
         ticksActive: d.ticksActive ?? 0,
@@ -421,20 +426,20 @@ export const useDepositStore = defineStore('deposits', () => {
     if (Array.isArray(data.depositHistory)) {
       depositHistory.value = data.depositHistory.map((h: DepositHistoryEntry) => ({
         depositDefId: h.depositDefId ?? '',
-        principal: h.principal ?? ZERO,
-        totalInterestEarned: h.totalInterestEarned ?? ZERO,
+        principal: D(h.principal ?? 0),
+        totalInterestEarned: D(h.totalInterestEarned ?? 0),
         effectiveAPY: h.effectiveAPY ?? 0,
         ticksHeld: h.ticksHeld ?? 0,
         matured: h.matured ?? false,
         earlyWithdrawal: h.earlyWithdrawal ?? false,
-        penaltyPaid: h.penaltyPaid ?? ZERO,
+        penaltyPaid: D(h.penaltyPaid ?? 0),
         status: h.status ?? 'completed'
       }))
     }
 
-    if (data.totalDeposited !== undefined) totalDeposited.value = data.totalDeposited ?? ZERO
+    if (data.totalDeposited !== undefined) totalDeposited.value = D(data.totalDeposited ?? 0)
     if (data.totalInterestEarnedEver !== undefined)
-      totalInterestEarnedEver.value = data.totalInterestEarnedEver ?? ZERO
+      totalInterestEarnedEver.value = D(data.totalInterestEarnedEver ?? 0)
     if (data.totalDepositsOpened !== undefined)
       totalDepositsOpened.value = data.totalDepositsOpened ?? 0
     if (data.totalDepositsMatured !== undefined)

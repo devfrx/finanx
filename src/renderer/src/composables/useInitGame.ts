@@ -107,7 +107,7 @@ export function useInitGame() {
 
       // Try to load saved game from disk
       if (!window.api) {
-        console.log('[Init] No IPC bridge available (running outside Electron), skipping save load')
+        console.debug('[Init] No IPC bridge available (running outside Electron), skipping save load')
         initialized.value = true
         loading.value = false
         return true
@@ -117,7 +117,7 @@ export function useInitGame() {
 
       if (result.success && result.data) {
         const save: SaveData = hydrateDecimals(result.data)
-        console.log('[Init] Loading saved game:', save)
+        console.debug('[Init] Loading saved game:', save)
 
         // Restore GameEngine tick counter and total play time so that
         // tick-relative logic (real-estate appreciation, startup maturity, etc.)
@@ -341,20 +341,20 @@ export function useInitGame() {
               if (hasAnything) {
                 offlineSummary.value = summary
               }
-              console.log(
+              console.debug(
                 `[Init] Offline earnings: ${summary.cashEarned.toString()} (${summary.timeAwayFormatted} away)`
               )
-              console.log(`[Init] Offline deposits interest: ${summary.depositInterest.toString()}`)
-              console.log(`[Init] Offline loan interest: ${summary.loanInterestPaid.toString()}`)
+              console.debug(`[Init] Offline deposits interest: ${summary.depositInterest.toString()}`)
+              console.debug(`[Init] Offline loan interest: ${summary.loanInterestPaid.toString()}`)
             }
           } catch (e) {
             console.warn('[Init] Failed to calculate offline progress:', e)
           }
         }
 
-        console.log('[Init] Game state restored successfully')
+        console.debug('[Init] Game state restored successfully')
       } else {
-        console.log('[Init] No save found, starting fresh game')
+        console.debug('[Init] No save found, starting fresh game')
         // Initialize banking card on fresh start
         bankingStore.initCard()
       }
@@ -369,7 +369,7 @@ export function useInitGame() {
         const startupValue = startups.totalInvested ?? ZERO
         const depositValue = depositStore.totalLockedBalance ?? ZERO
         player.netWorth = Formulas.calculateNetWorth(
-          player.cash,
+          player.totalFunds,
           business.totalBusinessValue,
           portfolioValue,
           propertyValue,

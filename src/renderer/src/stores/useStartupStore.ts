@@ -8,6 +8,7 @@ import Decimal from 'break_infinity.js'
 import { ZERO, D, add, sub, mul, gte } from '@renderer/core/BigNum'
 import { usePlayerStore } from './usePlayerStore'
 import { useCardPaymentStore } from './useCardPaymentStore'
+import { useEventStore } from './useEventStore'
 import { rollChance } from '@renderer/core/Formulas'
 import { gameEngine } from '@renderer/core/GameEngine'
 import {
@@ -208,7 +209,12 @@ export const useStartupStore = defineStore('startups', () => {
     if (currentIdx >= RESEARCH_PHASES.length - 1) return null // already at max
 
     const nextPhase = RESEARCH_PHASES[currentIdx + 1]
-    const cost = D(opp.researchCosts[nextPhase])
+    let cost = D(opp.researchCosts[nextPhase])
+
+    // Apply event research_cost_modifier (additive: e.g. -0.30 = 30% cheaper)
+    const events = useEventStore()
+    const researchMod = events.getAdditiveBonus('research_cost_modifier')
+    cost = mul(cost, Math.max(0.1, 1 + researchMod))
 
     const player = usePlayerStore()
     if (!gte(player.cardBalance, cost)) return null
@@ -267,10 +273,12 @@ export const useStartupStore = defineStore('startups', () => {
 
     // Calculate effective values with bonuses
     const sectorBonus = sectorBonuses.value[opp.sector] || 0
-    const effectiveSuccessChance = calculateEffectiveSuccessChance(
-      opp,
-      sectorBonus,
-      globalSuccessBonus.value
+    // Apply event startup_success_modifier (additive: e.g. +0.08 = +8% chance)
+    const events = useEventStore()
+    const successEventMod = events.getAdditiveBonus('startup_success_modifier')
+    const effectiveSuccessChance = Math.min(
+      0.95,
+      calculateEffectiveSuccessChance(opp, sectorBonus, globalSuccessBonus.value) + successEventMod
     )
     // Use baseReturnMultiplier directly so the stored value matches what
     // the opportunity card displayed. globalReturnBonus is applied at
@@ -351,7 +359,11 @@ export const useStartupStore = defineStore('startups', () => {
 
     const player = usePlayerStore()
     // Apply globalReturnBonus at collection time (base multiplier is stored on invest)
-    const effectiveMultiplier = inv.returnMultiplier * globalReturnBonus.value
+    // Also apply event startup_return_modifier (additive: e.g. +0.40 = +40% returns)
+    const events = useEventStore()
+    const returnEventMod = events.getAdditiveBonus('startup_return_modifier')
+    const effectiveMultiplier =
+      inv.returnMultiplier * globalReturnBonus.value * Math.max(0.1, 1 + returnEventMod)
     const returnAmount = mul(inv.investedAmount, effectiveMultiplier)
 
     // Add returns to player cash

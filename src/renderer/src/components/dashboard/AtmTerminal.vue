@@ -1,9 +1,11 @@
 <script setup lang="ts">
 /**
- * AtmTerminal — Withdraw from card balance (bank account) to wallet cash.
+ * AtmTerminal — Withdraw from card balance (bank account) to wallet cash,
+ * or deposit cash from wallet back to card.
  *
- * Shows tier-based fee and allows quick or custom withdrawals.
- * Card → ATM → Cash (wallet). Cash is needed for black market, chip purchases, etc.
+ * Shows tier-based fee and allows quick or custom withdrawals/deposits.
+ * Withdraw: Card → ATM → Cash (wallet)
+ * Deposit:  Cash (wallet) → ATM → Card
  */
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -20,9 +22,13 @@ const cardPayment = useCardPaymentStore()
 const player = usePlayerStore()
 const { formatCash } = useFormat()
 
+type AtmMode = 'withdraw' | 'deposit'
+const mode = ref<AtmMode>('withdraw')
 const amount = ref('')
 
 const presets = [100, 500, 1000, 5000, 10000]
+
+const isDeposit = computed(() => mode.value === 'deposit')
 
 const parsedAmount = computed((): Decimal => {
     const n = parseFloat(amount.value.replace(/,/g, ''))
@@ -35,31 +41,49 @@ const totalCost = computed(() => cardPayment.calculateAtmTotal(parsedAmount.valu
 
 const maxWithdrawable = computed(() => {
     const balance = player.cardBalance
-    // Max amount where amount + fee <= balance
     if (cardPayment.atmFeeRate === 0) return balance
     const maxFromBalance = balance.div(1 + cardPayment.atmFeeRate).floor()
     return maxFromBalance
 })
 
-const canWithdraw = computed(() => {
-    if (parsedAmount.value.lte(0)) return false
-    if (totalCost.value.gt(player.cardBalance)) return false
-    return true
+const maxDepositable = computed(() => {
+    const cash = player.cash
+    if (cardPayment.atmFeeRate === 0) return cash
+    const maxFromCash = cash.div(1 + cardPayment.atmFeeRate).floor()
+    return maxFromCash
 })
+
+const canExecute = computed(() => {
+    if (parsedAmount.value.lte(0)) return false
+    if (isDeposit.value) {
+        return totalCost.value.lte(player.cash)
+    }
+    return totalCost.value.lte(player.cardBalance)
+})
+
+function switchMode(m: AtmMode): void {
+    mode.value = m
+    amount.value = ''
+}
 
 function selectPreset(val: number): void {
     amount.value = val.toString()
 }
 
 function setMax(): void {
-    if (maxWithdrawable.value.gt(0)) {
-        amount.value = maxWithdrawable.value.toString()
+    const max = isDeposit.value ? maxDepositable.value : maxWithdrawable.value
+    if (max.gt(0)) {
+        amount.value = max.toString()
     }
 }
 
-function doWithdraw(): void {
-    if (!canWithdraw.value) return
-    cardPayment.withdrawFromAtm(parsedAmount.value)
+function doExecute(): void {
+    if (!canExecute.value) return
+    if (isDeposit.value) {
+        cardPayment.depositToCard(parsedAmount.value)
+    } else {
+        cardPayment.withdrawFromAtm(parsedAmount.value)
+    }
     amount.value = ''
 }
 
@@ -83,16 +107,31 @@ function onInput(e: Event): void {
             </div>
         </div>
 
+        <!-- Mode toggle -->
+        <div class="atm-mode-toggle">
+            <button class="atm-mode-btn" :class="{ 'atm-mode-btn--active': mode === 'withdraw' }"
+                @click="switchMode('withdraw')">
+                <AppIcon icon="mdi:cash-fast" class="atm-mode-icon" />
+                {{ t('atm.mode_withdraw') }}
+            </button>
+            <button class="atm-mode-btn" :class="{ 'atm-mode-btn--active': mode === 'deposit' }"
+                @click="switchMode('deposit')">
+                <AppIcon icon="mdi:credit-card-plus" class="atm-mode-icon" />
+                {{ t('atm.mode_deposit') }}
+            </button>
+        </div>
+
         <!-- Balance transfer visual -->
         <div class="atm-flow">
-            <div class="atm-flow-side">
+            <div class="atm-flow-side" :class="{ 'atm-flow-side--source': !isDeposit }">
                 <AppIcon icon="mdi:credit-card" class="atm-flow-icon" />
                 <span class="atm-flow-val">{{ formatCash(player.cardBalance) }}</span>
             </div>
             <div class="atm-flow-arrow">
-                <AppIcon icon="mdi:arrow-right" class="atm-flow-arrow-icon" />
+                <AppIcon :icon="isDeposit ? 'mdi:arrow-left' : 'mdi:arrow-right'" class="atm-flow-arrow-icon" />
             </div>
-            <div class="atm-flow-side atm-flow-side--wallet">
+            <div class="atm-flow-side"
+                :class="{ 'atm-flow-side--source': isDeposit, 'atm-flow-side--wallet': !isDeposit }">
                 <AppIcon icon="mdi:wallet" class="atm-flow-icon" />
                 <span class="atm-flow-val">{{ formatCash(player.cash) }}</span>
             </div>
@@ -119,7 +158,7 @@ function onInput(e: Event): void {
         <!-- Breakdown -->
         <div v-if="parsedAmount.gt(0)" class="atm-receipt">
             <div class="atm-receipt-row">
-                <span>{{ t('atm.withdraw_amount') }}</span>
+                <span>{{ isDeposit ? t('atm.deposit_amount') : t('atm.withdraw_amount') }}</span>
                 <span class="atm-receipt-val">{{ formatCash(parsedAmount) }}</span>
             </div>
             <div v-if="feeAmount.gt(0)" class="atm-receipt-row atm-receipt-row--fee">
@@ -128,13 +167,18 @@ function onInput(e: Event): void {
             </div>
             <div class="atm-receipt-divider" />
             <div class="atm-receipt-row atm-receipt-row--total">
-                <span>{{ t('atm.deducted_from_card') }}</span>
+                <span>{{ isDeposit ? t('atm.deducted_from_wallet') : t('atm.deducted_from_card') }}</span>
                 <span class="atm-receipt-val atm-receipt-val--total">{{ formatCash(totalCost) }}</span>
+            </div>
+            <div v-if="isDeposit" class="atm-receipt-row atm-receipt-row--credit">
+                <span>{{ t('atm.added_to_card') }}</span>
+                <span class="atm-receipt-val atm-receipt-val--credit">+{{ formatCash(parsedAmount) }}</span>
             </div>
         </div>
 
-        <UButton variant="primary" block :disabled="!canWithdraw" @click="doWithdraw" icon="mdi:cash-fast">
-            {{ t('atm.withdraw') }}
+        <UButton variant="primary" block :disabled="!canExecute" @click="doExecute"
+            :icon="isDeposit ? 'mdi:credit-card-plus' : 'mdi:cash-fast'">
+            {{ isDeposit ? t('atm.deposit') : t('atm.withdraw') }}
         </UButton>
     </div>
 </template>
@@ -213,6 +257,48 @@ function onInput(e: Event): void {
     letter-spacing: 0.04em;
 }
 
+/* ─── Mode Toggle ─── */
+.atm-mode-toggle {
+    display: flex;
+    gap: 2px;
+    background: color-mix(in srgb, var(--t-bg-muted) 60%, transparent);
+    border: 1px solid var(--t-border);
+    border-radius: var(--t-radius-md);
+    padding: 2px;
+}
+
+.atm-mode-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--t-space-1);
+    padding: 0.35rem 0.5rem;
+    border: none;
+    border-radius: calc(var(--t-radius-md) - 2px);
+    background: transparent;
+    color: var(--t-text-muted);
+    font-size: var(--t-font-size-xs);
+    font-weight: var(--t-font-semibold);
+    cursor: pointer;
+    transition: all var(--t-transition-fast);
+}
+
+.atm-mode-btn:hover {
+    color: var(--t-text-secondary);
+    background: color-mix(in srgb, var(--t-bg-elevated) 50%, transparent);
+}
+
+.atm-mode-btn--active {
+    background: color-mix(in srgb, var(--t-accent) 14%, transparent);
+    color: var(--t-accent);
+    box-shadow: 0 1px 4px color-mix(in srgb, var(--t-shadow) 12%, transparent);
+}
+
+.atm-mode-icon {
+    font-size: 0.85rem;
+}
+
 /* ─── Balance Flow ─── */
 .atm-flow {
     display: flex;
@@ -240,6 +326,10 @@ function onInput(e: Event): void {
 
 .atm-flow-side--wallet .atm-flow-icon {
     color: var(--t-success);
+}
+
+.atm-flow-side--source .atm-flow-icon {
+    color: var(--t-accent);
 }
 
 .atm-flow-val {
@@ -388,5 +478,16 @@ function onInput(e: Event): void {
 
 .atm-receipt-val--total {
     color: var(--t-danger);
+}
+
+.atm-receipt-row--credit {
+    font-weight: var(--t-font-bold);
+    color: var(--t-text);
+}
+
+.atm-receipt-val--credit {
+    color: var(--t-success);
+    font-family: var(--t-font-mono);
+    font-weight: var(--t-font-bold);
 }
 </style>

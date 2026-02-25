@@ -105,6 +105,8 @@ export const useCardPaymentStore = defineStore('cardPayment', () => {
   const totalAtmFees = ref<Decimal>(ZERO)
   const totalAtmWithdrawals = ref(0)
   const totalAtmVolume = ref<Decimal>(ZERO)
+  const totalAtmDeposits = ref(0)
+  const totalAtmDepositVolume = ref<Decimal>(ZERO)
 
   // ─── Card Binding State ───────────────────────────────────────
 
@@ -123,7 +125,8 @@ export const useCardPaymentStore = defineStore('cardPayment', () => {
     const baseFee = TIER_FEES[banking.cardTier]
     const upgrades = useUpgradeStore()
     const costMul = upgrades.getMultiplier('cost_reduction')
-    return Math.max(0, baseFee * costMul.toNumber())
+    // cost_reduction multiplier ≥ 1 → divide to reduce fees
+    return Math.max(0, baseFee / costMul.toNumber())
   })
 
   /** Current fee percentage for display */
@@ -143,7 +146,8 @@ export const useCardPaymentStore = defineStore('cardPayment', () => {
     const baseFee = ATM_FEES[banking.cardTier]
     const upgrades = useUpgradeStore()
     const costMul = upgrades.getMultiplier('cost_reduction')
-    return Math.max(0, baseFee * costMul.toNumber())
+    // cost_reduction multiplier ≥ 1 → divide to reduce fees
+    return Math.max(0, baseFee / costMul.toNumber())
   })
 
   /** ATM fee percentage for display */
@@ -413,6 +417,43 @@ export const useCardPaymentStore = defineStore('cardPayment', () => {
     return true
   }
 
+  /**
+   * Deposit cash into the card via ATM: cash wallet → cardBalance.
+   * Deducts (amount + ATM fee) from cash, credits amount to card.
+   * Returns false if insufficient cash.
+   */
+  function depositToCard(amount: Decimal): boolean {
+    const player = usePlayerStore()
+    const fee = calculateAtmFee(amount)
+    const total = add(amount, fee)
+
+    // Check cash balance
+    if (!gte(player.cash, total)) return false
+
+    // Deduct total (amount + fee) from cash
+    const ok = player.spendCash(total, {
+      key: 'banking.tx_atm_deposit_cash',
+      cat: 'banking'
+    })
+    if (!ok) return false
+
+    // Credit only the amount to card
+    player.earnToCard(amount, {
+      key: 'banking.tx_atm_deposit_card',
+      cat: 'banking'
+    })
+
+    // Update ATM stats
+    totalAtmFees.value = add(totalAtmFees.value, fee)
+    totalAtmDeposits.value++
+    totalAtmDepositVolume.value = add(totalAtmDepositVolume.value, amount)
+
+    // XP for ATM usage
+    player.addXp(D(1))
+
+    return true
+  }
+
   // ─── Card Binding Actions ─────────────────────────────────────
 
   /**
@@ -474,6 +515,9 @@ export const useCardPaymentStore = defineStore('cardPayment', () => {
       totalAtmWithdrawals.value = data.totalAtmWithdrawals
     if (typeof data.totalAtmVolume !== 'undefined')
       totalAtmVolume.value = D(data.totalAtmVolume as string | number)
+    if (typeof data.totalAtmDeposits === 'number') totalAtmDeposits.value = data.totalAtmDeposits
+    if (typeof data.totalAtmDepositVolume !== 'undefined')
+      totalAtmDepositVolume.value = D(data.totalAtmDepositVolume as string | number)
 
     // Card bindings
     if (Array.isArray(data.bindings)) {
@@ -492,6 +536,8 @@ export const useCardPaymentStore = defineStore('cardPayment', () => {
       totalAtmFees: totalAtmFees.value,
       totalAtmWithdrawals: totalAtmWithdrawals.value,
       totalAtmVolume: totalAtmVolume.value,
+      totalAtmDeposits: totalAtmDeposits.value,
+      totalAtmDepositVolume: totalAtmDepositVolume.value,
       // Bindings
       bindings: [...bindings.value]
     }
@@ -510,6 +556,8 @@ export const useCardPaymentStore = defineStore('cardPayment', () => {
     totalAtmFees,
     totalAtmWithdrawals,
     totalAtmVolume,
+    totalAtmDeposits,
+    totalAtmDepositVolume,
     // Binding State
     bindings,
     bindingCount,
@@ -532,6 +580,7 @@ export const useCardPaymentStore = defineStore('cardPayment', () => {
     quickPay,
     // ATM Actions
     withdrawFromAtm,
+    depositToCard,
     // Binding Actions
     bindCard,
     unbindCard,

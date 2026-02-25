@@ -305,13 +305,13 @@ export const useStockStore = defineStore('stocks', () => {
         if (existingPos) {
           existingPos.shares = savedPos.shares ?? 0
           existingPos.averageBuyPrice = savedPos.averageBuyPrice ?? 0
-          existingPos.totalInvested = savedPos.totalInvested ?? existingPos.totalInvested
+          existingPos.totalInvested = D(savedPos.totalInvested ?? existingPos.totalInvested)
         } else if (savedPos.shares > 0) {
           portfolio.value.push({
             assetId: savedPos.assetId,
             shares: savedPos.shares,
             averageBuyPrice: savedPos.averageBuyPrice,
-            totalInvested: savedPos.totalInvested
+            totalInvested: D(savedPos.totalInvested ?? 0)
           })
         }
       }
@@ -319,10 +319,10 @@ export const useStockStore = defineStore('stocks', () => {
     // Restore stats
     if (saved.stockStats) {
       if (saved.stockStats.totalRealizedProfit !== undefined) {
-        totalRealizedProfit.value = saved.stockStats.totalRealizedProfit
+        totalRealizedProfit.value = D(saved.stockStats.totalRealizedProfit)
       }
       if (saved.stockStats.totalDividendsEarned !== undefined) {
-        totalDividendsEarned.value = saved.stockStats.totalDividendsEarned
+        totalDividendsEarned.value = D(saved.stockStats.totalDividendsEarned)
       }
     }
     // Restore market simulator state
@@ -341,6 +341,36 @@ export const useStockStore = defineStore('stocks', () => {
         console.warn('[StockStore] Failed to restore market state:', e)
       }
     }
+  }
+
+  /**
+   * Force-reduce stock portfolio value by a given amount.
+   * Used by the loan system during collateral seizure.
+   * Liquidates shares proportionally across all positions.
+   */
+  function reduceAssetValue(amount: Decimal): void {
+    if (portfolio.value.length === 0) return
+    const totalVal = totalPortfolioValue.value
+    if (totalVal.lte(0)) return
+
+    for (const pos of portfolio.value) {
+      const asset = assets.value.find((a) => a.id === pos.assetId)
+      if (!asset || asset.currentPrice <= 0) continue
+      const posValue = D(asset.currentPrice * pos.shares)
+      const share = posValue.div(totalVal)
+      const reduction = mul(amount, share)
+      const sharesToLiquidate = Math.min(
+        pos.shares,
+        Math.ceil(reduction.toNumber() / asset.currentPrice)
+      )
+      if (sharesToLiquidate > 0) {
+        const fractionLiquidated = sharesToLiquidate / pos.shares
+        pos.shares -= sharesToLiquidate
+        pos.totalInvested = sub(pos.totalInvested, mul(pos.totalInvested, fractionLiquidated))
+      }
+    }
+    // Remove empty positions
+    portfolio.value = portfolio.value.filter((p) => p.shares > 0)
   }
 
   return {
@@ -362,6 +392,7 @@ export const useStockStore = defineStore('stocks', () => {
     prestigeReset,
     getSimulator,
     setMarketCondition,
-    loadFromSave
+    loadFromSave,
+    reduceAssetValue
   }
 })

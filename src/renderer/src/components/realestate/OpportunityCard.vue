@@ -285,14 +285,14 @@ function handleBuy(): void {
                         <AppIcon icon="mdi:trending-up" /> {{ t('realestate.appreciation') }}
                     </span>
                     <span class="fin-value fin-value--pos">+{{ dailyAppreciation.toFixed(1) }}%/{{ t('realestate.day')
-                        }}</span>
+                    }}</span>
                 </div>
                 <div class="fin-item">
                     <span class="fin-label">
                         <AppIcon icon="mdi:tools" /> {{ t('realestate.expense') }}
                     </span>
                     <span class="fin-value fin-value--neg">{{ formatCash(maintenancePerSecond + taxPerSecond)
-                        }}/s</span>
+                    }}/s</span>
                 </div>
             </div>
         </div>
@@ -560,6 +560,8 @@ function handleBuy(): void {
 /* ── Metrics Strip ── */
 .metrics-strip {
     display: flex;
+    align-items: stretch;
+    justify-content: space-evenly;
     flex-wrap: wrap;
     gap: var(--t-space-2);
 }

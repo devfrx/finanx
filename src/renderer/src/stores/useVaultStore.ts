@@ -255,13 +255,13 @@ export const useVaultStore = defineStore('vault', () => {
       // Migrate legacy rarity names (common→unverified, etc.)
       migrateItemRarities(items.value)
     }
-    if (data.storedCash !== undefined) storedCash.value = data.storedCash
+    if (data.storedCash !== undefined) storedCash.value = D(data.storedCash)
     if (data.capacityUpgrades !== undefined) capacityUpgrades.value = data.capacityUpgrades
     if (data.totalItemsStored !== undefined) totalItemsStored.value = data.totalItemsStored
     if (data.totalItemsSold !== undefined) totalItemsSold.value = data.totalItemsSold
-    if (data.totalSaleRevenue !== undefined) totalSaleRevenue.value = data.totalSaleRevenue
-    if (data.totalCashDeposited !== undefined) totalCashDeposited.value = data.totalCashDeposited
-    if (data.totalCashWithdrawn !== undefined) totalCashWithdrawn.value = data.totalCashWithdrawn
+    if (data.totalSaleRevenue !== undefined) totalSaleRevenue.value = D(data.totalSaleRevenue)
+    if (data.totalCashDeposited !== undefined) totalCashDeposited.value = D(data.totalCashDeposited)
+    if (data.totalCashWithdrawn !== undefined) totalCashWithdrawn.value = D(data.totalCashWithdrawn)
   }
 
   return {

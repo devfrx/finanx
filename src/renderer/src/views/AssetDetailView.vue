@@ -12,6 +12,7 @@ import { useStockStore } from '@renderer/stores/useStockStore'
 import { useCryptoStore } from '@renderer/stores/useCryptoStore'
 import { usePlayerStore } from '@renderer/stores/usePlayerStore'
 import { useLimitOrderStore } from '@renderer/stores/useLimitOrderStore'
+import { useCardPaymentStore } from '@renderer/stores/useCardPaymentStore'
 import AppIcon from '@renderer/components/AppIcon.vue'
 import { UButton } from '@renderer/components/ui'
 import CandlestickChart from '@renderer/components/charts/CandlestickChart.vue'
@@ -27,6 +28,7 @@ const stocks = useStockStore()
 const crypto = useCryptoStore()
 const player = usePlayerStore()
 const limitOrderStore = useLimitOrderStore()
+const cardPayment = useCardPaymentStore()
 const { formatCash, formatPercent } = useFormat()
 
 /** Determine type from route meta */
@@ -127,7 +129,7 @@ function goBack() {
                 <div class="fs-identity">
                     <h2 class="fs-name">{{ asset.name }}</h2>
                     <span class="fs-type-label">{{ $t(type === 'crypto' ? 'market.cryptocurrency' : 'market.stock')
-                        }}</span>
+                    }}</span>
                 </div>
             </div>
 
@@ -218,7 +220,7 @@ function goBack() {
                         <AppIcon :icon="type === 'crypto' ? 'mdi:wallet-outline' : 'mdi:briefcase-outline'" />
                     </div>
                     <span class="fs-empty-text">{{ $t(type === 'crypto' ? 'market.no_holdings' : 'market.no_position')
-                        }}</span>
+                    }}</span>
                     <span class="fs-empty-hint">{{ $t('market.no_position_hint') }}</span>
                 </div>
 
@@ -236,12 +238,16 @@ function goBack() {
                 <!-- Available balance -->
                 <div class="fs-balance">
                     <div class="fs-balance-icon">
-                        <AppIcon icon="mdi:wallet" />
+                        <AppIcon icon="mdi:credit-card" />
                     </div>
                     <div class="fs-balance-info">
-                        <span class="fs-balance-label">{{ $t('market.available') }}</span>
+                        <span class="fs-balance-label">{{ $t('market.card_balance') }}</span>
                         <span class="fs-balance-value">{{ formatCash(availableCash) }}</span>
                     </div>
+                    <span v-if="cardPayment.feePercent > 0" class="fs-fee-badge">
+                        <AppIcon icon="mdi:percent" />
+                        {{ cardPayment.feePercent }}%
+                    </span>
                 </div>
             </aside>
         </div>
@@ -668,6 +674,20 @@ function goBack() {
     font-size: var(--t-font-size-sm);
     font-weight: var(--t-font-bold);
     color: var(--t-text);
+}
+
+.fs-fee-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.65rem;
+    font-weight: var(--t-font-bold);
+    padding: 0.15rem 0.45rem;
+    border-radius: 99px;
+    background: var(--t-warning-muted);
+    color: var(--t-warning);
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 /* ─── Not Found ─── */

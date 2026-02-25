@@ -8,7 +8,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import Decimal from 'break_infinity.js'
-import { D, ZERO, add, sub, mul, gte } from '@renderer/core/BigNum'
+import { D, ZERO, add, sub, gte } from '@renderer/core/BigNum'
 import {
   evaluateOrders,
   generateOrderId,

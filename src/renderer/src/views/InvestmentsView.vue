@@ -3,6 +3,7 @@ import { computed, ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useStartupStore, type StartupInvestment } from '@renderer/stores/useStartupStore'
 import { usePlayerStore } from '@renderer/stores/usePlayerStore'
+import { useCardPaymentStore } from '@renderer/stores/useCardPaymentStore'
 import { useFormat } from '@renderer/composables/useFormat'
 import { D, mul, gte } from '@renderer/core/BigNum'
 import { gameEngine } from '@renderer/core/GameEngine'
@@ -28,6 +29,7 @@ import {
 
 const startups = useStartupStore()
 const player = usePlayerStore()
+const cardPayment = useCardPaymentStore()
 const { formatCash, formatRate, formatTime } = useFormat()
 const { t } = useI18n()
 
@@ -272,7 +274,7 @@ const investInfoSections = computed<InfoSection[]>(() => [
                                 :stroke-dashoffset="226.2 * (1 - getInvestmentProgress(inv) / 100)" />
                         </svg>
                         <span class="inv-card__ring-pct">{{ getInvestmentProgress(inv).toFixed(0)
-                            }}<small>%</small></span>
+                        }}<small>%</small></span>
                     </div>
                     <!-- Info -->
                     <div class="inv-card__info">
@@ -292,12 +294,12 @@ const investInfoSections = computed<InfoSection[]>(() => [
                             <div class="inv-card__metric">
                                 <span class="inv-card__metric-lbl">{{ $t('investments.success') }}</span>
                                 <span class="inv-card__metric-val text-sky">{{ formatRate(inv.successChance * 100)
-                                    }}</span>
+                                }}</span>
                             </div>
                             <div class="inv-card__metric">
                                 <span class="inv-card__metric-lbl">{{ $t('investments.return_label') }}</span>
                                 <span class="inv-card__metric-val text-emerald">{{ inv.returnMultiplier.toFixed(1)
-                                    }}x</span>
+                                }}x</span>
                             </div>
                         </div>
                         <div class="inv-card__time">
@@ -455,7 +457,7 @@ const investInfoSections = computed<InfoSection[]>(() => [
                         <div class="opp-card__actions">
                             <UButton v-if="getPhaseIndex(opp) < RESEARCH_PHASES.length - 1" variant="ghost" size="xs"
                                 icon="mdi:magnify"
-                                :disabled="!gte(player.cash, D(opp.researchCosts[RESEARCH_PHASES[getPhaseIndex(opp) + 1]]))"
+                                :disabled="!gte(player.cardBalance, cardPayment.calculateTotal(D(opp.researchCosts[RESEARCH_PHASES[getPhaseIndex(opp) + 1]])))"
                                 @click="doResearch(opp.id)">
                                 {{ $t('investments.research_phase', {
                                     phase: RESEARCH_PHASE_DATA[RESEARCH_PHASES[getPhaseIndex(opp) + 1]].name,
@@ -467,7 +469,8 @@ const investInfoSections = computed<InfoSection[]>(() => [
                                 {{ $t('investments.fully_researched') }}
                             </span>
                             <UButton variant="primary" size="xs" icon="mdi:send"
-                                :disabled="!gte(player.cash, D(opp.minInvestment))" @click="openInvestDialog(opp)">
+                                :disabled="!gte(player.cardBalance, cardPayment.calculateTotal(D(opp.minInvestment)))"
+                                @click="openInvestDialog(opp)">
                                 {{ $t('investments.invest') }}
                             </UButton>
                         </div>
@@ -530,13 +533,28 @@ const investInfoSections = computed<InfoSection[]>(() => [
                         formatCash(D(investAmount))
                             }}</strong></label>
                     <Slider v-model="investAmount" :min="selectedOpp.minInvestment"
-                        :max="Math.min(selectedOpp.maxInvestment, player.cash.toNumber())" :step="1" />
+                        :max="Math.min(selectedOpp.maxInvestment, player.cardBalance.toNumber())" :step="1" />
+                </div>
+
+                <div v-if="cardPayment.feePercent > 0" class="dialog-fee-breakdown">
+                    <div class="dialog-fee-row">
+                        <span class="dialog-fee-label">
+                            <AppIcon icon="mdi:credit-card-outline" class="dialog-fee-icon" />
+                            {{ $t('investments.invest_fee', { pct: cardPayment.feePercent }) }}
+                        </span>
+                        <span class="dialog-fee-val">+{{ formatCash(cardPayment.calculateFee(D(investAmount))) }}</span>
+                    </div>
+                    <div class="dialog-fee-row dialog-fee-total">
+                        <span class="dialog-fee-label">{{ $t('investments.invest_total') }}</span>
+                        <span class="dialog-fee-val-total">{{ formatCash(cardPayment.calculateTotal(D(investAmount)))
+                            }}</span>
+                    </div>
                 </div>
 
                 <div class="dialog-potential">
                     <span>{{ $t('investments.potential_returns') }}</span>
                     <strong class="text-emerald">{{ formatCash(D(investAmount * selectedOpp.baseReturnMultiplier))
-                        }}</strong>
+                    }}</strong>
                 </div>
             </div>
 
@@ -1492,6 +1510,53 @@ const investInfoSections = computed<InfoSection[]>(() => [
     padding: var(--t-space-3);
     background: color-mix(in srgb, var(--t-success) 10%, var(--t-bg-muted));
     border-radius: var(--t-radius-md);
+}
+
+/* Fee breakdown in dialog */
+.dialog-fee-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: var(--t-space-2) var(--t-space-3);
+    background: var(--t-bg-muted);
+    border-radius: var(--t-radius-sm);
+    margin-bottom: var(--t-space-2);
+}
+
+.dialog-fee-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.78rem;
+}
+
+.dialog-fee-label {
+    color: var(--t-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.dialog-fee-icon {
+    font-size: 0.82rem;
+}
+
+.dialog-fee-val {
+    font-family: var(--t-font-mono);
+    color: var(--t-warning);
+    font-weight: var(--t-font-semibold);
+}
+
+.dialog-fee-total {
+    border-top: 1px solid var(--t-border);
+    padding-top: 0.25rem;
+    margin-top: 0.15rem;
+}
+
+.dialog-fee-val-total {
+    font-family: var(--t-font-mono);
+    font-weight: var(--t-font-bold);
+    color: var(--t-text);
 }
 
 /* Color utilities */

@@ -881,6 +881,23 @@ export const useRealEstateStore = defineStore('realEstate', () => {
     globalRentMultiplier.value = D(1)
   }
 
+  /**
+   * Force-reduce property values by a given amount.
+   * Used by the loan system during collateral seizure.
+   * Distributes the reduction across all properties proportionally.
+   */
+  function reduceAssetValue(amount: Decimal): void {
+    if (properties.value.length === 0) return
+    const totalVal = totalPropertyValue.value
+    if (totalVal.lte(0)) return
+
+    for (const p of properties.value) {
+      const share = p.currentValue.div(totalVal)
+      const reduction = mul(amount, share)
+      p.currentValue = sub(p.currentValue, reduction).max(D(1))
+    }
+  }
+
   // ─── Public API ────────────────────────────────────────────────
 
   return {
@@ -941,6 +958,7 @@ export const useRealEstateStore = defineStore('realEstate', () => {
     exportState,
     loadFromSave,
     prestigeReset,
-    fullReset
+    fullReset,
+    reduceAssetValue
   }
 })

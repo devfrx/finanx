@@ -19,11 +19,13 @@ import {
 import { useShopStore } from '@renderer/stores/useShopStore'
 import { usePlayerStore } from '@renderer/stores/usePlayerStore'
 import { useFormat } from '@renderer/composables/useFormat'
+import { useNotify } from '@renderer/composables/useNotify'
 import { useI18n } from 'vue-i18n'
 
 const shop = useShopStore()
 const player = usePlayerStore()
 const { formatCash } = useFormat()
+const { warning, error: notifyError } = useNotify()
 const { t } = useI18n()
 
 function handleBuy(listingId: string, destination: 'vault' | 'storage'): void {
@@ -32,9 +34,9 @@ function handleBuy(listingId: string, destination: 'vault' | 'storage'): void {
         // Purchase failed — not enough cash or vault full
         const listing = shop.listings.find(l => l.id === listingId)
         if (listing && player.cash.lt(listing.price)) {
-            // Not enough cash
+            notifyError(t('shop.not_enough_cash'))
         } else if (destination === 'vault') {
-            // Vault is full
+            warning(t('shop.vault_full'))
         }
     }
 }

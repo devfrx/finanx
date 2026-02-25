@@ -591,7 +591,10 @@ export const useBusinessStore = defineStore('business', () => {
     const biz = businesses.value.find((b) => b.id === businessId)
     if (!biz || biz.pendingProfit.lte(ZERO)) return ZERO
     const player = usePlayerStore()
-    const amount = biz.pendingProfit
+    const events = useEventStore()
+    // Apply click multiplier from events (e.g. Golden Hour: 5×)
+    const clickMul = D(events.getMultiplier('click_multiplier'))
+    const amount = mul(biz.pendingProfit, clickMul)
     player.earnToCard(amount, {
       key: 'banking.tx_biz_collect',
       cat: 'business',
@@ -623,6 +626,8 @@ export const useBusinessStore = defineStore('business', () => {
     const bizEventRevMul = D(events.getMultiplier('income_multiplier', 'business'))
     const bizEventCostMul = D(events.getMultiplier('cost_multiplier'))
     const generalEventIncomeMul = D(events.getMultiplier('income_multiplier'))
+    // sector_boost for business (e.g. economic_stimulus: ×1.15)
+    const bizSectorBoost = D(events.getMultiplier('sector_boost', 'business'))
 
     // Black market timed effects
     const bmBusinessBoost = D(blackmarket.getEffectMultiplier('business_boost'))
@@ -775,7 +780,7 @@ export const useBusinessStore = defineStore('business', () => {
           revMultTotal
         ),
         mul(
-          mul(bizEventRevMul, generalEventIncomeMul),
+          mul(mul(bizEventRevMul, generalEventIncomeMul), bizSectorBoost),
           mul(mul(bmBusinessBoost, bmIncomeBoost), bmHeatPenalty)
         )
       )
@@ -942,6 +947,35 @@ export const useBusinessStore = defineStore('business', () => {
     businesses.value = migrated
   }
 
+  /**
+   * Force-reduce business asset values by a given amount.
+   * Used by the loan system during collateral seizure.
+   * Distributes the reduction across all businesses proportionally.
+   */
+  function reduceAssetValue(amount: Decimal): void {
+    if (businesses.value.length === 0) return
+    const totalVal = totalBusinessValue.value
+    if (totalVal.lte(0)) return
+
+    for (const biz of businesses.value) {
+      const bizVal = add(
+        Formulas.businessValuation(biz.avgProfitPerTick, biz.purchasePrice, biz.sectorMultiplier),
+        biz.pendingProfit
+      )
+      // Proportional share of the total reduction
+      const share = div(bizVal, totalVal)
+      const reduction = mul(amount, share)
+      // Reduce pending profit first, then purchase price
+      if (biz.pendingProfit.gte(reduction)) {
+        biz.pendingProfit = sub(biz.pendingProfit, reduction)
+      } else {
+        const remaining = sub(reduction, biz.pendingProfit)
+        biz.pendingProfit = ZERO
+        biz.purchasePrice = sub(biz.purchasePrice, remaining).max(D(1))
+      }
+    }
+  }
+
   return {
     businesses,
     totalProfitPerTick,
@@ -985,6 +1019,7 @@ export const useBusinessStore = defineStore('business', () => {
     collectProfit,
     tick,
     prestigeReset,
-    loadFromSave
+    loadFromSave,
+    reduceAssetValue
   }
 })

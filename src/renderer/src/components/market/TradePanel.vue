@@ -8,8 +8,11 @@ import { UTooltip } from '@renderer/components/ui'
 import InputNumber from 'primevue/inputnumber'
 import { smartDecimals } from '@renderer/composables/useFormat'
 import { useLimitOrderStore } from '@renderer/stores/useLimitOrderStore'
+import { useCardPaymentStore } from '@renderer/stores/useCardPaymentStore'
+import { D } from '@renderer/core/BigNum'
 import { EXPIRATION_PRESETS, type OrderType } from '@renderer/core/LimitOrderEngine'
 import { gameEngine } from '@renderer/core/GameEngine'
+import AppIcon from '@renderer/components/AppIcon.vue'
 
 const props = defineProps<{
     assetId: string
@@ -26,6 +29,7 @@ const emit = defineEmits<{
 }>()
 
 const limitOrders = useLimitOrderStore()
+const cardPayment = useCardPaymentStore()
 
 const quantity = ref<number>(1)
 const mode = ref<'qty' | 'pct' | 'limit'>('qty')
@@ -57,6 +61,19 @@ const costEstimate = computed(() => {
     return props.availableCash * (percentValue.value / 100)
 })
 
+/** Card fee for the current cost estimate */
+const feeAmount = computed(() => {
+    return cardPayment.calculateFee(D(costEstimate.value)).toNumber()
+})
+
+/** Total charge including card fee */
+const totalWithFee = computed(() => {
+    return cardPayment.calculateTotal(D(costEstimate.value)).toNumber()
+})
+
+/** Fee percentage for display */
+const feePercentDisplay = computed(() => cardPayment.feePercent)
+
 const qtyFromPercent = computed(() => {
     if (props.currentPrice <= 0) return 0
     const cash = props.availableCash * (percentValue.value / 100)
@@ -69,7 +86,7 @@ const effectiveQty = computed(() => {
     return qtyFromPercent.value
 })
 
-const canAffordAny = computed(() => props.availableCash >= props.currentPrice)
+const canAffordAny = computed(() => props.availableCash >= cardPayment.calculateTotal(D(props.currentPrice)).toNumber())
 
 /** Whether the limit order is a buy type */
 const isLimitBuy = computed(() => limitOrderType.value === 'limit_buy')
@@ -219,6 +236,13 @@ function setToMarketPrice() {
                     'market.shares') }}</span>
                 <span class="pct-cost">{{ formatCost(costEstimate) }}</span>
             </div>
+            <div v-if="feePercentDisplay > 0" class="pct-fee-row">
+                <span class="pct-fee-label">
+                    <AppIcon icon="mdi:credit-card-outline" class="fee-icon" />
+                    {{ $t('market.est_fee', { pct: feePercentDisplay }) }}
+                </span>
+                <span class="pct-fee-val">+{{ formatCost(feeAmount) }}</span>
+            </div>
             <div class="pct-actions">
                 <UTooltip :text="$t('orders.tip_buy')" placement="top">
                     <UButton variant="primary" size="sm" icon="mdi:plus" :disabled="qtyFromPercent <= 0"
@@ -289,11 +313,24 @@ function setToMarketPrice() {
 
             <!-- Cost estimate -->
             <UTooltip :text="$t('orders.tip_cost_estimate')" placement="top">
-                <div class="cost-estimate">
-                    <span class="cost-label">
-                        {{ isLimitBuy ? $t('orders.est_cost') : $t('orders.est_revenue') }}
-                    </span>
-                    <span class="cost-value">{{ formatCost(costEstimate) }}</span>
+                <div class="cost-breakdown">
+                    <div class="cost-estimate">
+                        <span class="cost-label">
+                            {{ isLimitBuy ? $t('orders.est_cost') : $t('orders.est_revenue') }}
+                        </span>
+                        <span class="cost-value">{{ formatCost(costEstimate) }}</span>
+                    </div>
+                    <div v-if="isLimitBuy && feePercentDisplay > 0" class="cost-estimate cost-fee">
+                        <span class="cost-label">
+                            <AppIcon icon="mdi:credit-card-outline" class="fee-icon" />
+                            {{ $t('orders.est_fee', { pct: feePercentDisplay }) }}
+                        </span>
+                        <span class="cost-value fee-value">+{{ formatCost(feeAmount) }}</span>
+                    </div>
+                    <div v-if="isLimitBuy && feePercentDisplay > 0" class="cost-estimate cost-total">
+                        <span class="cost-label">{{ $t('orders.est_total') }}</span>
+                        <span class="cost-value total-value">{{ formatCost(totalWithFee) }}</span>
+                    </div>
                 </div>
             </UTooltip>
 
@@ -326,9 +363,22 @@ function setToMarketPrice() {
         </div>
 
         <!-- Cost estimate (qty mode) -->
-        <div v-if="mode === 'qty'" class="cost-estimate">
-            <span class="cost-label">{{ $t('market.est_cost') }}</span>
-            <span class="cost-value">{{ formatCost(costEstimate) }}</span>
+        <div v-if="mode === 'qty'" class="cost-breakdown">
+            <div class="cost-estimate">
+                <span class="cost-label">{{ $t('market.est_cost') }}</span>
+                <span class="cost-value">{{ formatCost(costEstimate) }}</span>
+            </div>
+            <div v-if="feePercentDisplay > 0" class="cost-estimate cost-fee">
+                <span class="cost-label">
+                    <AppIcon icon="mdi:credit-card-outline" class="fee-icon" />
+                    {{ $t('market.est_fee', { pct: feePercentDisplay }) }}
+                </span>
+                <span class="cost-value fee-value">+{{ formatCost(feeAmount) }}</span>
+            </div>
+            <div v-if="feePercentDisplay > 0" class="cost-estimate cost-total">
+                <span class="cost-label">{{ $t('market.est_total') }}</span>
+                <span class="cost-value total-value">{{ formatCost(totalWithFee) }}</span>
+            </div>
         </div>
     </div>
 </template>
@@ -403,6 +453,70 @@ function setToMarketPrice() {
     padding: 0.25rem 0.5rem;
     background: var(--t-bg-muted);
     border-radius: var(--t-radius-sm);
+}
+
+.cost-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.cost-breakdown .cost-estimate {
+    border-radius: 0;
+}
+
+.cost-breakdown .cost-estimate:first-child {
+    border-radius: var(--t-radius-sm) var(--t-radius-sm) 0 0;
+}
+
+.cost-breakdown .cost-estimate:last-child {
+    border-radius: 0 0 var(--t-radius-sm) var(--t-radius-sm);
+}
+
+.cost-fee {
+    background: var(--t-bg-muted);
+    opacity: 0.85;
+}
+
+.cost-total {
+    background: var(--t-bg-card);
+    border: 1px solid var(--t-border);
+}
+
+.fee-icon {
+    font-size: 0.72rem;
+    vertical-align: middle;
+    margin-right: 0.15rem;
+}
+
+.fee-value {
+    color: var(--t-warning) !important;
+}
+
+.total-value {
+    font-weight: var(--t-font-bold) !important;
+    color: var(--t-text) !important;
+}
+
+.pct-fee-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.68rem;
+    padding: 0.15rem 0;
+}
+
+.pct-fee-label {
+    color: var(--t-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+}
+
+.pct-fee-val {
+    font-family: var(--t-font-mono);
+    color: var(--t-warning);
+    font-size: 0.68rem;
 }
 
 .cost-label {

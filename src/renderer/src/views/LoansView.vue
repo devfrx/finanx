@@ -84,7 +84,8 @@ function openApplyDialog(loan: LoanDef) {
 
     selectedLoan.value = loan
     minAmount.value = loan.minAmount.toNumber()
-    maxAmount.value = application.maxApproved?.toNumber() ?? loan.maxAmount.toNumber()
+    const rawMax = application.maxApproved?.toNumber() ?? loan.maxAmount.toNumber()
+    maxAmount.value = Math.max(minAmount.value, rawMax)
     loanAmount.value = minAmount.value
     showApplyDialog.value = true
 }
@@ -295,9 +296,9 @@ const loanInfoSections = computed<InfoSection[]>(() => [
                                 </div>
                                 <div class="history-details">
                                     <span>{{ $t('loans.interest_label') }} {{ formatCash(entry.totalInterestPaid)
-                                    }}</span>
+                                        }}</span>
                                     <span>{{ $t('loans.on_time') }} {{ entry.onTimePayments }} | {{ $t('loans.late')
-                                    }} {{ entry.latePayments
+                                        }} {{ entry.latePayments
                                         }}</span>
                                     <span class="history-status" :class="entry.status">{{ entry.status }}</span>
                                 </div>
@@ -326,7 +327,7 @@ const loanInfoSections = computed<InfoSection[]>(() => [
                 <div class="amount-selector">
                     <label>{{ $t('loans.loan_amount') }}</label>
                     <Slider v-model="loanAmount" :min="minAmount" :max="maxAmount"
-                        :step="Math.max(100, Math.floor((maxAmount - minAmount) / 100))" />
+                        :step="Math.max(1, Math.floor((maxAmount - minAmount) / 100)) || 1" />
                     <div class="amount-display">
                         <span class="amount-value">{{ formatCash(loanAmount) }}</span>
                         <span class="amount-range">{{ formatCash(minAmount) }} - {{ formatCash(maxAmount) }}</span>
@@ -372,7 +373,7 @@ const loanInfoSections = computed<InfoSection[]>(() => [
 
                 <div class="dialog-actions">
                     <UButton variant="ghost" @click="showRefinanceDialog = false">{{ $t('common.cancel')
-                    }}</UButton>
+                        }}</UButton>
                     <UButton variant="ghost" :disabled="!refinanceTarget" @click="confirmRefinance">{{
                         $t('loans.refinance') }}</UButton>
                 </div>

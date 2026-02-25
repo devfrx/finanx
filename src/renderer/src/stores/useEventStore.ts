@@ -129,6 +129,11 @@ export const useEventStore = defineStore('events', () => {
     return eventSystem.getMultiplier(effectType, target)
   }
 
+  /** Get the aggregate additive bonus for a given effect type (sums all active values) */
+  function getAdditiveBonus(effectType: EventEffectType, target?: string): number {
+    return eventSystem.getAdditiveBonus(effectType, target)
+  }
+
   /** Force-activate an event by ID (dev cheat) */
   function forceActivateEvent(eventId: string): boolean {
     // Ensure definitions are registered (defensive fallback)
@@ -181,7 +186,7 @@ export const useEventStore = defineStore('events', () => {
     activeEvents, pendingChoices, recentEvents,
     hasActiveEvents, hasPendingChoices, suppressAutoEvents,
     initEvents, tick, acceptChoice, declineChoice,
-    getMultiplier, popRecentEvent, getSystem, loadFromSave, prestigeReset,
+    getMultiplier, getAdditiveBonus, popRecentEvent, getSystem, loadFromSave, prestigeReset,
     forceActivateEvent, getAllDefinitions
   }
 })

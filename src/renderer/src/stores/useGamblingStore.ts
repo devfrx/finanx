@@ -7,9 +7,20 @@ import Decimal from 'break_infinity.js'
 import { D, ZERO, add, sub, max } from '@renderer/core/BigNum'
 import { usePlayerStore } from './usePlayerStore'
 import { useUpgradeStore } from './useUpgradeStore'
+import { useEventStore } from './useEventStore'
 import { DIVINE_ABILITIES, type DivineAbilityDef } from '@renderer/data/lottery'
 
-export type GamblingGame = 'slots' | 'roulette' | 'dice' | 'blackjack' | 'poker' | 'coinflip' | 'plinko' | 'lottery' | 'scratchcard' | 'horseracing'
+export type GamblingGame =
+  | 'slots'
+  | 'roulette'
+  | 'dice'
+  | 'blackjack'
+  | 'poker'
+  | 'coinflip'
+  | 'plinko'
+  | 'lottery'
+  | 'scratchcard'
+  | 'horseracing'
 
 export interface GameStat {
   played: number
@@ -91,9 +102,12 @@ export const useGamblingStore = defineStore('gambling', () => {
 
   /**
    * Get the current luck multiplier (1.0 = base, 1.5 = 50% bonus, etc.)
+   * Combines skill tree upgrade + active event sector_boost for gambling.
    */
   function getLuckMultiplier(): number {
-    return useUpgradeStore().getMultiplier('gambling_luck').toNumber()
+    const baseMul = useUpgradeStore().getMultiplier('gambling_luck').toNumber()
+    const eventBoost = useEventStore().getMultiplier('sector_boost', 'gambling')
+    return baseMul * eventBoost
   }
 
   /**
@@ -104,7 +118,7 @@ export const useGamblingStore = defineStore('gambling', () => {
   function getLuckBonus(): number {
     const mult = getLuckMultiplier()
     if (mult <= 1) return 0
-    return 1 - (1 / mult)
+    return 1 - 1 / mult
   }
 
   /**
@@ -164,7 +178,7 @@ export const useGamblingStore = defineStore('gambling', () => {
   /** Get all unlocked divine ability definitions */
   function getUnlockedDivineAbilities(): DivineAbilityDef[] {
     return divineAbilities.value
-      .map(id => DIVINE_ABILITIES.find(a => a.id === id))
+      .map((id) => DIVINE_ABILITIES.find((a) => a.id === id))
       .filter((a): a is DivineAbilityDef => !!a)
   }
 
@@ -172,7 +186,7 @@ export const useGamblingStore = defineStore('gambling', () => {
   function getDivineMultiplier(target: string): number {
     let mult = 1
     for (const id of divineAbilities.value) {
-      const ability = DIVINE_ABILITIES.find(a => a.id === id)
+      const ability = DIVINE_ABILITIES.find((a) => a.id === id)
       if (ability && ability.effect.target === target) {
         mult *= ability.effect.value
       }
@@ -209,24 +223,46 @@ export const useGamblingStore = defineStore('gambling', () => {
     divineAbilities?: string[]
     lotteryWins?: Record<string, boolean>
   }): void {
-    if (data.totalBet !== undefined) totalBet.value = data.totalBet
-    if (data.totalWon !== undefined) totalWon.value = data.totalWon
-    if (data.totalLost !== undefined) totalLost.value = data.totalLost
+    if (data.totalBet !== undefined) totalBet.value = D(data.totalBet)
+    if (data.totalWon !== undefined) totalWon.value = D(data.totalWon)
+    if (data.totalLost !== undefined) totalLost.value = D(data.totalLost)
     if (data.gamesPlayed !== undefined) gamesPlayed.value = data.gamesPlayed
-    if (data.biggestWin !== undefined) biggestWin.value = data.biggestWin
-    if (data.biggestLoss !== undefined) biggestLoss.value = data.biggestLoss
+    if (data.biggestWin !== undefined) biggestWin.value = D(data.biggestWin)
+    if (data.biggestLoss !== undefined) biggestLoss.value = D(data.biggestLoss)
     if (data.gameStats !== undefined) gameStats.value = data.gameStats
     if (data.divineAbilities !== undefined) divineAbilities.value = data.divineAbilities
     if (data.lotteryWins !== undefined) lotteryWins.value = data.lotteryWins
   }
 
   return {
-    totalBet, totalWon, totalLost, gamesPlayed, biggestWin, biggestLoss,
-    gameStats, activeGame, netProfit, winRate,
-    divineAbilities, lotteryWins,
-    recordWin, recordLoss, setActiveGame, getStats, prestigeReset, fullReset, loadFromSave,
-    getLuckMultiplier, getLuckBonus, luckyRoll, luckyRandom,
-    unlockDivineAbility, hasDivineAbility, getUnlockedDivineAbilities, getDivineMultiplier,
-    recordLotteryWin, hasLotteryWin
+    totalBet,
+    totalWon,
+    totalLost,
+    gamesPlayed,
+    biggestWin,
+    biggestLoss,
+    gameStats,
+    activeGame,
+    netProfit,
+    winRate,
+    divineAbilities,
+    lotteryWins,
+    recordWin,
+    recordLoss,
+    setActiveGame,
+    getStats,
+    prestigeReset,
+    fullReset,
+    loadFromSave,
+    getLuckMultiplier,
+    getLuckBonus,
+    luckyRoll,
+    luckyRandom,
+    unlockDivineAbility,
+    hasDivineAbility,
+    getUnlockedDivineAbilities,
+    getDivineMultiplier,
+    recordLotteryWin,
+    hasLotteryWin
   }
 })

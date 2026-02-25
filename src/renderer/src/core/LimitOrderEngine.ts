@@ -12,7 +12,7 @@
  * which orders should be executed.
  */
 import Decimal from 'break_infinity.js'
-import { D, ZERO, add, sub, mul, gte } from '@renderer/core/BigNum'
+import { D } from '@renderer/core/BigNum'
 
 // ─── Types ──────────────────────────────────────────────────────
 
