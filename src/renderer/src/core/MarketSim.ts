@@ -22,6 +22,10 @@ export type MarketSector =
   | 'entertainment'
   | 'defi'
   | 'meme'
+  | 'automotive'
+  | 'realestate'
+  | 'consumer'
+  | 'logistics'
 
 export type MarketCondition = 'normal' | 'bull' | 'bear' | 'crash' | 'bubble'
 
