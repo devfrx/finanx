@@ -143,7 +143,10 @@ export class MarketSimulator {
   /** Accumulator for daily history sampling */
   private dayAccumulator: number = 0
   /** Current in-progress candle OHLC per asset (accumulates during each game day) */
-  private candleAccumulators: Map<string, { open: number; high: number; low: number; startTick: number }> = new Map()
+  private candleAccumulators: Map<
+    string,
+    { open: number; high: number; low: number; startTick: number }
+  > = new Map()
   /** Total ticks elapsed (for candle timestamps) */
   private totalTicks: number = 0
   /** Max number of candles to keep per asset */
@@ -222,7 +225,8 @@ export class MarketSimulator {
 
       // Calculate effective drift & volatility
       const sectorMod = this.state.sectorModifiers[config.sector] ?? 0
-      const effectiveDrift = config.drift + conditionEffect.driftMod + this.state.sentimentModifier + sectorMod
+      const effectiveDrift =
+        config.drift + conditionEffect.driftMod + this.state.sentimentModifier + sectorMod
       const effectiveVol = config.volatility * conditionEffect.volMod
 
       // Generate random shock
@@ -381,7 +385,11 @@ export class MarketSimulator {
     // Ensure dailyHistory and candlestickHistory exist for each asset (backward compat with old saves)
     const entries: [string, AssetState][] = data.assets.map(([id, state]) => [
       id,
-      { ...state, dailyHistory: state.dailyHistory ?? [], candlestickHistory: state.candlestickHistory ?? [] }
+      {
+        ...state,
+        dailyHistory: state.dailyHistory ?? [],
+        candlestickHistory: state.candlestickHistory ?? []
+      }
     ])
     this.state = {
       condition: data.condition,
@@ -397,6 +405,30 @@ export class MarketSimulator {
           open: assetState.currentPrice,
           high: assetState.currentPrice,
           low: assetState.currentPrice,
+          startTick: this.totalTicks
+        })
+      }
+    }
+    // Add any newly-registered configs that are missing from the saved state
+    for (const [id, config] of this.configs) {
+      if (!this.state.assets.has(id)) {
+        this.state.assets.set(id, {
+          id: config.id,
+          name: config.name,
+          currentPrice: config.basePrice,
+          previousPrice: config.basePrice,
+          priceHistory: [config.basePrice],
+          dailyHistory: [],
+          candlestickHistory: [],
+          changePercent: 0,
+          ath: config.basePrice,
+          atl: config.basePrice,
+          totalVolume: 0
+        })
+        this.candleAccumulators.set(id, {
+          open: config.basePrice,
+          high: config.basePrice,
+          low: config.basePrice,
           startTick: this.totalTicks
         })
       }
@@ -472,10 +504,10 @@ export class MarketSimulator {
     }
 
     if (validCount === 0) validCount = 1
-    const shortTermMomentum = Math.max(-1, Math.min(1, shortMomSum / validCount * 10))
-    const mediumTermMomentum = Math.max(-1, Math.min(1, mediumMomSum / validCount * 5))
+    const shortTermMomentum = Math.max(-1, Math.min(1, (shortMomSum / validCount) * 10))
+    const mediumTermMomentum = Math.max(-1, Math.min(1, (mediumMomSum / validCount) * 5))
     const avgDistanceFromAth = athDistSum / validCount
-    const volatilityIndex = Math.min(100, volSum / validCount * 1000)
+    const volatilityIndex = Math.min(100, (volSum / validCount) * 1000)
 
     // ── Trend detection ──
     const combinedMomentum = shortTermMomentum * 0.4 + mediumTermMomentum * 0.6
@@ -498,18 +530,16 @@ export class MarketSimulator {
       phase = 'crash' // far from ATH with strong downward momentum
     } else if (avgDistanceFromAth > 0.15 && mediumTermMomentum > 0.1) {
       phase = 'recovery' // recovering from a dip
-    } else if (avgDistanceFromAth > 0.10 && mediumTermMomentum < -0.1) {
+    } else if (avgDistanceFromAth > 0.1 && mediumTermMomentum < -0.1) {
       phase = 'correction' // pulling back from recent highs
     }
 
     // ── Fear & Greed Index ──
     // Composite score: momentum (40%), volatility inverse (30%), ATH distance inverse (30%)
-    const momentumScore = (combinedMomentum + 1) / 2 * 100 // 0-100
-    const volScore = Math.max(0, 100 - volatilityIndex * 2)  // low vol = high score
-    const athScore = (1 - avgDistanceFromAth) * 100           // near ATH = high score
-    const fearGreedIndex = Math.round(
-      momentumScore * 0.4 + volScore * 0.3 + athScore * 0.3
-    )
+    const momentumScore = ((combinedMomentum + 1) / 2) * 100 // 0-100
+    const volScore = Math.max(0, 100 - volatilityIndex * 2) // low vol = high score
+    const athScore = (1 - avgDistanceFromAth) * 100 // near ATH = high score
+    const fearGreedIndex = Math.round(momentumScore * 0.4 + volScore * 0.3 + athScore * 0.3)
 
     return {
       trend,

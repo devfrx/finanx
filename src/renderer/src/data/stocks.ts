@@ -25,7 +25,7 @@ export const STOCKS: AssetConfig[] = [
     sector: 'commodities',
     basePrice: 45,
     drift: 0.06,
-    volatility: 0.20,
+    volatility: 0.2,
     minPrice: 1,
     maxHistory: 2000,
     dividendYield: 0.028 // 2.8% — commodity producer, moderate yield
@@ -36,8 +36,8 @@ export const STOCKS: AssetConfig[] = [
     ticker: 'SOLARW',
     sector: 'energy',
     basePrice: 80,
-    drift: 0.10,
-    volatility: 0.30,
+    drift: 0.1,
+    volatility: 0.3,
     minPrice: 1,
     maxHistory: 2000,
     dividendYield: 0.022 // 2.2% — growing energy sector
@@ -101,5 +101,101 @@ export const STOCKS: AssetConfig[] = [
     minPrice: 1,
     maxHistory: 2000,
     dividendYield: 0 // 0% — high-growth entertainment, no dividends
+  },
+  {
+    id: 'CLOUDX',
+    name: 'CloudNexus',
+    ticker: 'CLOUDX',
+    sector: 'tech',
+    basePrice: 220,
+    drift: 0.13,
+    volatility: 0.3,
+    minPrice: 1,
+    maxHistory: 2000,
+    dividendYield: 0 // 0% — high-growth cloud, reinvests profits
+  },
+  {
+    id: 'EVDRIVE',
+    name: 'EV Drive Motors',
+    ticker: 'EVDRIVE',
+    sector: 'automotive',
+    basePrice: 180,
+    drift: 0.14,
+    volatility: 0.38,
+    minPrice: 1,
+    maxHistory: 2000,
+    dividendYield: 0 // 0% — disruptive EV growth stock
+  },
+  {
+    id: 'REALTY',
+    name: 'Realty Trust REIT',
+    ticker: 'REALTY',
+    sector: 'realestate',
+    basePrice: 55,
+    drift: 0.05,
+    volatility: 0.14,
+    minPrice: 1,
+    maxHistory: 2000,
+    dividendYield: 0.055 // 5.5% — REIT, legally required high distribution
+  },
+  {
+    id: 'FOODCO',
+    name: 'FoodCo Staples',
+    ticker: 'FOODCO',
+    sector: 'consumer',
+    basePrice: 90,
+    drift: 0.04,
+    volatility: 0.12,
+    minPrice: 1,
+    maxHistory: 2000,
+    dividendYield: 0.03 // 3% — consumer staples, defensive dividend
+  },
+  {
+    id: 'OILMX',
+    name: 'OilMax Energy',
+    ticker: 'OILMX',
+    sector: 'energy',
+    basePrice: 65,
+    drift: 0.05,
+    volatility: 0.28,
+    minPrice: 1,
+    maxHistory: 2000,
+    dividendYield: 0.042 // 4.2% — oil major, high yield
+  },
+  {
+    id: 'BIOLAB',
+    name: 'BioLab Sciences',
+    ticker: 'BIOLAB',
+    sector: 'healthcare',
+    basePrice: 110,
+    drift: 0.15,
+    volatility: 0.45,
+    minPrice: 1,
+    maxHistory: 2000,
+    dividendYield: 0 // 0% — speculative biotech, binary outcomes
+  },
+  {
+    id: 'LOGIX',
+    name: 'LogiX Supply',
+    ticker: 'LOGIX',
+    sector: 'logistics',
+    basePrice: 75,
+    drift: 0.06,
+    volatility: 0.18,
+    minPrice: 1,
+    maxHistory: 2000,
+    dividendYield: 0.02 // 2% — logistics, steady moderate yield
+  },
+  {
+    id: 'CRYPTEX',
+    name: 'CryptoEx Exchange',
+    ticker: 'CRYPTEX',
+    sector: 'finance',
+    basePrice: 250,
+    drift: 0.16,
+    volatility: 0.5,
+    minPrice: 1,
+    maxHistory: 2000,
+    dividendYield: 0.005 // 0.5% — crypto exchange, high volatility
   }
 ]
